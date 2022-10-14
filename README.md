@@ -4,3 +4,4 @@
 - 팀원
   - 김현영 (Front-end)
   - 이도경 (Back-end)
+  - 우시은 (Back-end, Infra)
