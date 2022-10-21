@@ -1,12 +1,27 @@
-# A501 팀 환영합니다.
+# 오랭지
 
-+ 팀장: 원찬호 (Front-end)
-- 팀원
-  - 김현영 (Front-end)
-  - 이도경 (Back-end)
-  - 우시은 (Back-end, Infra)
-  - 조혜림 (Front-end, UX/UI)
-  - 홍제민(Front-end)
+## 서비스 소개
+
+### 기술 스택
+
+- Front-end : Nginx, React Native, Material UI
+- Back-end : Spring Boot, JPA, QueryDSL
+- Infra, etc : Docker, Jenkins
+
+## 팀 소개
+
+### 팀 명
+
+- 밍기뉴
+
+### 팀원 소개
+
+- **원찬호** : 팀장, Front-end
+- **김현영** : Front-end
+- **우시은** : Back-end, Infra
+- **이도경** : Back-end
+- **조혜림** : Front-end, UX/UI
+- **홍제민** : Front-end
 
 # Git과 Jira 사용 규칙
 
