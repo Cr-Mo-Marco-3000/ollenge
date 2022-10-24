@@ -15,30 +15,25 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Example {
+public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long exampleId;
+    long reportId;
 
-    @Column(length = 15, nullable = false)
-    String exampleName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_user_id", nullable = false)
+    User reportUserId;
 
-    @Column(length = 150, nullable = false)
-    String password;
-
-    @Column(length = 300, nullable = false)
-    String exampleContent;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reported_user_id", nullable = false)
+    User reportedUserId;
 
     @Column(nullable = false)
     @CreatedDate
-    LocalDateTime createdDate;
+    LocalDateTime createdDatetime;
 
-    @LastModifiedDate
-    LocalDateTime updatedDate;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "example2_id")
-//    Example2 example2;
+    @Column(length = 100)
+    String content;
 
 }
