@@ -33,7 +33,7 @@ public class User {
     String loginType;
 
     @Column(length = 300)
-    String description;
+    String userDescription;
 
     @Column(nullable = false, columnDefinition = "int default 0")
     int userScore;

@@ -34,6 +34,6 @@ public class Report {
     LocalDateTime createdDatetime;
 
     @Column(length = 100)
-    String content;
+    String reportContent;
 
 }

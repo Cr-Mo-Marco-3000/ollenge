@@ -30,7 +30,7 @@ public class Comment {
     User user;
 
     @Column(length = 300, nullable = false)
-    String content;
+    String commentContent;
 
     @Column(nullable = false)
     @CreatedDate

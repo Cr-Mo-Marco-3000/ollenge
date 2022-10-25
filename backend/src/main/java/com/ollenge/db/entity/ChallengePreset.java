@@ -35,6 +35,6 @@ public class ChallengePreset {
     LocalTime endTime;
 
     @Column(length = 100, nullable = false)
-    String description;
+    String presetDescription;
 
 }

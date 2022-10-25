@@ -28,7 +28,9 @@ public class Feed {
     @CreatedDate
     LocalDateTime createdDatetime;
 
-    @Column(nullable = false)
+    @Column(length = 255, nullable = false)
     String feedImg;
 
+    @Column(length = 300, nullable = false)
+    String feedContent;
 }
