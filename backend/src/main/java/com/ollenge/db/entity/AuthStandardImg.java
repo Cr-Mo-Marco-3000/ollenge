@@ -1,11 +1,9 @@
 package com.ollenge.db.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,26 +12,17 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Feed {
+public class AuthStandardImg {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long feedId;
-
-    @Column(length = 10, nullable = false)
-    String feedType;
+    long authStandardImgId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participation_id", nullable = false)
     Participation participation;
 
     @Column(nullable = false)
-    @CreatedDate
-    LocalDateTime createdDatetime;
+    String standardImg;
 
-    @Column(length = 255, nullable = false)
-    String feedImg;
-
-    @Column(length = 300, nullable = false)
-    String feedContent;
 }

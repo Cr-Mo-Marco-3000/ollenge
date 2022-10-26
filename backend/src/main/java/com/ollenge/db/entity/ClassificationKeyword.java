@@ -4,7 +4,6 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -13,34 +12,17 @@ import java.time.LocalTime;
 @Builder
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class ChallengePreset {
+public class ClassificationKeyword {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long challengePresetId;
-
-    @Column(nullable = false)
-    String challengePresetImg;
-
-    @Column(nullable = false)
-    String presetName;
-
-    @Column(length = 50, nullable = false)
-    String topic;
-
-    @Column(nullable = false)
-    LocalTime startTime;
-
-    @Column(nullable = false)
-    LocalTime endTime;
-
-    @Column(length = 100, nullable = false)
-    String presetDescription;
-
-    @Column
-    int stepCount;
+    long classificationKeywordId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classification_type_id", nullable = false)
     ClassificationType classificationType;
+
+    @Column(length = 50, nullable = false)
+    String keyword;
+
 }
