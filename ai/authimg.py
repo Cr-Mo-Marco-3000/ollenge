@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Form, File, UploadFile
+from pydantic import BaseModel, Json
 from clarifai_grpc.grpc.api import service_pb2, resources_pb2
 from clarifai_grpc.grpc.api.status import status_code_pb2
 from clarifai_grpc.channel.clarifai_channel import ClarifaiChannel
@@ -14,6 +15,13 @@ import matplotlib.pyplot as plt
 import cv2, numpy as np
 import sys
 import requests
+
+# 이미지 처리용
+import base64
+import json
+import io
+from PIL import Image
+
 
 # 4개의 point를 가지고 넓이 구하는 함수
 def explode_xy(xy):
@@ -33,6 +41,16 @@ def shoelace_area(x_list,y_list):
         a2 += y_list[j]*x_list[j+1]
     l=abs(a1-a2)/2
     return l
+
+class pictures(BaseModel):
+    data: str
+    name: str
+
+class tagpicture(BaseModel):
+    data: str
+    name: str
+    tag: str
+
 
 stub = service_pb2_grpc.V2Stub(ClarifaiChannel.get_grpc_channel())
 
@@ -79,17 +97,28 @@ async def authimglc():
     return {"response": result}
 
 
-# url을 바탕으로 img recognition 실행
-@app.post("/auth/tagurl")
-async def authimgurl(url: str):
+# base64를 통해 이미지 태그
+@app.post("/auth/tag")
+async def authimgtag(req: tagpicture):
     result = {}
+    req = str(req)
+    data = req.split("'")[1]
+    name = req.split("'")[3] 
+    print(req.split("'")[2:])
+    imgdata = base64.b64decode(data)
+    filename = 'tag_img.jpg'
+    with open(filename, 'wb') as f:
+        f.write(imgdata)
+
+    with open(filename, "rb") as f:
+        file_bytes = f.read()
     request = service_pb2.PostModelOutputsRequest(
         # This is the model ID of a publicly available General model. You may use any other public or custom model ID.
         model_id="general-image-recognition",
         user_app_id=resources_pb2.UserAppIDSet(app_id=YOUR_APPLICATION_ID),
         inputs=[
             resources_pb2.Input(
-                data=resources_pb2.Data(image=resources_pb2.Image(url=url))
+                data=resources_pb2.Data(image=resources_pb2.Image(base64=file_bytes))
             )
         ],
     )
@@ -98,11 +127,12 @@ async def authimgurl(url: str):
     if response.status.code != status_code_pb2.SUCCESS:
         # print(response)
         raise Exception(f"Request failed, status code: {response.status}")
+        return {"status": 500, "message": "API Fault", "result": {False}}
 
     for concept in response.outputs[0].data.concepts:
         # print("%12s: %.2f" % (concept.name, concept.value))
         result.update({concept.name:concept.value})
-    return {"response": result}
+    return {"status": 200, "message": "success", "result": result}
 
 
 # 이미지 비교
@@ -245,7 +275,8 @@ async def featimg(data1:pictures):
     cv2.waitKey()
     cv2.destroyAllWindows()
     # 사각형의 넓이에 따라 출력
-    if A<=5:
+    print(A)
+    if A<=30:
         return {"status": 200, "message":"잘못된 사진입니다."}
     else:
         return {"status": 200, "message":"비교되었습니다."}
