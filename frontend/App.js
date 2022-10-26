@@ -8,6 +8,8 @@ import RankingCGScreen from "./screens/RankingCGScreen";
 import UserRankScreen from "./screens/UserRankScreen";
 import MyPageScreen from "./screens/MyPageScreen";
 
+import ColorSet from "./assets/style/ColorSet";
+
 const MyCGRoute = () => <MyCGScreen />;
 
 const RankingCGRoute = () => <RankingCGScreen />;
@@ -43,7 +45,7 @@ const MyComponent = () => {
   function startScreenChange() {
     setIndex(0);
   }
-
+  // index == 4인 경우 StartScreen 출력, 그 외엔 BottomNav랑 해당 스크린 출력
   return (
     <View style={styles.rootScreen}>
       {index == 4 ? (
@@ -56,12 +58,12 @@ const MyComponent = () => {
           compact={false}
           sceneAnimationType={"shifting"}
           barStyle={styles.bottomNavContainer}
-          activeColor="#F88440"
-          inactiveColor="#004E66"
+          activeColor={`${ColorSet.orangeColor(100)}`}
+          inactiveColor={`${ColorSet.navyColor(100)}`}
           theme={{
             colors: {
-              onSurfaceVariant: "#004E66",
-              onSurface: "#F88440",
+              onSurfaceVariant: `${ColorSet.navyColor(100)}`,
+              onSurface: `${ColorSet.orangeColor(100)}`,
               secondaryContainer: "#FF999900",
             },
           }}
@@ -79,8 +81,7 @@ const styles = StyleSheet.create({
   },
   bottomNavContainer: {
     backgroundColor: "white",
-    borderTopColor: "#004E66",
+    borderTopColor: `${ColorSet.navyColor(100)}`,
     borderTopWidth: 1,
-    color: "#004E66",
   },
 });
