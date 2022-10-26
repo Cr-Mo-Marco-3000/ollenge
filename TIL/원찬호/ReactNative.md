@@ -45,3 +45,10 @@
 3. Native Base
 + 호환성의 문제로 점유율이 하락하였으나,과거에는 1위를 자리하던 UI 컴포넌트 라이브러리이다.
 
+`expo init TravelHard --npm`
++ 발생한 오류: expo-cli is not supported...
+
+원인으로는 node 버전이 최신화가 되지 않아 그럴 수 있다고 한다. => 
+그 후, `npm install --global expo-cli` 를 실행했다.
+
+그러자 발생한 'file already exists'
