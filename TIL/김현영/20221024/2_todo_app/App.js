@@ -1,4 +1,8 @@
 import { StatusBar } from "expo-status-bar"
+
+// localStorage와 같은 역할을 함
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
 import {
   StyleSheet,
   Text,
@@ -8,6 +12,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native"
+
 import { useState, useEffect } from "react"
 
 // 누르는 Event를 Listen할 준비가 된 View
@@ -42,6 +47,24 @@ export default function App() {
     setText(payload)
   }
 
+  const TODOS_KEY = "@toDos"
+
+  const saveToDo = async (toSave) => {
+    try {
+      // async Storage에 저장 전, 로컬 스토리지에 저장하는 것 처럼 Stringfy해야 한다.
+      const stringfiedToDo = JSON.stringify(toSave)
+      await AsyncStorage.setItem(TODOS_KEY, stringfiedToDo)
+    } catch (error) {
+      console.log("에러발생!")
+    }
+  }
+
+  const loadToDo = async () => {
+    try {
+      const value = await AsyncStorage.getItem(TODOS_KEY)
+    } catch (error) {}
+  }
+
   const addTodo = (payload) => {
     if (!text) {
       setAlertText("입력해주세요!")
@@ -49,14 +72,6 @@ export default function App() {
         setAlertText("")
       }, 2000)
     } else {
-      // setToDos(() => {
-      //   console.log(text)
-      //   return {
-      //     ...toDos,
-      //     text,
-      //   }
-      // })
-
       // 객체를 만들 때, key가 대괄호로 둘러쌓인 경우, 이를 계산된 프로퍼티라 일컫는다.
       // 단순 변수가 올 수도 있고, 복잡한 표현식이 올 수도 있다.
 
@@ -72,7 +87,9 @@ export default function App() {
       // })
 
       // 2. ...이용하기
-      setToDos({ ...toDos, [Date.now()]: { text, work: working } })
+      const newToDos = { ...toDos, [Date.now()]: { text, working } }
+      setToDos(newToDos)
+      saveToDo(newToDos)
       setText("")
     }
   }
@@ -106,6 +123,7 @@ export default function App() {
           style={styles.input}
           onChangeText={onChangeText}
           value={text}
+          // submit 됐을 때 실행되는 함수
           onSubmitEditing={addTodo}
           // placeholderTextColor={theme.grey}
           // 포커스 됐을 때, 자동으로 모든 텍스트 블록설정
@@ -117,15 +135,19 @@ export default function App() {
           // multiline
         ></TextInput>
         <ScrollView>
-          {Object.keys(toDos).map((key, idx) => (
-            <View
-              style={styles.toDo}
-              key={key}
-            >
-              {/* 렌더링되는 react Child은 스트링이어야 한다. */}
-              <Text style={styles.toDoText}>{toDos[key]["text"]}</Text>
-            </View>
-          ))}
+          {Object.keys(toDos).map((key, idx) =>
+            // 아래 부분이 통째로 return 된다고 생각하면 된다.
+            // 화살표 함수에서, => 뒤 부분이 통째로 리턴되는 경우는, 한 줄이 아니라, 하나의 자료형 => ()로 묶인 부분이다!
+            toDos[key]["working"] === working ? (
+              <View
+                style={styles.toDo}
+                key={key}
+              >
+                {/* 렌더링되는 react Child은 스트링이어야 한다. */}
+                <Text style={styles.toDoText}>{toDos[key]["text"]}</Text>
+              </View>
+            ) : null
+          )}
         </ScrollView>
       </View>
     </View>
@@ -164,15 +186,16 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   toDo: {
-    backgroundColor: theme.toDoBackground,
+    backgroundColor: theme.grey,
     marginBottom: 20,
-    paddingVertical: 10,
+    paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 20,
+    color: "red",
   },
   toDoText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: "500",
   },
 })
