@@ -52,3 +52,4 @@
 그 후, `npm install --global expo-cli` 를 실행했다.
 
 그러자 발생한 'file already exists'
+.
