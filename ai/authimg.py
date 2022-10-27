@@ -23,6 +23,42 @@ import io
 from PIL import Image
 
 
+# S3연결
+def s3_connection(id, key):
+    try:
+        # s3 클라이언트 생성
+        s3 = boto3.client(
+            service_name="s3",
+            region_name="ap-northeast-2",
+            aws_access_key_id=id,
+            aws_secret_access_key=key,
+        )
+    except Exception as e:
+        print(e)
+    else:
+        print("s3 bucket connected!") 
+        return s3
+
+
+def s3_upload(fr, bk, to):  # local 파일인  fr을  bk버킷에 to 라는 이름으로 저장
+    try:
+        s3.upload_file(fr, bk, to)
+        return "https://homybk.s3.ap-northeast-2.amazonaws.com/"+to
+    except Exception as e:
+        print(e)
+        return 0
+
+
+def s3_download(bk, fr, to):
+    try:
+        s3.download_file(bk, fr, to)
+        return to
+    except Exception as e:
+        print(e)
+        return 0
+
+
+
 # 4개의 point를 가지고 넓이 구하는 함수
 def explode_xy(xy):
     xl=[]
@@ -46,9 +82,12 @@ class pictures(BaseModel):
     data: str
     name: str
 
+class featpicture(BaseModel):
+    data: str
+    url: str
+
 class tagpicture(BaseModel):
     data: str
-    name: str
     tag: str
 
 
@@ -61,6 +100,11 @@ YOUR_DEEP_API_KEY=os.environ.get('DEEPAIKEY')
 YOUR_APPLICATION_ID = "my-first-application"
 metadata = (("authorization", f"Key {YOUR_CLARIFAI_API_KEY}"),)
 
+# S3 key관리
+S3_KEY_ID = os.environ.get('S3KEYID')
+S3_SECRET_KEY = os.environ.get('S3SECRETKEY')        
+s3 = s3_connection(S3_KEY_ID, S3_SECRET_KEY)
+
 app = FastAPI()
 
 # 메인 화면
@@ -69,32 +113,35 @@ async def root():
     return {"message": "I'm python"}
 
 # 로컬에 있는 사진을 바탕으로 img recognition 실행
-@app.get("/auth/taglocal")
-async def authimglc():
-    result = {}
-    SAMPLE_URL = "./imgs/cat.jpg"
-    with open(SAMPLE_URL, "rb") as f:
-        file_bytes = f.read()
-    request = service_pb2.PostModelOutputsRequest(
-        # This is the model ID of a publicly available General model. You may use any other public or custom model ID.
-        model_id="general-image-recognition",
-        user_app_id=resources_pb2.UserAppIDSet(app_id=YOUR_APPLICATION_ID),
-        inputs=[
-            resources_pb2.Input(
-                data=resources_pb2.Data(image=resources_pb2.Image(base64=file_bytes))
-            )
-        ],
-    )
-    response = stub.PostModelOutputs(request, metadata=metadata)
+# @app.get("/auth/taglocal")
+# async def authimglc():
+#     result = {}
+#     SAMPLE_URL = "./imgs/mouse2.jpg"
+#     with open(SAMPLE_URL, "rb") as f:
+#         file_bytes = f.read()
+#     request = service_pb2.PostModelOutputsRequest(
+#         # This is the model ID of a publicly available General model. You may use any other public or custom model ID.
+#         model_id="general-image-recognition",
+#         user_app_id=resources_pb2.UserAppIDSet(app_id=YOUR_APPLICATION_ID),
+#         inputs=[
+#             resources_pb2.Input(
+#                 data=resources_pb2.Data(image=resources_pb2.Image(base64=file_bytes))
+#             )
+#         ],
+#     )
+#     response = stub.PostModelOutputs(request, metadata=metadata)
 
-    if response.status.code != status_code_pb2.SUCCESS:
-        # print(response)
-        raise Exception(f"Request failed, status code: {response.status}")
+#     if response.status.code != status_code_pb2.SUCCESS:
+#         # print(response)
+#         raise Exception(f"Request failed, status code: {response.status}")
 
-    for concept in response.outputs[0].data.concepts:
-        # print("%12s: %.2f" % (concept.name, concept.value))
-        result.update({concept.name:concept.value})
-    return {"response": result}
+#     for concept in response.outputs[0].data.concepts:
+#         # print("%12s: %.2f" % (concept.name, concept.value))
+#         result.update({concept.name:concept.value})
+
+#     if "cute" in result:
+#         return True
+#     return {"response": result}
 
 
 # base64를 통해 이미지 태그
@@ -103,8 +150,10 @@ async def authimgtag(req: tagpicture):
     result = {}
     req = str(req)
     data = req.split("'")[1]
-    name = req.split("'")[3] 
-    print(req.split("'")[2:])
+    tag = req.split("'")[3]
+    if not(tag):
+        return {"status": 400, "message": "No Tag", "result": False}
+    # print(req.split("'")[2:])
     imgdata = base64.b64decode(data)
     filename = 'tag_img.jpg'
     with open(filename, 'wb') as f:
@@ -127,12 +176,16 @@ async def authimgtag(req: tagpicture):
     if response.status.code != status_code_pb2.SUCCESS:
         # print(response)
         raise Exception(f"Request failed, status code: {response.status}")
-        return {"status": 500, "message": "API Fault", "result": {False}}
+        return {"status": 500, "message": "Clarifai Api Fault", "result": False}
 
     for concept in response.outputs[0].data.concepts:
         # print("%12s: %.2f" % (concept.name, concept.value))
         result.update({concept.name:concept.value})
-    return {"status": 200, "message": "success", "result": result}
+    
+    if tag in result:
+        return {"status": 200, "message": "Matched", "result": True}
+    else:
+        return {"status": 200, "message": "Not Matched", "result": False}
 
 
 # 이미지 비교
@@ -151,12 +204,10 @@ async def authimgtag(req: tagpicture):
 
 
 # 이미지 특징점 확인
-@app.post("/auth/test")
+@app.post("/auth/stdimg")
 async def test(data1: pictures):
     data1 = str(data1)
     data = data1.split("'")[1]
-    name = data1.split("'")[3]
-    print(name)
     imgdata = base64.b64decode(data)
     filename = 'feature_test.jpg'
     with open(filename, 'wb') as f:
@@ -165,41 +216,40 @@ async def test(data1: pictures):
     src1 = cv2.imread('feature_test.jpg', cv2.IMREAD_GRAYSCALE)
     if src1 is None:
         print('Image load failed!')
-        return {"status":400, "message": "사진을 다시 찍으세요"}
+        return {"status":400, "message": "Take Picture Again", "result": False}
     
     feature = cv2.AKAZE_create()
     kp1, desc1 = feature.detectAndCompute(src1, None)
 
     if len(kp1)<80:
         print('need more features')
-        return {"status":400, "message": "등록 불가능한 사진입니다."}
+        return {"status":200, "message": "Too Little Features", "result": False}
     else:
         print('good')
-        return {"status":200, "message": "good picture"}
-    return {"status":500, "message": "무언가 잘못 되었다!"}
+        return {"status":200, "message": "Good Picture", "result": True}
+    return {"status":500, "message": "Something Wrong", "result": False}
 
 # 이미지 특징점 비교
 @app.post("/auth/feature")
-async def featimg(data1:pictures):
+async def featimg(data1:featpicture):
     # 영상 불러오기
-    # image_nparray1 = np.asarray(bytearray(requests.get(url1).content), dtype=np.uint8)
     # image_nparray2 = np.asarray(bytearray(requests.get(url2).content), dtype=np.uint8)
     data1 = str(data1)
     base1 = data1.split("'")[1]
-    name1 = data1.split("'")[3]
-    print(name1)
+    url1 = data1.split("'")[3]
+    if not(url1):
+        return {"status":400, "message": "You don't have std img", "result": False}
     imgdata = base64.b64decode(base1)
+    image_nparray1 = np.asarray(bytearray(requests.get(url1).content), dtype=np.uint8)
+
     filename = 'to_auth.jpg'
     with open(filename, 'wb') as f:
         f.write(imgdata)
-    
-    # pic2은 유저가 찍은 사진, pic1는 이미 찍어둔 사진
+    # pic2은 유저가 찍은 사진
     with open('to_auth.jpg', 'rb') as f:
         pic2 = f.read()
-    with open('feature_test.jpg', 'rb') as f:
-        pic1 = f.read()
-    # image_nparray1 = np.fromstring(image_nparray1, dtype = np.uint8)
-    image_nparray1 = np.fromstring(pic1, dtype = np.uint8)
+    image_nparray1 = np.fromstring(image_nparray1, dtype = np.uint8)
+    # image_nparray1 = np.fromstring(pic1, dtype = np.uint8)
     image_nparray2 = np.fromstring(pic2, dtype = np.uint8)
 
     src1 = cv2.imdecode(image_nparray1, cv2.IMREAD_GRAYSCALE)
@@ -207,10 +257,10 @@ async def featimg(data1:pictures):
 
     if src1 is None:
         print('Image1 load failed!')
-        return {"status":400, "message": "사진을 다시 찍으세요"}
+        return {"status":400, "message": "Missing Picture", "result": False}
     elif src2 is None:
         print('Image2 load failed!')
-        return {"status":500, "message": "원본 사진 url 잘못 되었음"}
+        return {"status":500, "message": "Missing Std Picture", "result": False}
 
     # 특징점 알고리즘 객체 생성 (KAZE, AKAZE, ORB 등)
     # feature = cv2.KAZE_create() # 기본값인 L2놈 이용
@@ -277,7 +327,7 @@ async def featimg(data1:pictures):
     # 사각형의 넓이에 따라 출력
     print(A)
     if A<=30:
-        return {"status": 200, "message":"잘못된 사진입니다."}
+        return {"status":200, "message": "You took wrong picture", "result": False}
     else:
-        return {"status": 200, "message":"비교되었습니다."}
+        return {"status":200, "message": "Complete", "result": True}
 
