@@ -1,25 +1,25 @@
-import * as React from "react";
-import { BottomNavigation, Text } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
+import * as React from "react"
+import { BottomNavigation, Text } from "react-native-paper"
+import { View, StyleSheet } from "react-native"
 
-import StartScreen from "./screens/StartScreen";
-import MyCGScreen from "./screens/MyCGScreen";
-import RankingCGScreen from "./screens/RankingCGScreen";
-import UserRankScreen from "./screens/UserRankScreen";
-import MyPageScreen from "./screens/MyPageScreen";
+import StartScreen from "./screens/StartScreen"
+import MyCGScreen from "./screens/MyCGScreen"
+import RankingCGScreen from "./screens/RankingCGScreen"
+import UserRankScreen from "./screens/UserRankScreen"
+import MyPageScreen from "./screens/MyPageScreen"
 
-import ColorSet from "./assets/style/ColorSet";
+import ColorSet from "./style/ColorSet"
 
-const MyCGRoute = () => <MyCGScreen />;
+const MyCGRoute = () => <MyCGScreen />
 
-const RankingCGRoute = () => <RankingCGScreen />;
+const RankingCGRoute = () => <RankingCGScreen />
 
-const UserRankRoute = () => <UserRankScreen />;
+const UserRankRoute = () => <UserRankScreen />
 
-const MyPageRoute = () => <MyPageScreen />;
+const MyPageRoute = () => <MyPageScreen />
 
 const MyComponent = () => {
-  const [index, setIndex] = React.useState(4);
+  const [index, setIndex] = React.useState(4)
   const [routes] = React.useState([
     {
       key: "myCG",
@@ -33,17 +33,17 @@ const MyComponent = () => {
       title: "마이페이지",
       focusedIcon: "account",
     },
-  ]);
+  ])
 
   const renderScene = BottomNavigation.SceneMap({
     myCG: MyCGRoute,
     rankingCG: RankingCGRoute,
     userRank: UserRankRoute,
     myPage: MyPageRoute,
-  });
+  })
 
   function startScreenChange() {
-    setIndex(0);
+    setIndex(0)
   }
   // index == 4인 경우 StartScreen 출력, 그 외엔 BottomNav랑 해당 스크린 출력
   return (
@@ -70,10 +70,10 @@ const MyComponent = () => {
         />
       )}
     </View>
-  );
-};
+  )
+}
 
-export default MyComponent;
+export default MyComponent
 
 const styles = StyleSheet.create({
   rootScreen: {
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
     borderTopColor: `${ColorSet.navyColor(100)}`,
     borderTopWidth: 1,
   },
-});
+})
