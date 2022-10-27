@@ -4,35 +4,47 @@ import { LinearGradient } from "expo-linear-gradient"
 import styled, { css } from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { Dimensions } from "react-native"
-import { useState } from "react"
 
-import ColorSet from "../style/ColorSet"
-import { OrangeLogo } from "../assets/images/index"
-import LoginScreen from "../components/StartScreen/LoginScreen"
+import ColorSet from "../../style/ColorSet"
+import { OrangeLogo } from "../../assets/images"
+import KakaoButton from "./KakaoButton"
+import GoogleButton from "./GoogleButton"
 
-function StartScreen({ startScreenChange }) {
+function LoginScreen({ startScreenChange, isSignupHandler }) {
   const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
-  const [isSignup, setIsSignup] = useState(0)
-  const isSignupHandler = () => {
-    setIsSignup(1)
-  }
-
   return (
-    <View style={{ flex: 1 }}>
-      {isSignup ? (
-        <Text>회원가입입</Text>
-      ) : (
-        <LoginScreen
-          startScreenChange={startScreenChange}
-          isSignupHandler={isSignupHandler}
-        />
-      )}
-    </View>
+    <LinearGradient
+      style={styles.rootScreen}
+      colors={["#EDF8FF", "#FCBE32"]}
+      end={{ x: 0.5, y: 1 }}
+    >
+      <TopArea windowWidth={windowWidth} windowHeight={windowHeight}>
+        <OrangeLogo />
+      </TopArea>
+      <MiddleArea>
+        <Text
+          style={{
+            color: `${ColorSet.navyColor(100)}`,
+            fontSize: RFPercentage(10),
+          }}
+        >
+          오랭지
+        </Text>
+      </MiddleArea>
+      <BottomArea windowWidth={windowWidth} windowHeight={windowHeight}>
+        <OrangeLogo />
+      </BottomArea>
+      <ButtonContainer windowHeight={windowHeight}>
+        <KakaoButton handler={isSignupHandler} />
+        <GoogleButton handler={startScreenChange} />
+      </ButtonContainer>
+    </LinearGradient>
   )
 }
-export default StartScreen
+export default LoginScreen
 
+// style code
 const styles = StyleSheet.create({
   rootScreen: {
     flex: 1,
@@ -62,7 +74,8 @@ const BottomArea = styled.View`
 `
 
 const ButtonContainer = styled.View`
-  position: relative;
-  top: ${(props) => props.windowHeight * 0.28}%;
   width: 100%;
+  align-items: center;
+  position: absolute;
+  bottom: ${(props) => props.windowHeight * 0.01}%;
 `
