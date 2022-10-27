@@ -4,13 +4,19 @@ import { LinearGradient } from "expo-linear-gradient"
 import styled, { css } from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { Dimensions } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 
 import ColorSet from "../../style/ColorSet"
 import { OrangeLogo } from "../../assets/images"
 import KakaoButton from "./KakaoButton"
 import GoogleButton from "./GoogleButton"
 
-function LoginScreen({ startScreenChange, isSignupHandler }) {
+function LoginScreen({ startScreenChange }) {
+  const navigation = useNavigation()
+  function screenHandler() {
+    navigation.push("Signup")
+  }
+
   const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
   return (
@@ -36,7 +42,7 @@ function LoginScreen({ startScreenChange, isSignupHandler }) {
         <OrangeLogo />
       </BottomArea>
       <ButtonContainer windowHeight={windowHeight}>
-        <KakaoButton handler={isSignupHandler} />
+        <KakaoButton handler={screenHandler} />
         <GoogleButton handler={startScreenChange} />
       </ButtonContainer>
     </LinearGradient>
