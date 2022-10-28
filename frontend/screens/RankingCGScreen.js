@@ -1,6 +1,6 @@
-import { Text } from "react-native-paper";
+import { Text } from "react-native-paper"
 
 function RankingCGScreen() {
-  return <Text>랭킹 챌린지 페이지</Text>;
+  return <Text>랭킹 챌린지 페이지</Text>
 }
-export default RankingCGScreen;
+export default RankingCGScreen
