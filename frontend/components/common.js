@@ -1,5 +1,5 @@
 import { Text } from "react-native"
-import ColorSet from "../assets/style/ColorSet"
+import ColorSet from "../style/ColorSet"
 
 export const MyText = (props) => {
   const selectedColor = props.color ? props.color : "navy"

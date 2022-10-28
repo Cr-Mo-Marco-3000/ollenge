@@ -5,30 +5,33 @@ import styled, { css } from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { Dimensions } from "react-native"
 import { useState } from "react"
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
 
 import ColorSet from "../style/ColorSet"
 import { OrangeLogo } from "../assets/images/index"
 import LoginScreen from "../components/StartScreen/LoginScreen"
+import SignupScreen from "../components/StartScreen/SignupScreen"
+
+const Stack = createNativeStackNavigator()
 
 function StartScreen({ startScreenChange }) {
-  const windowWidth = Dimensions.get("window").width
-  const windowHeight = Dimensions.get("window").height
-  const [isSignup, setIsSignup] = useState(0)
-  const isSignupHandler = () => {
-    setIsSignup(1)
-  }
-
   return (
-    <View style={{ flex: 1 }}>
-      {isSignup ? (
-        <Text>회원가입입</Text>
-      ) : (
-        <LoginScreen
-          startScreenChange={startScreenChange}
-          isSignupHandler={isSignupHandler}
-        />
-      )}
-    </View>
+    <NavigationContainer style={{ flex: 1 }}>
+      <Stack.Navigator
+        screenOptions={{
+          headerTitle: "",
+          headerBackTitle: "",
+          headerTransparent: true,
+          headerTintColor: `${ColorSet.navyColor(100)}`,
+        }}
+      >
+        <Stack.Screen name="Login" options={{ headerShown: false }}>
+          {(props) => <LoginScreen startScreenChange={startScreenChange} />}
+        </Stack.Screen>
+        <Stack.Screen name="Signup" component={SignupScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 export default StartScreen
