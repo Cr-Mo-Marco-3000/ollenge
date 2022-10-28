@@ -2,8 +2,6 @@ import React from "react"
 
 import { View, Image, StyleSheet, Pressable, Alert } from "react-native"
 import * as ImagePicker from "expo-image-picker"
-import { useState } from "react"
-import defaultImage from "../../assets/images/default-image.png"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { LinearGradient } from "expo-linear-gradient"
 import styled from "styled-components"
@@ -11,9 +9,7 @@ import styled from "styled-components"
 import ColorSet from "../../style/ColorSet"
 import { PlusIcon } from "../../assets/images"
 
-function ImagePickerContainer() {
-  const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
-  const [image, setImage] = useState(defaultImageUri)
+function ImagePickerContainer({ imageUri, imageUriHandler, defaultImageUri }) {
   const photoHandler = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -22,25 +18,25 @@ function ImagePickerContainer() {
       quality: 1,
     })
     if (!result.cancelled) {
-      setImage(result.uri)
+      imageUriHandler(result.uri)
     }
   }
 
   const cameraHandler = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
     if (permissionResult.granted == false) {
-      alert("카메라 권한을 승인하지 않았습니다")
+      Alert.alert("카메라 권한을 승인하지 않았습니다")
       return
     }
 
     const result = await ImagePicker.launchCameraAsync()
     if (!result.cancelled) {
-      setImage(result.uri)
+      imageUriHandler(result.uri)
     }
   }
 
   const defaultHandler = () => {
-    setImage(defaultImageUri)
+    imageUriHandler(defaultImageUri)
   }
   function pressHandler() {
     Alert.alert(
@@ -58,11 +54,11 @@ function ImagePickerContainer() {
   return (
     <RootScreen>
       <View style={styles.imageContainer}>
-        <Image style={styles.profileImage} source={{ uri: image }} resizeMode="cover" />
+        <Image style={styles.profileImage} source={{ uri: imageUri }} resizeMode="cover" />
       </View>
       <Pressable style={styles.editButton} onPress={pressHandler}>
         <LinearGradient
-          colors={[`${ColorSet.orangeColor(100)}`, `${ColorSet.yellowColor(100)}`]}
+          colors={[`${ColorSet.orangeColor(1)}`, `${ColorSet.yellowColor(1)}`]}
           style={{
             borderRadius: 100,
             alignItems: "center",

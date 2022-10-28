@@ -70,12 +70,12 @@ const MyComponent = () => {
           compact={false}
           sceneAnimationType={"shifting"}
           barStyle={styles.bottomNavContainer}
-          activeColor={`${ColorSet.orangeColor(100)}`}
-          inactiveColor={`${ColorSet.navyColor(100)}`}
+          activeColor={`${ColorSet.orangeColor(1)}`}
+          inactiveColor={`${ColorSet.navyColor(1)}`}
           theme={{
             colors: {
-              onSurfaceVariant: `${ColorSet.navyColor(100)}`,
-              onSurface: `${ColorSet.orangeColor(100)}`,
+              onSurfaceVariant: `${ColorSet.navyColor(1)}`,
+              onSurface: `${ColorSet.orangeColor(1)}`,
               secondaryContainer: "#FF999900",
             },
           }}
@@ -83,11 +83,7 @@ const MyComponent = () => {
       )}
     </View>
   ) : (
-    <AppLoading
-      startAsync={getFonts}
-      onFinish={() => setIsReady(true)}
-      onError={() => {}}
-    />
+    <AppLoading startAsync={getFonts} onFinish={() => setIsReady(true)} onError={() => {}} />
   )
 }
 
@@ -99,7 +95,7 @@ const styles = StyleSheet.create({
   },
   bottomNavContainer: {
     backgroundColor: "white",
-    borderTopColor: `${ColorSet.navyColor(100)}`,
+    borderTopColor: `${ColorSet.navyColor(1)}`,
     borderTopWidth: 1,
   },
 })
