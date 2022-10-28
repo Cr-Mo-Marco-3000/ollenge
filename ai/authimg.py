@@ -22,8 +22,10 @@ import json
 import io
 from PIL import Image
 
-
 # S3연결
+import boto3
+
+
 def s3_connection(id, key):
     try:
         # s3 클라이언트 생성
@@ -80,7 +82,6 @@ def shoelace_area(x_list,y_list):
 
 class pictures(BaseModel):
     data: str
-    name: str
 
 class featpicture(BaseModel):
     data: str
