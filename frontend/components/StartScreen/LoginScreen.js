@@ -1,7 +1,8 @@
-// import { Text } from "react-native-paper";
-import { StyleSheet, Button, View, Text } from "react-native"
+import React from "react"
+
+import { StyleSheet, Text } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
-import styled, { css } from "styled-components/native"
+import styled from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { Dimensions } from "react-native"
 import { useNavigation } from "@react-navigation/native"
@@ -22,10 +23,7 @@ function LoginScreen({ startScreenChange }) {
   return (
     <LinearGradient
       style={styles.rootScreen}
-      colors={[
-        `${ColorSet.paleBlueColor(100)}`,
-        `${ColorSet.yellowColor(100)}`,
-      ]}
+      colors={[`${ColorSet.paleBlueColor(100)}`, `${ColorSet.yellowColor(100)}`]}
       end={{ x: 0.5, y: 1 }}
     >
       <TopArea windowWidth={windowWidth} windowHeight={windowHeight}>

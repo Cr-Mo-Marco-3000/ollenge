@@ -1,6 +1,6 @@
-import { View, Pressable, Text, StyleSheet } from "react-native"
-import styled, { css } from "styled-components/native"
-import { RFPercentage } from "react-native-responsive-fontsize"
+//
+import React, { View } from "react-native"
+import styled from "styled-components/native"
 import { KakaoLogo } from "../../assets/images"
 import AppText from "../common/AppText"
 

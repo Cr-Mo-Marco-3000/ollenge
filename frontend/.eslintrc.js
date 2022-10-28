@@ -12,7 +12,7 @@ module.exports = {
   plugins: ["react"],
   rules: {
     indent: ["error", 2],
-    "linebreak-style": ["error", "windows"],
+    "linebreak-style": ["error", require("os").EOL === "\r\n" ? "windows" : "unix"],
     quotes: ["error", "double"],
     semi: ["error", "never"],
   },
