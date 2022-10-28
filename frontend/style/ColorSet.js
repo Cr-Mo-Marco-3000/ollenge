@@ -4,4 +4,5 @@ export default {
   yellowColor: (opacity) => `rgba(252, 191, 50, ${opacity})`,
   paleBlueColor: (opacity) => `rgba(237, 248, 255, ${opacity})`,
   greenColor: (opacity) => `rgba(85, 238, 154, ${opacity})`,
-};
+  blackColor: (opacity) => `rgba(0, 0, 0, ${opacity})`,
+}

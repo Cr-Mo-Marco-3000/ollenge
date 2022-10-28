@@ -22,21 +22,18 @@ function LoginScreen({ startScreenChange }) {
   return (
     <LinearGradient
       style={styles.rootScreen}
-      colors={["#EDF8FF", "#FCBE32"]}
+      colors={[
+        `${ColorSet.paleBlueColor(100)}`,
+        `${ColorSet.yellowColor(100)}`,
+      ]}
       end={{ x: 0.5, y: 1 }}
     >
       <TopArea windowWidth={windowWidth} windowHeight={windowHeight}>
         <OrangeLogo />
       </TopArea>
       <MiddleArea>
-        <Text
-          style={{
-            color: `${ColorSet.navyColor(100)}`,
-            fontSize: RFPercentage(10),
-          }}
-        >
-          오랭지
-        </Text>
+        <Text style={styles.logoText}>오랭지</Text>
+        <Text style={styles.subText}>오늘의 챌린지</Text>
       </MiddleArea>
       <BottomArea windowWidth={windowWidth} windowHeight={windowHeight}>
         <OrangeLogo />
@@ -56,11 +53,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  logoText: {
+    textShadowColor: `${ColorSet.paleBlueColor(1)}`,
+    textShadowOffset: { width: 0, height: 5 },
+    textShadowRadius: 1,
+    color: `${ColorSet.navyColor(100)}`,
+    fontSize: RFPercentage(10),
+    fontFamily: "Recipekorea",
+  },
+  subText: {
+    color: `${ColorSet.navyColor(100)}`,
+    fontSize: RFPercentage(4),
+    fontFamily: "HyeminBold",
+  },
 })
 
 const TopArea = styled.View`
   width: ${(props) => props.windowWidth * 0.32}%;
-  top: ${(props) => (props.windowWidth / props.windowHeight) * -850};
+  top: ${(props) => (props.windowWidth / props.windowHeight) * -85}%;
   left: ${(props) => props.windowWidth * 0.32 * -0.3}%;
   transform: rotate(40deg);
   position: absolute;

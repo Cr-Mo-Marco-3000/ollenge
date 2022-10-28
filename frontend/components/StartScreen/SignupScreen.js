@@ -1,5 +1,4 @@
 import { View, StyleSheet } from "react-native"
-
 function SignupScreen({ isSignupHandler }) {
   return <View style={styles.rootScreen}></View>
 }

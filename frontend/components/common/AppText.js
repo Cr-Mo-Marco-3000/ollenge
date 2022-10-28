@@ -1,5 +1,6 @@
 import { Text } from "react-native"
 import ColorSet from "../../style/ColorSet"
+import { RFPercentage } from "react-native-responsive-fontsize"
 
 /*
 Text 컴포넌트
@@ -9,7 +10,7 @@ size prop으로, 숫자를 넣습니다.
 */
 const AppText = (props) => {
   const selectedColor = props.color ? props.color : "navy"
-  const selectedSize = props.size ? parseInt(props.size) : 30
+  const selectedSize = props.size ? parseInt(props.size) : 3
 
   const theme = {
     orange: ColorSet.orangeColor(1),
@@ -17,13 +18,15 @@ const AppText = (props) => {
     yellow: ColorSet.yellowColor(1),
     paleBlue: ColorSet.paleBlueColor(1),
     green: ColorSet.greenColor(1),
+    black: ColorSet.blackColor(1),
   }
 
   return (
     <Text
       style={{
         color: theme[selectedColor],
-        fontSize: selectedSize,
+        fontSize: RFPercentage(selectedSize),
+        fontFamily: "HyeminRegular",
       }}
     >
       {props.children}

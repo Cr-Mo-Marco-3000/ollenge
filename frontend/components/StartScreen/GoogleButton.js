@@ -2,6 +2,7 @@ import { View, Pressable, Text, StyleSheet } from "react-native"
 import styled, { css } from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { GoogleLogo } from "../../assets/images"
+import AppText from "../common/AppText"
 
 function GoogleButton(props) {
   return (
@@ -11,7 +12,7 @@ function GoogleButton(props) {
           <GoogleLogo />
         </View>
         <View style={{ flex: 5, alignItems: "center" }}>
-          <Text style={{ fontSize: RFPercentage(2.6) }}>구글 로그인</Text>
+          <AppText color={"black"}>구글 로그인</AppText>
         </View>
       </ButtonInnerContainer>
     </ButtonContainer>

@@ -1,6 +1,9 @@
 import * as React from "react"
 import { BottomNavigation, Text } from "react-native-paper"
 import { View, StyleSheet } from "react-native"
+import * as Font from "expo-font"
+import AppLoading from "expo-app-loading"
+import { useState } from "react"
 
 import StartScreen from "./screens/StartScreen"
 import MyCGScreen from "./screens/MyCGScreen"
@@ -19,6 +22,15 @@ const UserRankRoute = () => <UserRankScreen />
 const MyPageRoute = () => <MyPageScreen />
 
 const MyComponent = () => {
+  const [isReady, setIsReady] = useState(false)
+  const getFonts = async () => {
+    await Font.loadAsync({
+      Recipekorea: require("./assets/fonts/Recipekorea.ttf"),
+      HyeminRegular: require("./assets/fonts/HyeminRegular.ttf"),
+      HyeminBold: require("./assets/fonts/HyeminBold.ttf"),
+    })
+  }
+
   const [index, setIndex] = React.useState(4)
   const [routes] = React.useState([
     {
@@ -46,7 +58,7 @@ const MyComponent = () => {
     setIndex(0)
   }
   // index == 4인 경우 StartScreen 출력, 그 외엔 BottomNav랑 해당 스크린 출력
-  return (
+  return isReady ? (
     <View style={styles.rootScreen}>
       {index == 4 ? (
         <StartScreen startScreenChange={startScreenChange} />
@@ -70,6 +82,12 @@ const MyComponent = () => {
         />
       )}
     </View>
+  ) : (
+    <AppLoading
+      startAsync={getFonts}
+      onFinish={() => setIsReady(true)}
+      onError={() => {}}
+    />
   )
 }
 

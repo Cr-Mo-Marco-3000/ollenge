@@ -2,6 +2,7 @@ import { View, Pressable, Text, StyleSheet } from "react-native"
 import styled, { css } from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { KakaoLogo } from "../../assets/images"
+import AppText from "../common/AppText"
 
 function KakaoButton(props) {
   return (
@@ -11,7 +12,7 @@ function KakaoButton(props) {
           <KakaoLogo />
         </View>
         <View style={{ flex: 5, alignItems: "center" }}>
-          <Text style={{ fontSize: RFPercentage(2.6) }}>카카오 로그인</Text>
+          <AppText color={"black"}>카카오 로그인</AppText>
         </View>
       </ButtonInnerContainer>
     </ButtonContainer>
