@@ -18,7 +18,7 @@ public class AuthStep {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long authStepId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id", nullable = false)
     Challenge challenge;
 

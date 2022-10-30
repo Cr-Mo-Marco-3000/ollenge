@@ -18,7 +18,7 @@ public class AuthStandardImg {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long authStandardImgId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participation_id", nullable = false)
     Participation participation;
 

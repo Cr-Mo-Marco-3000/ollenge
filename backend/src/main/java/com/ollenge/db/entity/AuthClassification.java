@@ -18,11 +18,11 @@ public class AuthClassification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long authClassificationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id", nullable = false)
     Challenge challenge;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classification_type_id", nullable = false)
     ClassificationType classificationType;
 

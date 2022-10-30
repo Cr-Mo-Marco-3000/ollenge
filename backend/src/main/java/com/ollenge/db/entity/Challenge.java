@@ -12,7 +12,8 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @Entity
-@Builder
+//@Builder(builderMethodName = "ChallengeBuilder")
+@Builder(builderMethodName = "ChallengeBuilder")
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @DynamicInsert
@@ -31,6 +32,12 @@ public class Challenge {
 
     @Column(length = 50, nullable = false)
     String challengeName;
+
+    @Column(length = 45, nullable = false)
+    String challengeTopic;
+
+    @Column(length = 10, nullable = false)
+    String authType;
 
     @Column(nullable = false)
     LocalDate startDate;
@@ -56,6 +63,9 @@ public class Challenge {
     @Column(nullable = false, columnDefinition = "int default 0")
     int challengeScore;
 
-    @Column(length = 300, nullable = false)
+    @Column(length = 300)
     String challengeDescription;
+
+    @OneToOne(mappedBy = "challenge")
+    AuthClassification authClassification;
 }

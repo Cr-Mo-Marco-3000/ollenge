@@ -20,13 +20,13 @@ public class ChallengePreset {
     long challengePresetId;
 
     @Column(nullable = false)
-    String challengePresetImg;
-
-    @Column(nullable = false)
-    String presetName;
+    String presetImg;
 
     @Column(length = 50, nullable = false)
-    String topic;
+    String presetTopic;
+
+    @Column(length = 10, nullable = false)
+    String authType;
 
     @Column(nullable = false)
     LocalTime startTime;
@@ -41,6 +41,6 @@ public class ChallengePreset {
     int stepCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "classification_type_id", nullable = false)
+    @JoinColumn(name = "classification_type_id")
     ClassificationType classificationType;
 }
