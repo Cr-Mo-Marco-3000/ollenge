@@ -1,6 +1,7 @@
 import React from "react-native"
 import styled from "styled-components"
 import AppText from "../components/common/AppText"
+import AppBoldText from "../components/common/AppBoldText"
 import { NavigationContainer } from "@react-navigation/native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import BeforeStart from "../components/MyCGScreen/BeforeStart"
@@ -17,9 +18,7 @@ function MyCGScreen() {
       <Header>
         <HeaderTextView>
           <HeaderTextColumn>
-            <AppText size="28" weight="900">
-              내 챌린지
-            </AppText>
+            <AppBoldText>내 챌린지</AppBoldText>
           </HeaderTextColumn>
           <HeaderTextColumn></HeaderTextColumn>
         </HeaderTextView>
