@@ -34,6 +34,6 @@ public class Feed {
     @Column(length = 255, nullable = false)
     String feedImg;
 
-    @Column(length = 300, nullable = false)
+    @Column(length = 300)
     String feedContent;
 }

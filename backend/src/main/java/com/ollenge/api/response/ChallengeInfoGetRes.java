@@ -9,14 +9,14 @@ import lombok.Setter;
 @Setter
 public class ChallengeInfoGetRes extends BaseResponseBody {
 
-    ChallengeInfoData challengeInfoData;
+    ChallengeInfoData challengeInfoList;
 
-    public static ChallengeInfoGetRes of(int status, String msg, ChallengeInfoData challengeInfoData) {
-        ChallengeInfoGetRes challengePostRes = new ChallengeInfoGetRes();
-        challengePostRes.setStatusCode(status);
-        challengePostRes.setMessage(msg);
-        challengePostRes.challengeInfoData = challengeInfoData;
+    public static ChallengeInfoGetRes of(int status, String msg, ChallengeInfoData challengeInfoList) {
+        ChallengeInfoGetRes challengeInfoGetRes = new ChallengeInfoGetRes();
+        challengeInfoGetRes.setStatusCode(status);
+        challengeInfoGetRes.setMessage(msg);
+        challengeInfoGetRes.challengeInfoList = challengeInfoList;
 
-        return challengePostRes;
+        return challengeInfoGetRes;
     }
 }

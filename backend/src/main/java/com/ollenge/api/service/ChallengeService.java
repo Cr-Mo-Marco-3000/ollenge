@@ -5,6 +5,7 @@ import com.ollenge.api.request.ChallengeParticipationPostReq;
 import com.ollenge.api.request.ChallengePostReq;
 import com.ollenge.api.response.data.ChallengeCreatedData;
 import com.ollenge.api.response.data.ChallengeInfoData;
+import com.ollenge.api.response.data.ChallengeStateData;
 import com.ollenge.common.util.LocalDateTimeUtils;
 import com.ollenge.db.entity.*;
 import com.ollenge.db.repository.*;
@@ -142,6 +143,12 @@ public class ChallengeService {
             classificationType = authClassification.getClassificationType();
         }
         return ChallengeInfoData.of(challenge, classificationType);
+    }
+
+    public List<ChallengeStateData> getChallengeState(long challengeId) throws InvalidChallengeIdException {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge ID " + challengeId); });
+        return challengeRepositorySupport.getChallengeState(challenge);
     }
 
     private boolean isValidAuthType(String authType) {

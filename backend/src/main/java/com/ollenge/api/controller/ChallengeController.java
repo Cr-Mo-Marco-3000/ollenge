@@ -5,8 +5,10 @@ import com.ollenge.api.request.ChallengeParticipationPostReq;
 import com.ollenge.api.request.ChallengePostReq;
 import com.ollenge.api.response.ChallengeInfoGetRes;
 import com.ollenge.api.response.ChallengePostRes;
+import com.ollenge.api.response.ChallengeStateGetRes;
 import com.ollenge.api.response.data.ChallengeCreatedData;
 import com.ollenge.api.response.data.ChallengeInfoData;
+import com.ollenge.api.response.data.ChallengeStateData;
 import com.ollenge.api.service.ChallengeService;
 import com.ollenge.common.model.response.BaseResponseBody;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -135,14 +138,34 @@ public class ChallengeController {
     @GetMapping("/{challengeId}")
     @ApiOperation(value = "챌린지 정보 조회", notes = "챌린지의 상세 정보를 조회합니다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "챌린지 현황 조회 성공"),
+            @ApiResponse(code = 200, message = "챌린지 정보 조회 성공"),
             @ApiResponse(code = 400, message = "해당하는 챌린지가 없습니다."),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     public ResponseEntity<? extends BaseResponseBody> getChallengeInfo(@PathVariable long challengeId) {
         try {
             ChallengeInfoData challengeInfoData = challengeService.getChallengeInfo(challengeId);
-            return ResponseEntity.status(200).body(ChallengeInfoGetRes.of(200, "챌린지 현황 조회 성공", challengeInfoData));
+            return ResponseEntity.status(200).body(ChallengeInfoGetRes.of(200, "챌린지 정보 조회 성공", challengeInfoData));
+        } catch (InvalidChallengeIdException invalidChallengeIdException) {
+            invalidChallengeIdException.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "해당하는 챌린지가 없습니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
+
+    @GetMapping("/state/{challengeId}")
+    @ApiOperation(value = "챌린지 현황 조회", notes = "챌린지의 현황을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "챌린지 현황 조회 성공"),
+            @ApiResponse(code = 400, message = "해당하는 챌린지가 없습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> getChallengeState(@PathVariable long challengeId) {
+        try {
+            List<ChallengeStateData> challengeStateList = challengeService.getChallengeState(challengeId);
+            return ResponseEntity.status(200).body(ChallengeStateGetRes.of(200, "챌린지 현황 조회 성공", challengeStateList));
         } catch (InvalidChallengeIdException invalidChallengeIdException) {
             invalidChallengeIdException.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "해당하는 챌린지가 없습니다."));
