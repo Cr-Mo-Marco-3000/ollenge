@@ -28,7 +28,7 @@ export default TextInputContainer
 const styles = StyleSheet.create({
   textInputBox: {
     backgroundColor: "rgb(255, 255, 255)",
-    width: "80%",
+    width: "100%",
     height: RFPercentage(8),
     borderRadius: 10,
     shadowColor: "#000",

@@ -1,9 +1,9 @@
 import * as React from "react"
-import { BottomNavigation, Text } from "react-native-paper"
-import { View, StyleSheet, StatusBar } from "react-native"
+import { BottomNavigation, configureFonts } from "react-native-paper"
+import { View, StyleSheet, StatusBar, NativeModules } from "react-native"
 import * as Font from "expo-font"
 import AppLoading from "expo-app-loading"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import StartScreen from "./screens/StartScreen"
 import MyCGScreen from "./screens/MyCGScreen"
@@ -21,7 +21,19 @@ const UserRankRoute = () => <UserRankScreen />
 
 const MyPageRoute = () => <MyPageScreen />
 
-const MyComponent = () => {
+const { StatusBarManager } = NativeModules
+
+const App = () => {
+  useEffect(() => {
+    Platform.OS == "ios"
+      ? StatusBarManager.getHeight((statusBarFrameData) => {
+          setStatusBarHeight(statusBarFrameData.height)
+        })
+      : setStatusBarHeight(StatusBar.currentHeight)
+  }, [])
+
+  const [statusBarHeight, setStatusBarHeight] = useState(0)
+
   const [isReady, setIsReady] = useState(false)
   const getFonts = async () => {
     await Font.loadAsync({
@@ -60,7 +72,7 @@ const MyComponent = () => {
   // index == 4인 경우 StartScreen 출력, 그 외엔 BottomNav랑 해당 스크린 출력
   return isReady ? (
     <View style={styles.rootScreen}>
-      <View style={styles.statusBarMargin}></View>
+      <View style={index == 4 ? { height: 0 } : { height: statusBarHeight }}></View>
       {index == 4 ? (
         <StartScreen startScreenChange={startScreenChange} />
       ) : (
@@ -74,6 +86,11 @@ const MyComponent = () => {
           activeColor={`${ColorSet.orangeColor(1)}`}
           inactiveColor={`${ColorSet.navyColor(1)}`}
           theme={{
+            fonts: {
+              labelMedium: {
+                fontFamily: "HyeminBold",
+              },
+            },
             colors: {
               onSurfaceVariant: `${ColorSet.navyColor(1)}`,
               onSurface: `${ColorSet.orangeColor(1)}`,
@@ -88,9 +105,7 @@ const MyComponent = () => {
   )
 }
 
-export default MyComponent
-
-const statusBarHeight = StatusBar.currentHeight
+export default App
 
 const styles = StyleSheet.create({
   rootScreen: {
@@ -100,8 +115,5 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopColor: `${ColorSet.navyColor(1)}`,
     borderTopWidth: 1,
-  },
-  statusBarMargin: {
-    height: statusBarHeight,
   },
 })
