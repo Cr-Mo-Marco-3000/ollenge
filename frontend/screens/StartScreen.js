@@ -1,4 +1,6 @@
 // import { Text } from "react-native-paper";
+import React from "react"
+
 import { StyleSheet, Button, View, Text } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import styled, { css } from "styled-components/native"
@@ -12,6 +14,7 @@ import ColorSet from "../style/ColorSet"
 import { OrangeLogo } from "../assets/images/index"
 import LoginScreen from "../components/StartScreen/LoginScreen"
 import SignupScreen from "../components/StartScreen/SignupScreen"
+import KakaloLoginScreen from "../components/StartScreen/KakaoLoginScreen"
 
 const Stack = createNativeStackNavigator()
 
@@ -30,6 +33,7 @@ function StartScreen({ startScreenChange }) {
           {(props) => <LoginScreen startScreenChange={startScreenChange} />}
         </Stack.Screen>
         <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="Kakao" component={KakaloLoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )
