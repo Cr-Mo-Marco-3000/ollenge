@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -87,9 +88,9 @@ public class ChallengeService {
         return ChallengeCreatedData.of(challengeId, inviteCode);
     }
 
-    public void participateChallenge(ChallengeParticipationPostReq challengeParticipationPostReq) throws NoSuchElementException, DuplicatedPeriodTopicRankingChallengeException, InvalidChallengeIdException, AlreadyParticipatedException, InvalidDateTimeException, InvalidInviteCodeException {
+    public void participateChallenge(ChallengeParticipationPostReq challengeParticipationPostReq) throws NoSuchElementException, DuplicatedPeriodTopicRankingChallengeException, InvalidChallengeIdException, InvalidParticipationException, InvalidDateTimeException, InvalidInviteCodeException {
         Challenge challenge = challengeRepository.findById(challengeParticipationPostReq.getChallengeId())
-                .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge ID " + challengeParticipationPostReq.getChallengeId()); });;
+                .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge ID " + challengeParticipationPostReq.getChallengeId()); });
         User user = User.builder().userId(challengeParticipationPostReq.getUserId()).build();
         
         if (!challenge.getInviteCode().equals(challengeParticipationPostReq.getInviteCode())) {
@@ -99,7 +100,7 @@ public class ChallengeService {
             throw new DuplicatedPeriodTopicRankingChallengeException("Duplicated ranking challenge that has same period and topic exception");
         }
         else if (participationRepository.findByChallengeAndUser(challenge, user).size() > 0) {
-            throw new AlreadyParticipatedException("Already participated challenge.");
+            throw new InvalidParticipationException("Already participated challenge.");
         }
         else if (!LocalDateTimeUtils.isValidStartDate(challenge.getStartDate())) {
             throw new InvalidDateTimeException("Already started challenge.");
@@ -111,12 +112,31 @@ public class ChallengeService {
         participationRepository.save(participation);
     }
 
+    @Transactional
+    public void giveUpChallenge(long challengeId, long userId) throws NoSuchElementException, InvalidChallengeIdException, InvalidParticipationException, InvalidDateTimeException {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge ID " + challengeId); });
+        User user = User.builder().userId(userId).build();
+
+        if (participationRepository.findByChallengeAndUser(challenge, user).size() == 0) {
+            throw new InvalidParticipationException("Not in challenge.");
+        }
+        else if (!LocalDateTimeUtils.isValidStartDate(challenge.getStartDate())) {
+            throw new InvalidDateTimeException("Already started challenge.");
+        }
+
+        participationRepository.deleteByChallengeAndUser(challenge, user);
+        if (participationRepository.findByChallenge(challenge).size() == 0) {
+            challengeRepository.delete(challenge);
+        }
+    }
+
     private boolean isValidAuthType(String authType) {
         return authType.equals("none") || authType.equals("feature") || authType.equals("classifi") || authType.equals("step");
     }
 
     private boolean isDuplicatedTopicPeriod(LocalDate startDate, LocalDate endDate, String challengeTopic) {
         List<Challenge> challengeList = challengeRepositorySupport.getRankingChallengeTopicPeriod(startDate, endDate, challengeTopic);
-        return challengeList.size() > 0;
+        return !challengeList.isEmpty();
     }
 }

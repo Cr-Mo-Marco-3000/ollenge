@@ -90,9 +90,37 @@ public class ChallengeController {
         } catch (DuplicatedPeriodTopicRankingChallengeException duplicatedPeriodTopicRankingChallengeException) {
             duplicatedPeriodTopicRankingChallengeException.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "같은 기간과 주제를 가진 랭킹 챌린지에 참여하고 있습니다."));
-        } catch (AlreadyParticipatedException alreadyParticipatedException) {
+        } catch (InvalidParticipationException alreadyParticipatedException) {
             alreadyParticipatedException.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 참여하고 있는 챌린지입니다."));
+        } catch (InvalidDateTimeException invalidDateTimeException) {
+            invalidDateTimeException.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 시작한 챌린지 입니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
+
+    @DeleteMapping("/{challengeId}/{userId}")
+    @ApiOperation(value = "챌린지 포기", notes = "챌린지를 포기합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "챌린지 포기 성공"),
+            @ApiResponse(code = 400, message = "해당하는 챌린지가 없습니다."),
+            @ApiResponse(code = 400, message = "참여 중인 챌린지가 아닙니다."),
+            @ApiResponse(code = 400, message = "이미 시작한 챌린지 입니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> giveUpChallenge(@PathVariable long challengeId, @PathVariable long userId) {
+        try {
+            challengeService.giveUpChallenge(challengeId, userId);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "챌린지 포기 성공"));
+        } catch (InvalidChallengeIdException invalidChallengeIdException) {
+            invalidChallengeIdException.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "해당하는 챌린지가 없습니다."));
+        } catch (InvalidParticipationException invalidParticipationException) {
+            invalidParticipationException.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "참여 중인 챌린지가 아닙니다."));
         } catch (InvalidDateTimeException invalidDateTimeException) {
             invalidDateTimeException.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "이미 시작한 챌린지 입니다."));
