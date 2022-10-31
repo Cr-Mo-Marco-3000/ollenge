@@ -84,5 +84,5 @@ export default Challenging
 
 const IconView = styled.View`
   width: 15%;
-  height: 50;
+  height: 50px;
 `

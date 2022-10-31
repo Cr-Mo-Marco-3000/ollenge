@@ -15,7 +15,7 @@ import GoogleButton from "./GoogleButton"
 function LoginScreen({ startScreenChange }) {
   const navigation = useNavigation()
   function screenHandler() {
-    navigation.push("Kakao")
+    navigation.push("Signup")
   }
 
   const windowWidth = Dimensions.get("window").width
