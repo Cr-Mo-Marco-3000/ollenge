@@ -1,17 +1,17 @@
-import * as React from "react";
-import { View } from "react-native";
-import { BottomNavigation, Text } from "react-native-paper";
+import * as React from "react"
+import { View } from "react-native"
+import { BottomNavigation, Text } from "react-native-paper"
 
-const MusicRoute = () => <Text>Music</Text>;
+const MusicRoute = () => <Text>Music</Text>
 
-const AlbumsRoute = () => <Text>Albums</Text>;
+const AlbumsRoute = () => <Text>Albums</Text>
 
-const RecentsRoute = () => <Text>Recents</Text>;
+const RecentsRoute = () => <Text>Recents</Text>
 
-const NotificationsRoute = () => <Text>Notifications</Text>;
+const NotificationsRoute = () => <Text>Notifications</Text>
 
 const BottomNav = () => {
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = React.useState(0)
   const [routes] = React.useState([
     {
       key: "music",
@@ -27,14 +27,14 @@ const BottomNav = () => {
       focusedIcon: "bell",
       unfocusedIcon: "bell-outline",
     },
-  ]);
+  ])
 
   const renderScene = BottomNavigation.SceneMap({
     music: MusicRoute,
     albums: AlbumsRoute,
     recents: RecentsRoute,
     notifications: NotificationsRoute,
-  });
+  })
 
   return (
     <View>
@@ -44,7 +44,7 @@ const BottomNav = () => {
         renderScene={renderScene}
       />
     </View>
-  );
-};
+  )
+}
 
-export default BottomNav;
+export default BottomNav
