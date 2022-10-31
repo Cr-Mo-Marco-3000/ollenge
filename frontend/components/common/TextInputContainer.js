@@ -1,4 +1,5 @@
 import React from "react"
+
 import { TextInput, StyleSheet } from "react-native"
 import styled from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
   textInputBox: {
     backgroundColor: "rgb(255, 255, 255)",
     width: "80%",
-    height: "25%",
+    height: RFPercentage(8),
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {

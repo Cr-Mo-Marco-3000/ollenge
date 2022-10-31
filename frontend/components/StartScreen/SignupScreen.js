@@ -9,6 +9,8 @@ import defaultImage from "../../assets/images/default-image.png"
 import AppBoldText from "../common/AppBoldText"
 import ImagePickerContainer from "../common/ImagePicker"
 import TextInputContainer from "../common/TextInputContainer"
+import AppButton from "../common/AppButton"
+import { RFPercentage } from "react-native-responsive-fontsize"
 
 function SignupScreen() {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
@@ -20,6 +22,10 @@ function SignupScreen() {
   }
   function nicknameInputHandler(text) {
     setNicknameInput(text)
+  }
+
+  function buttonHandler() {
+    console.log("버튼 클릭")
   }
 
   return (
@@ -35,6 +41,9 @@ function SignupScreen() {
       <View style={styles.textInputContainer}>
         <AppBoldText size={3}>닉네임</AppBoldText>
         <TextInputContainer inputHandler={nicknameInputHandler} inputText={nicknameInput} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <AppButton title={"완료"} handler={buttonHandler} />
       </View>
     </LinearGradient>
   )
@@ -54,5 +63,10 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     bottom: "5%",
+  },
+  buttonContainer: {
+    height: RFPercentage(8),
+    width: "100%",
+    bottom: "10%",
   },
 })
