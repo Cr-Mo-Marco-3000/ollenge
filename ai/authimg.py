@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Form, File, UploadFile
+from fastapi import FastAPI, Form, File, UploadFile, HTTPException, Request
+from fastapi.responses import JSONResponse
+import uvicorn
 from pydantic import BaseModel, Json
 from clarifai_grpc.grpc.api import service_pb2, resources_pb2
 from clarifai_grpc.grpc.api.status import status_code_pb2
@@ -22,43 +24,21 @@ import json
 import io
 from PIL import Image
 
+# 현재 시간
+from datetime import datetime
+
 # S3연결
-import boto3
+from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name
+# DB 연결
+from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth
+# model 연결
+from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput
 
 
-def s3_connection(id, key):
-    try:
-        # s3 클라이언트 생성
-        s3 = boto3.client(
-            service_name="s3",
-            region_name="ap-northeast-2",
-            aws_access_key_id=id,
-            aws_secret_access_key=key,
-        )
-    except Exception as e:
-        print(e)
-    else:
-        print("s3 bucket connected!") 
-        return s3
-
-
-def s3_upload(fr, bk, to):  # local 파일인  fr을  bk버킷에 to 라는 이름으로 저장
-    try:
-        s3.upload_file(fr, bk, to)
-        return "https://homybk.s3.ap-northeast-2.amazonaws.com/"+to
-    except Exception as e:
-        print(e)
-        return 0
-
-
-def s3_download(bk, fr, to):
-    try:
-        s3.download_file(bk, fr, to)
-        return to
-    except Exception as e:
-        print(e)
-        return 0
-
+def remove_img(img_dir):
+    if os.path.isfile(img_dir):
+        os.remove(img_dir)
+    return True
 
 
 # 4개의 point를 가지고 넓이 구하는 함수
@@ -80,16 +60,28 @@ def shoelace_area(x_list,y_list):
     l=abs(a1-a2)/2
     return l
 
-class pictures(BaseModel):
-    data: str
 
-class featpicture(BaseModel):
-    data: str
-    url: str
+def date_to_str(typedate):
+    return str(typedate.year)+str(typedate.month)+str(typedate.day)
 
-class tagpicture(BaseModel):
-    data: str
-    tag: str
+
+def is_auth_intime(participation_id):
+    start_date, end_date, start_time, end_time = execute_select_challenge_auth_time(participation_id)
+    now = datetime.now()
+    current_time_date = now.strftime("%Y%m%d")
+    start_date = date_to_str(start_date)
+    end_date = date_to_str(end_date)
+    current_time_time = now.hour *3600 + now.minute*60 + now.second
+    start_time = start_time.seconds
+    end_time = end_time.seconds
+
+    if current_time_date <start_date or current_time_date>end_date:
+        return [1, "인증 날이 아닙니다."]
+    elif start_time > current_time_time or end_time<current_time_time:
+        return [2, "인증 시간이 아닙니다."]
+    else:
+        return [3, now.strftime("%Y%m%d%H%M%S")]
+
 
 
 stub = service_pb2_grpc.V2Stub(ClarifaiChannel.get_grpc_channel())
@@ -101,167 +93,319 @@ YOUR_DEEP_API_KEY=os.environ.get('DEEPAIKEY')
 YOUR_APPLICATION_ID = "my-first-application"
 metadata = (("authorization", f"Key {YOUR_CLARIFAI_API_KEY}"),)
 
-# S3 key관리
-S3_KEY_ID = os.environ.get('S3KEYID')
-S3_SECRET_KEY = os.environ.get('S3SECRETKEY')        
-s3 = s3_connection(S3_KEY_ID, S3_SECRET_KEY)
-
 app = FastAPI()
 
 # 메인 화면
-@app.get("/auth")
+@app.get("/")
 async def root():
-    return {"message": "I'm python"}
-
-# 로컬에 있는 사진을 바탕으로 img recognition 실행
-# @app.get("/auth/taglocal")
-# async def authimglc():
-#     result = {}
-#     SAMPLE_URL = "./imgs/mouse2.jpg"
-#     with open(SAMPLE_URL, "rb") as f:
-#         file_bytes = f.read()
-#     request = service_pb2.PostModelOutputsRequest(
-#         # This is the model ID of a publicly available General model. You may use any other public or custom model ID.
-#         model_id="general-image-recognition",
-#         user_app_id=resources_pb2.UserAppIDSet(app_id=YOUR_APPLICATION_ID),
-#         inputs=[
-#             resources_pb2.Input(
-#                 data=resources_pb2.Data(image=resources_pb2.Image(base64=file_bytes))
-#             )
-#         ],
-#     )
-#     response = stub.PostModelOutputs(request, metadata=metadata)
-
-#     if response.status.code != status_code_pb2.SUCCESS:
-#         # print(response)
-#         raise Exception(f"Request failed, status code: {response.status}")
-
-#     for concept in response.outputs[0].data.concepts:
-#         # print("%12s: %.2f" % (concept.name, concept.value))
-#         result.update({concept.name:concept.value})
-
-#     if "cute" in result:
-#         return True
-#     return {"response": result}
+    return JSONResponse(
+        status_code=418,
+        content={
+            "message": f"Oops! did something. There goes a rainbow...",
+            "errcode": 0,
+            },
+    )
 
 
-# base64를 통해 이미지 태그
-@app.post("/auth/tag")
-async def authimgtag(req: tagpicture):
+# 아무런 인증 방법이 없는 경우
+@app.post("/auth/common")
+async def authimgcommon(data: CommonInput):
     result = {}
-    req = str(req)
-    data = req.split("'")[1]
-    tag = req.split("'")[3]
-    if not(tag):
-        return {"status": 400, "message": "No Tag", "result": False}
-    # print(req.split("'")[2:])
-    imgdata = base64.b64decode(data)
-    filename = 'tag_img.jpg'
+    try:
+        data = str(data)
+        participation_id = data.split("'")[1]
+        feed_img = data.split("'")[3]
+        feed_content = data.split("'")[5]
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1,
+                },
+        )
+    # 인증 시간 관련
+    time_flag = is_auth_intime(int(participation_id))
+    if time_flag[0] == 3:
+        pass
+    else:
+        # raise HTTPException(detail='시간이 아니요', status_code=400)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"인증 시간이 아닙니다.",
+                "errcode": 2,
+                },
+        )
+    
+    imgdata = base64.b64decode(feed_img)
+    filename = "./imgs/"+make_common_url_name(participation_id)
+    with open(filename, 'wb') as f:
+        f.write(imgdata)
+
+    try:
+        to = make_common_url_name(participation_id)
+        file_url = s3_upload(filename, 'homybk', to)
+        if file_url:
+            execute_insert_feed(participation_id, file_url, feed_content)
+    except:
+        remove_img(filename)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": f"S3 오류",
+                "errcode": 3
+                },
+        )
+
+    remove_img(filename)
+    return JSONResponse(
+        status_code=200,
+        content={
+            "message": f"완료 되었습니다.",
+            },
+    )
+
+
+# base64를 통해 이미지 분류
+@app.post("/auth/classification")
+async def authimgclassification(data: classificationpicture):
+    result = {}
+    try:
+        data = str(data)
+        participation_id = data.split("'")[1]
+        feed_img = data.split("'")[3]
+        feed_content = data.split("'")[5]
+        classification_keyword = data.split("'")[7]
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1,
+                },
+        )
+    # 인증 시간 관련
+    time_flag = is_auth_intime(int(participation_id))
+    if time_flag[0] == 3:
+        feed_time = time_flag[1]
+    else:
+        # raise HTTPException(detail='시간이 아니요', status_code=400)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"인증 시간이 아닙니다.",
+                "errcode": 4,
+                },
+        )
+    
+    imgdata = base64.b64decode(feed_img)
+    filename = "./imgs/"+make_classification_url_name(participation_id)
     with open(filename, 'wb') as f:
         f.write(imgdata)
 
     with open(filename, "rb") as f:
         file_bytes = f.read()
-    request = service_pb2.PostModelOutputsRequest(
-        # This is the model ID of a publicly available General model. You may use any other public or custom model ID.
-        model_id="general-image-recognition",
-        user_app_id=resources_pb2.UserAppIDSet(app_id=YOUR_APPLICATION_ID),
-        inputs=[
-            resources_pb2.Input(
-                data=resources_pb2.Data(image=resources_pb2.Image(base64=file_bytes))
-            )
-        ],
-    )
-    response = stub.PostModelOutputs(request, metadata=metadata)
+    try:
+        request = service_pb2.PostModelOutputsRequest(
+            # This is the model ID of a publicly available General model. You may use any other public or custom model ID.
+            model_id="general-image-recognition",
+            user_app_id=resources_pb2.UserAppIDSet(app_id=YOUR_APPLICATION_ID),
+            inputs=[
+                resources_pb2.Input(
+                    data=resources_pb2.Data(image=resources_pb2.Image(base64=file_bytes))
+                )
+            ],
+        )
+        response = stub.PostModelOutputs(request, metadata=metadata)
+    except:
+        remove_img(filename)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": f"Clarifai 서버 문제, 혹은 그에 관한 문제",
+                "errcode": 2,
+                },
+        )
 
     if response.status.code != status_code_pb2.SUCCESS:
         # print(response)
-        raise Exception(f"Request failed, status code: {response.status}")
-        return {"status": 500, "message": "Clarifai Api Fault", "result": False}
+        remove_img(filename)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": f"Clarifai 서버 문제, 혹은 그에 관한 문제",
+                "errcode": 2,
+                },
+        )
 
     for concept in response.outputs[0].data.concepts:
         # print("%12s: %.2f" % (concept.name, concept.value))
         result.update({concept.name:concept.value})
-    
-    if tag in result:
-        return {"status": 200, "message": "Matched", "result": True}
+    # print(result)
+    if classification_keyword in result:
+        try:
+            to = make_classification_url_name(participation_id)
+            file_url = s3_upload(filename, 'homybk', to)
+            if file_url:
+                execute_insert_feed(participation_id, file_url, feed_content, feed_time)
+        except:
+            remove_img(filename)
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "message": f"S3 오류",
+                    "errcode": 5
+                    },
+            )
+
+        remove_img(filename)
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"잘 찍었습니다.",
+                },
+        )
     else:
-        return {"status": 200, "message": "Not Matched", "result": False}
-
-
-# 이미지 비교
-# @app.get("/auth/")
-# async def cmpimg():  # 못 써먹을 수준
-#     import requests
-#     r = requests.post(
-#         "https://api.deepai.org/api/image-similarity",
-#         files={
-#             'image1': open('mouse1.jpg', 'rb'),
-#             'image2': open('mouse2.jpg', 'rb'),
-#         },
-#         headers={'api-key': YOUR_DEEP_API_KEY}
-#     )
-#     return r.json()
+        remove_img(filename)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"해당 단어에 알맞지 않은 사진이거나, 사진을 다시 찍어주세요.",
+                "errcode": 3,
+                },
+        )
 
 
 # 이미지 특징점 확인
 @app.post("/auth/stdimg")
-async def test(data1: pictures):
-    data1 = str(data1)
-    data = data1.split("'")[1]
-    imgdata = base64.b64decode(data)
-    filename = 'feature_test.jpg'
-    with open(filename, 'wb') as f:
-        f.write(imgdata)
-    
-    src1 = cv2.imread('feature_test.jpg', cv2.IMREAD_GRAYSCALE)
-    if src1 is None:
-        print('Image load failed!')
-        return {"status":400, "message": "Take Picture Again", "result": False}
-    
+async def test(data: StdImgInput):
+    filename = ''
+    try:
+        data = str(data)
+        participation_id = (data.split("'")[1])
+        std_img=data.split("'")[3]
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1
+                },
+        )
+    try:
+        imgdata = base64.b64decode(std_img)
+        filename = "./imgs/"+make_std_url_name(participation_id)
+        with open(filename, 'wb') as f:
+            f.write(imgdata)
+        src1 = cv2.imread(filename, cv2.IMREAD_GRAYSCALE)
+    except:
+        if filename:
+            remove_img(filename)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"사진이 첨부되지 않았습니다.",
+                "errcode": 2
+                },
+        )
     feature = cv2.AKAZE_create()
     kp1, desc1 = feature.detectAndCompute(src1, None)
 
     if len(kp1)<80:
-        print('need more features')
-        return {"status":200, "message": "Too Little Features", "result": False}
+        remove_img(filename)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"특징점이 확실한 사직을 찍어주세요.",
+                "errcode": 3
+                },
+        )
     else:
-        print('good')
-        return {"status":200, "message": "Good Picture", "result": True}
-    return {"status":500, "message": "Something Wrong", "result": False}
+        try:
+            to = make_std_url_name(participation_id)
+            file_url = s3_upload(filename, 'homybk', to)
+            if file_url:
+                execute_insert_std_img(participation_id, file_url)
+        except:
+            remove_img(filename)
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "message": f"사진이 업로드 되지 않습니다.",
+                    "errcode": 4
+                    },
+            )
+
+        remove_img(filename)
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"완료 되었습니다.",
+                },
+        )
+    remove_img(filename)
+    return JSONResponse(
+        status_code=500,
+        content={
+            "message": f"뭔가 잘못 되었고, 문의바랍니다.",
+            },
+    )
 
 # 이미지 특징점 비교
 @app.post("/auth/feature")
-async def featimg(data1:featpicture):
+async def featimg(data:FeatureInput):
     # 영상 불러오기
     # image_nparray2 = np.asarray(bytearray(requests.get(url2).content), dtype=np.uint8)
-    data1 = str(data1)
-    base1 = data1.split("'")[1]
-    url1 = data1.split("'")[3]
+    try:
+        data = str(data)    
+        participation_id = data.split("'")[1]
+        feed_img = data.split("'")[3]
+        feed_content = data.split("'")[5]
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1
+                },
+        )
+    url1 = execute_select_std_img(participation_id)
     if not(url1):
-        return {"status":400, "message": "You don't have std img", "result": False}
-    imgdata = base64.b64decode(base1)
-    image_nparray1 = np.asarray(bytearray(requests.get(url1).content), dtype=np.uint8)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"기준 사진이 존재하지 않습니다.",
+                "errcode": 2
+                },
+        )
+        # 인증 시간 관련
+    time_flag = is_auth_intime(int(participation_id))
+    if time_flag[0] == 3:
+        pass
+    else:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"인증 시간이 아닙니다.",
+                "errcode": 3,
+                },
+        )
+    
+    imgdata = base64.b64decode(feed_img)
 
-    filename = 'to_auth.jpg'
+    filename = "./imgs/"+make_feature_url_name(participation_id)
     with open(filename, 'wb') as f:
         f.write(imgdata)
     # pic2은 유저가 찍은 사진
-    with open('to_auth.jpg', 'rb') as f:
+    with open(filename, 'rb') as f:
         pic2 = f.read()
+    image_nparray1 = np.asarray(bytearray(requests.get(url1).content), dtype=np.uint8)
     image_nparray1 = np.fromstring(image_nparray1, dtype = np.uint8)
-    # image_nparray1 = np.fromstring(pic1, dtype = np.uint8)
     image_nparray2 = np.fromstring(pic2, dtype = np.uint8)
 
     src1 = cv2.imdecode(image_nparray1, cv2.IMREAD_GRAYSCALE)
     src2 = cv2.imdecode(image_nparray2, cv2.IMREAD_GRAYSCALE)
-
-    if src1 is None:
-        print('Image1 load failed!')
-        return {"status":400, "message": "Missing Picture", "result": False}
-    elif src2 is None:
-        print('Image2 load failed!')
-        return {"status":500, "message": "Missing Std Picture", "result": False}
 
     # 특징점 알고리즘 객체 생성 (KAZE, AKAZE, ORB 등)
     # feature = cv2.KAZE_create() # 기본값인 L2놈 이용
@@ -321,14 +465,88 @@ async def featimg(data1:featpicture):
 
     xy_e=explode_xy(sqs)
     A=shoelace_area(xy_e[0],xy_e[1])
-    # print(A)
-    plt.imshow(dst,),plt.show()
-    cv2.waitKey()
-    cv2.destroyAllWindows()
-    # 사각형의 넓이에 따라 출력
     print(A)
+    # plt.imshow(dst,),plt.show()
+    # cv2.waitKey()
+    # cv2.destroyAllWindows()
+    # # 사각형의 넓이에 따라 출력
     if A<=30:
-        return {"status":200, "message": "You took wrong picture", "result": False}
+        remove_img(filename)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"사진이 일치하지 않습니다.",
+                "errcode": 4
+                },
+        )
     else:
-        return {"status":200, "message": "Complete", "result": True}
+        try:
+            to = make_feature_url_name(participation_id)
+            file_url = s3_upload(filename, 'homybk', to)
+            if file_url:
+                execute_insert_feed(participation_id, file_url, feed_content, feed_time)
+        except:
+            remove_img(filename)
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "message": f"사진이 업로드 되지 않습니다.",
+                    "errcode": 5
+                    },
+            )
+        remove_img(filename)
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"완료되었습니다.",
+                },
+        )
 
+
+@app.get("/auth/isauthtoday/{participation_id}")
+async def isauthedtoday(participation_id: int):
+    now = datetime.now()
+    today = current_time_date = now.strftime("%Y-%m-%d")
+    isauthed = execute_select_isauth(participation_id, today)
+    if isauthed:
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"이미 인증 되었습니다.",
+                "isauthed": True
+                },
+        )
+    else:
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"인증이 완료되지 않았습니다.",
+                "isauthed": False
+                },
+        )
+
+
+@app.get("/auth/isstdimg/{participation_id}")
+async def isstdimg(participation_id: int):
+    isstdimg = execute_select_std_img(participation_id)
+    if isstdimg:
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"이미 기준 사진이 존재 합니다.",
+                "isauthed": True
+                },
+        )
+    else:
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": f"인증 사진이 존재하지 않습니다.",
+                "isauthed": False
+                },
+        )
+
+
+# reload app``
+if __name__ == '__main__':
+    uvicorn.run("authimg:app", host="localhost", port=8000, reload=True)
