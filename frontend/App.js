@@ -1,6 +1,6 @@
 import * as React from "react"
 import { BottomNavigation, Text } from "react-native-paper"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, StatusBar } from "react-native"
 import * as Font from "expo-font"
 import AppLoading from "expo-app-loading"
 import { useState } from "react"
@@ -60,6 +60,7 @@ const MyComponent = () => {
   // index == 4인 경우 StartScreen 출력, 그 외엔 BottomNav랑 해당 스크린 출력
   return isReady ? (
     <View style={styles.rootScreen}>
+      <View style={styles.statusBarMargin}></View>
       {index == 4 ? (
         <StartScreen startScreenChange={startScreenChange} />
       ) : (
@@ -89,6 +90,8 @@ const MyComponent = () => {
 
 export default MyComponent
 
+const statusBarHeight = StatusBar.currentHeight
+
 const styles = StyleSheet.create({
   rootScreen: {
     flex: 1,
@@ -97,5 +100,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopColor: `${ColorSet.navyColor(1)}`,
     borderTopWidth: 1,
+  },
+  statusBarMargin: {
+    height: statusBarHeight,
   },
 })
