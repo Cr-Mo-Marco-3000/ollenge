@@ -4,6 +4,7 @@ import com.ollenge.api.exception.*;
 import com.ollenge.api.request.ChallengeParticipationPostReq;
 import com.ollenge.api.request.ChallengePostReq;
 import com.ollenge.api.response.data.ChallengeCreatedData;
+import com.ollenge.api.response.data.ChallengeInfoData;
 import com.ollenge.common.util.LocalDateTimeUtils;
 import com.ollenge.db.entity.*;
 import com.ollenge.db.repository.*;
@@ -99,7 +100,7 @@ public class ChallengeService {
         else if (challenge.getChallengePreset() != null && isDuplicatedTopicPeriod(challenge.getStartDate(), challenge.getEndDate(), challenge.getChallengeTopic())) {
             throw new DuplicatedPeriodTopicRankingChallengeException("Duplicated ranking challenge that has same period and topic exception");
         }
-        else if (participationRepository.findByChallengeAndUser(challenge, user).size() > 0) {
+        else if (!participationRepository.findByChallengeAndUser(challenge, user).isEmpty()) {
             throw new InvalidParticipationException("Already participated challenge.");
         }
         else if (!LocalDateTimeUtils.isValidStartDate(challenge.getStartDate())) {
@@ -118,7 +119,7 @@ public class ChallengeService {
                 .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge ID " + challengeId); });
         User user = User.builder().userId(userId).build();
 
-        if (participationRepository.findByChallengeAndUser(challenge, user).size() == 0) {
+        if (participationRepository.findByChallengeAndUser(challenge, user).isEmpty()) {
             throw new InvalidParticipationException("Not in challenge.");
         }
         else if (!LocalDateTimeUtils.isValidStartDate(challenge.getStartDate())) {
@@ -126,9 +127,21 @@ public class ChallengeService {
         }
 
         participationRepository.deleteByChallengeAndUser(challenge, user);
-        if (participationRepository.findByChallenge(challenge).size() == 0) {
+        if (participationRepository.findByChallenge(challenge).isEmpty()) {
             challengeRepository.delete(challenge);
         }
+    }
+
+    public ChallengeInfoData getChallengeInfo(long challengeId) throws InvalidChallengeIdException {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge ID " + challengeId); });
+
+        ClassificationType classificationType = null;
+        if (challenge.getAuthType().equals("classifi")) {
+            AuthClassification authClassification = authClassificationRepository.findByChallenge(challenge);
+            classificationType = authClassification.getClassificationType();
+        }
+        return ChallengeInfoData.of(challenge, classificationType);
     }
 
     private boolean isValidAuthType(String authType) {

@@ -3,8 +3,10 @@ package com.ollenge.api.controller;
 import com.ollenge.api.exception.*;
 import com.ollenge.api.request.ChallengeParticipationPostReq;
 import com.ollenge.api.request.ChallengePostReq;
+import com.ollenge.api.response.ChallengeInfoGetRes;
 import com.ollenge.api.response.ChallengePostRes;
 import com.ollenge.api.response.data.ChallengeCreatedData;
+import com.ollenge.api.response.data.ChallengeInfoData;
 import com.ollenge.api.service.ChallengeService;
 import com.ollenge.common.model.response.BaseResponseBody;
 import io.swagger.annotations.ApiOperation;
@@ -130,18 +132,23 @@ public class ChallengeController {
         }
     }
 
-//    @GetMapping
-//    @ApiOperation(value = "글쓰기", notes = "댓글을 작성합니다")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "챌린지가 생성되었습니다."),
-//            @ApiResponse(code = 500, message = "서버 에러 발생")
-//    })
-//    public ResponseEntity<? extends BaseResponseBody> getChallenge() {
-//        try {
-//            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "테스트 성공"));
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
-//        }
-//    }
+    @GetMapping("/{challengeId}")
+    @ApiOperation(value = "챌린지 정보 조회", notes = "챌린지의 상세 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "챌린지 현황 조회 성공"),
+            @ApiResponse(code = 400, message = "해당하는 챌린지가 없습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> getChallengeInfo(@PathVariable long challengeId) {
+        try {
+            ChallengeInfoData challengeInfoData = challengeService.getChallengeInfo(challengeId);
+            return ResponseEntity.status(200).body(ChallengeInfoGetRes.of(200, "챌린지 현황 조회 성공", challengeInfoData));
+        } catch (InvalidChallengeIdException invalidChallengeIdException) {
+            invalidChallengeIdException.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "해당하는 챌린지가 없습니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
 }
