@@ -127,7 +127,7 @@ async def authimgcommon(data: CommonInput):
     # 인증 시간 관련
     time_flag = is_auth_intime(int(participation_id))
     if time_flag[0] == 3:
-        pass
+        feed_time = time_flag[1]
     else:
         # raise HTTPException(detail='시간이 아니요', status_code=400)
         return JSONResponse(
@@ -147,7 +147,7 @@ async def authimgcommon(data: CommonInput):
         to = make_common_url_name(participation_id)
         file_url = s3_upload(filename, 'homybk', to)
         if file_url:
-            execute_insert_feed(participation_id, file_url, feed_content)
+            execute_insert_feed(participation_id, file_url, feed_content,feed_time)
     except:
         remove_img(filename)
         return JSONResponse(
@@ -382,7 +382,7 @@ async def featimg(data:FeatureInput):
         # 인증 시간 관련
     time_flag = is_auth_intime(int(participation_id))
     if time_flag[0] == 3:
-        pass
+        feed_time = time_flag[1]
     else:
         return JSONResponse(
             status_code=400,
@@ -466,9 +466,9 @@ async def featimg(data:FeatureInput):
     xy_e=explode_xy(sqs)
     A=shoelace_area(xy_e[0],xy_e[1])
     print(A)
-    # plt.imshow(dst,),plt.show()
-    # cv2.waitKey()
-    # cv2.destroyAllWindows()
+    plt.imshow(dst,),plt.show()
+    cv2.waitKey()
+    cv2.destroyAllWindows()
     # # 사각형의 넓이에 따라 출력
     if A<=30:
         remove_img(filename)

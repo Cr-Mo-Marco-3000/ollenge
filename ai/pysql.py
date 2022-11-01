@@ -49,11 +49,11 @@ def execute_insert_std_img(participation_id, url):
     del_sql = f"DELETE FROM auth_standard_img WHERE participation_id = {participation_id}" 
     execute_delete(del_sql)
     # sql = f"INSERT INTO auth_standard_img (standard_img, participation_id) VALUES ('https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg', {participation_id});"
-    sql = f"""INSERT INTO auth_standard_img (standard_img, participation_id) VALUES (%s, %s);"""
+    sql = """INSERT INTO auth_standard_img (standard_img, participation_id) VALUES (%s, %s);"""
     vals = (url, participation_id)
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute(sql)
+    cursor.execute(sql, vals)
     conn.commit()
     cursor.close()
     conn.close()
