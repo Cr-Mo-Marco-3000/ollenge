@@ -4,10 +4,9 @@ import com.ollenge.api.exception.DuplicatedNicknameException;
 import com.ollenge.api.exception.InvalidNicknameException;
 import com.ollenge.api.exception.InvalidUserDescriptionException;
 import com.ollenge.api.request.UserPostReq;
-import com.ollenge.api.response.UserLoginGetRes;
 import com.ollenge.api.service.UserService;
-import com.ollenge.common.auth.OllengeUserDetails;
 import com.ollenge.common.model.response.BaseResponseBody;
+import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.db.entity.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,8 +35,8 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     public ResponseEntity<BaseResponseBody> signup(@ApiIgnore Authentication authentication, @RequestBody UserPostReq userPostReq) {
-        OllengeUserDetails userDetails = (OllengeUserDetails) authentication.getDetails();
-        User user = userService.getUserByUserId(Long.parseLong(userDetails.getUsername()));
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userService.getUserByUserId(userId);
 
         if (user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
 

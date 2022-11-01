@@ -5,8 +5,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.*;
 
+import com.ollenge.common.auth.OllengeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -24,7 +26,12 @@ public class JwtTokenUtil {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
     public static final String ISSUER = "ollenge.com";
-    
+
+    public static long getUserIdByJWT(Authentication authentication) {
+        OllengeUserDetails userDetails = (OllengeUserDetails) authentication.getDetails();
+        return Long.parseLong(userDetails.getUsername());
+    }
+
     @Autowired
 	public JwtTokenUtil(@Value("${jwt.secret}") String secretKey, @Value("${jwt.expiration}") Integer expirationTime) {
 		this.secretKey = secretKey;
