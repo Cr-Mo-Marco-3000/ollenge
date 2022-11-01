@@ -11,6 +11,7 @@ import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import BedgeCard from "./BedgeCard"
+import TopMargin from "../common/TopMargin"
 
 function MyInfoScreen() {
   const navigation = useNavigation()
@@ -20,6 +21,7 @@ function MyInfoScreen() {
 
   return (
     <ScrollView style={styles.rootScreen}>
+      <TopMargin />
       <View style={styles.scrollContainer}>
         <View style={styles.imageBox}>
           <DefaultImage />
