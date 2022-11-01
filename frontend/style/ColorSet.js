@@ -7,4 +7,5 @@ export default {
   blackColor: (opacity) => `rgba(0, 0, 0, ${opacity})`,
   deepOrangeColor: (opacity) => `rgba(209, 50, 0, ${opacity})`,
   whiteColor: (opacity) => `rgba(255, 255, 255, ${opacity})`,
+  lightBlueColor: (opacity) => `rgba(128, 167, 179, ${opacity})`,
 }

@@ -5,9 +5,9 @@ import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import AppCard from "../common/AppCard"
 import { ProgressBar } from "react-native-paper"
-import { ExampleIcon, RunningIcon } from "../../assets/images/MyCGScreen/MyCGScreen"
+import { ExampleIcon, RunningIcon, CrownIcon } from "../../assets/images/MyCGScreen/MyCGScreen"
 
-export default function ChallengingCard(props) {
+export default function EndedCard(props) {
   const windowWidth = Dimensions.get("window").width
   const isChallenge = props.challengeInfo.isChallenge
   const title = props.challengeInfo.title
@@ -22,14 +22,14 @@ export default function ChallengingCard(props) {
     <View
       style={{
         backgroundColor: "#edf8ff",
-        height: parseInt(200),
+        height: parseInt(270),
         justifyContent: "flex-start",
         alignItems: "center",
       }}
     >
       <View
         style={{
-          height: 200 * 0.9,
+          height: 270 * 0.9,
           width: "90%",
         }}
       >
@@ -37,10 +37,11 @@ export default function ChallengingCard(props) {
           {/* 상단  */}
           <View
             style={{
-              flex: 7,
+              flex: 8.5,
+              // backgroundColor: "red",
               flexDirection: "row",
               justifyContent: "center",
-              alignItems: "flex-end",
+              alignItems: "center",
             }}
           >
             {/* 전체 넓이 지정 View */}
@@ -82,11 +83,9 @@ export default function ChallengingCard(props) {
                     borderBottomRightRadius: circleHeightWidth * 0.4,
                     borderTopRightRadius: circleHeightWidth * 0.4,
                     left: circleHeightWidth * 0.5,
-                    height: circleHeightWidth * 0.45,
+                    height: circleHeightWidth * 0.7,
                     zIndex: 5,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
+                    // justifyContent: "space-between",
                   }}
                 >
                   {/* 뿔 안 글자 */}
@@ -97,10 +96,25 @@ export default function ChallengingCard(props) {
                       right: 10,
                       height: "100%",
                       justifyContent: "center",
-                      alignItems: "center",
+                      alignItems: "flex-start",
                     }}
                   >
-                    <AppBoldText color="white">{title}</AppBoldText>
+                    <View
+                      style={{
+                        left: 8,
+                      }}
+                    >
+                      <AppBoldText color="white">{title}</AppBoldText>
+                    </View>
+                    <View
+                      style={{
+                        left: 10,
+                      }}
+                    >
+                      <AppBoldText size={2} color="white">
+                        10.18 - 11.05
+                      </AppBoldText>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -110,38 +124,76 @@ export default function ChallengingCard(props) {
                   flex: 6,
                 }}
               >
+                {/* 그래프 부분 */}
                 <View
                   style={{
                     position: "absolute",
-                    top: 200 * 0.7 * 0.95 * 0.9 * 0.4,
-                    height: circleHeightWidth * 0.55,
+                    top: 200 * 0.7 * 0.95 * 0.9 * 0.6,
+                    height: 270 * 0.9 * 0.9 - circleHeightWidth,
                     width: windowWidth * 0.8 - circleHeightWidth,
-                    // left: 0,
                     right: 0,
-                    // backgroundColor: "red",
                     justifyContent: "center",
                     alignItems: "center",
+                    // backgroundColor: "red",
                   }}
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <AppText size="2">{teamName}</AppText>
+                  {/* 내용 부분 */}
+                  <View style={{ height: "80%", width: "100%" }}>
                     <View
                       style={{
-                        width: 200 * 0.7 * 0.95 * 0.9 * 0.6 * 0.5,
-                        height: 200 * 0.7 * 0.95 * 0.9 * 0.6 * 0.5,
-                        borderRadius: 200 * 0.7 * 0.95 * 0.9 * 0.6 * 0.5,
-                        marginLeft: 5,
-                        backgroundColor: "#FCBE32",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        width: "100%",
+                        height: "25%",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
-                      <AppText size="2">{memberNumber}명</AppText>
+                      <View>
+                        <AppBoldText size={2}>내 달성률</AppBoldText>
+                      </View>
+                      <View>
+                        <AppBoldText size={2}>76%</AppBoldText>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        width: "100%",
+                        height: "25%",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <ProgressBar
+                        color={ColorSet.navyColor(1)}
+                        style={{ height: 13 }}
+                        progress={0.76}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: "100%",
+                        height: "25%",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View>
+                        <AppBoldText size={2}>팀 달성률</AppBoldText>
+                      </View>
+                      <View>
+                        <AppBoldText size={2}>90%</AppBoldText>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        width: "100%",
+                        height: "25%",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <ProgressBar
+                        color={ColorSet.navyColor(1)}
+                        style={{ height: 13 }}
+                        progress={0.9}
+                      />
                     </View>
                   </View>
                 </View>
@@ -151,7 +203,7 @@ export default function ChallengingCard(props) {
           {/* 하단 */}
           <View
             style={{
-              flex: 3,
+              flex: 1.5,
               alignItems: "center",
             }}
           >
@@ -160,65 +212,24 @@ export default function ChallengingCard(props) {
                 style={{
                   width: windowWidth * 0.8,
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: "bold",
-                    fontFamily: "HyeminRegular",
-                    color: ColorSet.navyColor(1),
-                  }}
-                >
-                  {startDate}
-                </Text>
                 <View
                   style={{
-                    position: "absolute",
-                    width: windowWidth * 0.8,
-                    height: 17,
-                    // backgroundColor: "red",
+                    width: 30,
+                    height: 30,
+                    bottom: 2,
+                    marginRight: 5,
                   }}
                 >
-                  {progress > 20 && progress < 80 ? (
-                    <View
-                      style={{
-                        width: 30,
-                        height: 30,
-                        left: (windowWidth * 0.8 * progress) / 100 - 15,
-                        bottom: 4,
-                      }}
-                    >
-                      <RunningIcon
-                        style={{
-                          position: "absolute",
-                        }}
-                      />
-                    </View>
-                  ) : null}
+                  <CrownIcon />
                 </View>
-
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: "bold",
-                    fontFamily: "HyeminRegular",
-                    color: ColorSet.navyColor(1),
-                  }}
-                >
-                  {endDate}
-                </Text>
+                <AppBoldText size={2} color="yellow">
+                  전체 10팀 중 1등 달성!
+                </AppBoldText>
               </View>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "flex-start",
-                width: windowWidth * 0.8,
-              }}
-            >
-              <ProgressBar style={{}} progress={progress / 100} color={ColorSet.orangeColor(1)} />
             </View>
           </View>
         </AppCard>

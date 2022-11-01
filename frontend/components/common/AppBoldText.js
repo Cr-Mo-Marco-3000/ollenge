@@ -23,6 +23,7 @@ const AppBoldText = (props) => {
     black: ColorSet.blackColor(1),
     deepOrange: ColorSet.deepOrangeColor(1),
     white: ColorSet.whiteColor(1),
+    ligntBlue: ColorSet.lightBlueColor(1),
   }
 
   return (
