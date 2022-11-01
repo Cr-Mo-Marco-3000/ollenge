@@ -29,7 +29,7 @@ function MyCGScreen() {
             flex: 8,
           }}
           screenOptions={{
-            tabBarLabelStyle: { fontSize: 16, fontWeight: "900" },
+            tabBarLabelStyle: { fontSize: 16, fontFamily: "HyeminBold" },
             // 글자색
             tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
             tabBarInactiveTintColor: `${ColorSet.navyColor(0.5)}`,
@@ -61,7 +61,7 @@ const Body = styled.View`
 
 // Header
 const Header = styled.View`
-  flex: 1.5;
+  /* flex: 1.5; */
   background-color: white;
 `
 

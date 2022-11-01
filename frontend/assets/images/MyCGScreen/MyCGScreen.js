@@ -1,5 +1,5 @@
-import Fire from "./fire_3d.png"
-import Pencil from "./pencil_3d.png"
+import Fire from "./fire-front-color.png"
+import Pencil from "./pencil-front-color.png"
 import Running from "./person_running_3d_light.png"
 import Example from "./example.jpg"
 
@@ -22,7 +22,7 @@ export function ExampleIcon() {
   return (
     <Image
       source={Example}
-      style={{ height: "100%", width: "100%", borderRadius: 200 * 0.7 * 0.95 * 0.9 }}
+      style={{ height: "100%", width: "100%", borderRadius: 200 * 0.7 * 0.95 * 0.75 }}
       resizeMode="cover"
     />
   )
