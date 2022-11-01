@@ -35,6 +35,9 @@ public class User {
     @Column(length = 300)
     String userDescription;
 
+    @Column(nullable = false)
+    boolean userFlag;
+
     @Column(nullable = false, columnDefinition = "int default 0")
     int userScore;
 

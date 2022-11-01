@@ -5,6 +5,7 @@ import com.ollenge.db.repository.UserRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -97,9 +98,10 @@ public class OAuthService {
 
     public User createUser(JSONObject jsonObject) throws JSONException {
         User user = new User();
-        user.setNickname("testname");
+        user.setNickname(jsonObject.getString("id"));
         user.setAuthCode(jsonObject.getString("id"));
         user.setLoginType(jsonObject.getString("login_type"));
+        user.setUserFlag(false);
         return userRepository.save(user);
     }
 }
