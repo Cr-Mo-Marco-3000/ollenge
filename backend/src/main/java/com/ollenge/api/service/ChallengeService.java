@@ -39,7 +39,7 @@ public class ChallengeService {
             challengePreset = ChallengePreset.builder()
                     .challengePresetId(challengePostReq.getChallengePresetId())
                     .build();
-            if (isDuplicatedTopicPeriod(challengePostReq.getStartDate(), challengePostReq.getEndDate(), challengePostReq.getChallengeTopic())) {
+            if (isDuplicatedTopicPeriod(User.builder().userId(challengePostReq.getUserId()).build(), challengePostReq.getStartDate(), challengePostReq.getEndDate(), challengePreset)) {
                 throw new DuplicatedPeriodTopicRankingChallengeException("Duplicated ranking challenge that has same period and topic exception");
             }
         }
@@ -98,7 +98,7 @@ public class ChallengeService {
         if (!challenge.getInviteCode().equals(challengeParticipationPostReq.getInviteCode())) {
             throw new InvalidInviteCodeException("Invalid invite code");
         }
-        else if (challenge.getChallengePreset() != null && isDuplicatedTopicPeriod(challenge.getStartDate(), challenge.getEndDate(), challenge.getChallengeTopic())) {
+        else if (challenge.getChallengePreset() != null && isDuplicatedTopicPeriod(user, challenge.getStartDate(), challenge.getEndDate(), challenge.getChallengePreset())) {
             throw new DuplicatedPeriodTopicRankingChallengeException("Duplicated ranking challenge that has same period and topic exception");
         }
         else if (!participationRepository.findByChallengeAndUser(challenge, user).isEmpty()) {
@@ -155,8 +155,8 @@ public class ChallengeService {
         return authType.equals("none") || authType.equals("feature") || authType.equals("classifi") || authType.equals("step");
     }
 
-    private boolean isDuplicatedTopicPeriod(LocalDate startDate, LocalDate endDate, String challengeTopic) {
-        List<Challenge> challengeList = challengeRepositorySupport.getRankingChallengeTopicPeriod(startDate, endDate, challengeTopic);
+    private boolean isDuplicatedTopicPeriod(User user, LocalDate startDate, LocalDate endDate, ChallengePreset challengePreset) {
+        List<Challenge> challengeList = challengeRepositorySupport.getRankingChallengeTopicPeriod(user, startDate, endDate, challengePreset);
         return !challengeList.isEmpty();
     }
 }

@@ -1,7 +1,7 @@
 package com.ollenge.db.repository;
 
-import com.ollenge.api.response.data.ChallengeStateData;
 import com.ollenge.db.entity.*;
+import com.ollenge.api.response.data.ChallengeStateData;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +21,18 @@ public class ChallengeRepositorySupport {
 
     QChallenge qChallenge = QChallenge.challenge;
     QParticipation qParticipation = QParticipation.participation;
+
     QFeed qFeed = QFeed.feed;
 
-    public List<Challenge> getRankingChallengeTopicPeriod (LocalDate startDate, LocalDate endDate, String challengeTopic) {
+
+    public List<Challenge> getRankingChallengeTopicPeriod (User user, LocalDate startDate, LocalDate endDate, ChallengePreset challengePreset) {
         return jpaQueryFactory
-                .select(qChallenge)
-                .from(qChallenge)
-                .where(qChallenge.challengePreset.isNotNull()
-                        .and(qChallenge.startDate.eq(startDate))
-                        .and(qChallenge.endDate.eq(endDate))
-                        .and(qChallenge.challengeTopic.eq(challengeTopic)))
+                .select(qParticipation.challenge)
+                .from(qParticipation)
+                .where(qParticipation.user.eq(user)
+                        .and(qParticipation.challenge.startDate.eq(startDate))
+                        .and(qParticipation.challenge.endDate.eq(endDate))
+                        .and(qParticipation.challenge.challengePreset.eq(challengePreset)))
                 .fetch();
     }
 
