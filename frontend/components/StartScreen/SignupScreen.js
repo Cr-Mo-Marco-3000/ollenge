@@ -29,7 +29,7 @@ function SignupScreen() {
   }
 
   return (
-    <LinearGradient style={styles.rootScreen} colors={["white", `${ColorSet.paleBlueColor(100)}`]}>
+    <LinearGradient style={styles.rootScreen} colors={["white", `${ColorSet.paleBlueColor(1)}`]}>
       <KeyboardAvoidingView style={{ width: "100%", flex: 1 }} behavior={"position"}>
         <View style={{ marginTop: "30%", width: "100%", alignItems: "center" }}>
           <AppBoldText size={3}>회원 정보 설정</AppBoldText>
