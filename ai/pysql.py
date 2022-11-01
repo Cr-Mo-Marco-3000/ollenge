@@ -1,13 +1,14 @@
 import pymysql
+from dotenv import dotenv_values
 import os
 
 
 def get_connection():
     return pymysql.connect(
         user = "ollenge",
-        password = 'ollenge1010',
-        host = 'localhost',
-        port = 3306,
+        password = DB_PASSWORD,
+        host = DB_HOST,
+        port = 32000,
         db = "ollenge",
         charset = 'utf8'
     )
@@ -108,3 +109,8 @@ def execute_select_isauth(participation_id, feed_time):
         return True
     else:
         return False 
+
+        
+config = dotenv_values(".env")
+DB_PASSWORD = config.get('DB_PASSWORD')
+DB_HOST = config.get('DB_HOST')
