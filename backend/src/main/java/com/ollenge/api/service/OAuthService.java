@@ -18,6 +18,12 @@ import java.net.URL;
 @Service
 public class OAuthService {
 
+    @Value("${kakao.apikey}")
+    private String apiKey;
+
+    @Value("${kakao.apiurl}")
+    private String apiURL;
+
     @Autowired
     UserRepository userRepository;
 
@@ -37,8 +43,8 @@ public class OAuthService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id="+"e92257cb82c9cbdfea8773e3656f72a2");
-            sb.append("&redirect_uri=http://localhost:8080/api/oauth/kakao");
+            sb.append("&client_id="+apiKey);
+            sb.append("&redirect_uri=" + apiURL);
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
