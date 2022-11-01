@@ -50,106 +50,107 @@ const Ended = () => {
         backgroundColor: "#edf8ff",
       }}
     >
-      <View
-        style={{
-          flex: 3,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <DataTable
+      <ScrollBackground>
+        <View
           style={{
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-            width: "90%",
-            backgroundColor: "#80A7B3",
-            elevation: 5,
+            marginTop: 30,
+            marginBottom: 10,
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <DataTable.Header>
-            <DataTable.Title
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#80A7B3",
-              }}
-            >
-              <AppBoldText size={2} color="white">
-                챌린지
-              </AppBoldText>
-            </DataTable.Title>
-            <DataTable.Title
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <AppBoldText size={2} color="white">
-                평균 달성률
-              </AppBoldText>
-            </DataTable.Title>
-            <DataTable.Title
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <AppBoldText size={2} color="white">
-                누적 점수
-              </AppBoldText>
-            </DataTable.Title>
-          </DataTable.Header>
-        </DataTable>
+          <DataTable
+            style={{
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+              width: "90%",
+              backgroundColor: "#80A7B3",
+              elevation: 5,
+            }}
+          >
+            <DataTable.Header>
+              <DataTable.Title
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#80A7B3",
+                }}
+              >
+                <AppBoldText size={2} color="white">
+                  챌린지
+                </AppBoldText>
+              </DataTable.Title>
+              <DataTable.Title
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <AppBoldText size={2} color="white">
+                  평균 달성률
+                </AppBoldText>
+              </DataTable.Title>
+              <DataTable.Title
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <AppBoldText size={2} color="white">
+                  누적 점수
+                </AppBoldText>
+              </DataTable.Title>
+            </DataTable.Header>
+          </DataTable>
 
-        <DataTable
+          <DataTable
+            style={{
+              borderBottomRightRadius: 10,
+              borderBottomLeftRadius: 10,
+              width: "90%",
+              backgroundColor: "white",
+              elevation: 5,
+            }}
+          >
+            <DataTable.Row>
+              <DataTable.Cell
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <AppBoldText size={2} color="ligntBlue">
+                  18회 참여
+                </AppBoldText>
+              </DataTable.Cell>
+              <DataTable.Cell
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <AppBoldText size={2} color="ligntBlue">
+                  79,24%
+                </AppBoldText>
+              </DataTable.Cell>
+              <DataTable.Cell
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <AppBoldText size={2} color="ligntBlue">
+                  2,257점
+                </AppBoldText>
+              </DataTable.Cell>
+            </DataTable.Row>
+          </DataTable>
+        </View>
+        <View
           style={{
-            borderBottomRightRadius: 10,
-            borderBottomLeftRadius: 10,
-            width: "90%",
-            backgroundColor: "white",
-            elevation: 5,
+            flex: 7,
           }}
         >
-          <DataTable.Row>
-            <DataTable.Cell
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <AppBoldText size={2} color="ligntBlue">
-                18회 참여
-              </AppBoldText>
-            </DataTable.Cell>
-            <DataTable.Cell
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <AppBoldText size={2} color="ligntBlue">
-                79,24%
-              </AppBoldText>
-            </DataTable.Cell>
-            <DataTable.Cell
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <AppBoldText size={2} color="ligntBlue">
-                2,257점
-              </AppBoldText>
-            </DataTable.Cell>
-          </DataTable.Row>
-        </DataTable>
-      </View>
-      <View
-        style={{
-          flex: 7,
-        }}
-      >
-        <ScrollBackground>
           <DivideView>
             <IconView>
               <RankingChallengeIcon />
@@ -172,8 +173,8 @@ const Ended = () => {
             .map((challengeInfo, idx) => (
               <EndedCard key={idx} challengeInfo={challengeInfo} />
             ))}
-        </ScrollBackground>
-      </View>
+        </View>
+      </ScrollBackground>
     </View>
   )
 }

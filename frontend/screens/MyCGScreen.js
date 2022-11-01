@@ -8,13 +8,14 @@ import BeforeStart from "../components/MyCGScreen/BeforeStart"
 import Challenging from "../components/MyCGScreen/Challenging"
 import Ended from "../components/MyCGScreen/Ended"
 import ColorSet from "../style/ColorSet"
-
+import TopMargin from "../components/common/TopMargin"
 function MyCGScreen() {
   const Tab = createMaterialTopTabNavigator()
 
   return (
     <Body>
       {/* Header부분 */}
+      <TopMargin />
       <Header>
         <HeaderTextView>
           <HeaderTextColumn>
@@ -61,7 +62,7 @@ const Body = styled.View`
 
 // Header
 const Header = styled.View`
-  /* flex: 1.5; */
+  flex: 1;
   background-color: white;
 `
 
