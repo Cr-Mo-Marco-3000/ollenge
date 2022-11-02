@@ -8,7 +8,7 @@ services:
     container_name: mysql
     restart: always
     volumes:
-      - ./deployment/db-init/:/docker-entrypoint-initdb.d/
+      - /home/ubuntu/ollenge/deployment/db-init/:/docker-entrypoint-initdb.d/
     networks:
       - app-network
     ports:
@@ -51,8 +51,8 @@ services:
     container_name: certbot
     image: certbot/certbot
     volumes:
-      - ./deployment/certbot-etc:/etc/letsencrypt
-      - ./deployment/dist:/var/www/html
+      - /home/ubuntu/ollenge/deployment/certbot-etc:/etc/letsencrypt
+      - /home/ubuntu/ollenge/deployment/dist:/var/www/html
     command: renew
   nginx:
     container_name: nginx
@@ -62,9 +62,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./deployment/dist:/var/www/html
-      - ./deployment/nginx-conf:/etc/nginx/conf.d
-      - ./deployment/certbot-etc:/etc/letsencrypt
+      - /home/ubuntu/ollenge/deployment/dist:/var/www/html
+      - /home/ubuntu/ollenge/deployment/nginx-conf:/etc/nginx/conf.d
+      - /home/ubuntu/ollenge/deployment/certbot-etc:/etc/letsencrypt
     networks:
       - app-network
     depends_on:
