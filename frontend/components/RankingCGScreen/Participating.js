@@ -12,31 +12,34 @@ import {
 const Participating = () => {
   const tempList = [
     {
-      isChallenge: true,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
+      presetTopic: "운동 하기",
+      challengePresetID: 1,
       memberNumber: 4,
       progress: 20,
-      startDate: "10.26",
-      endDate: "11.05",
+      startDate: "22.10.20",
+      endDate: "11.30",
+      isParticipated: true,
+      peopleNumber: 23,
     },
     {
-      isChallenge: true,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
+      presetTopic: "기상 미션 (7시)",
+      challengePresetID: 2,
       memberNumber: 4,
-      progress: 50,
-      startDate: "10.26",
-      endDate: "11.05",
+      progress: 20,
+      startDate: "22.10.20",
+      endDate: "11.30",
+      isParticipated: true,
+      peopleNumber: 21,
     },
     {
-      isChallenge: false,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
+      presetTopic: "매일 독서하기 (7시)",
+      challengePresetID: 3,
       memberNumber: 4,
-      progress: 50,
-      startDate: "10.26",
-      endDate: "11.05",
+      progress: 20,
+      startDate: "22.10.20",
+      endDate: "11.30",
+      isParticipated: false,
+      peopleNumber: 20,
     },
   ]
 
@@ -47,11 +50,9 @@ const Participating = () => {
           height: 20,
         }}
       ></View>
-      {tempList
-        .filter((listItem) => listItem.isChallenge)
-        .map((challengeInfo, idx) => (
-          <ParticipatingCard key={idx} />
-        ))}
+      {tempList.map((challengeInfo, idx) => (
+        <ParticipatingCard key={idx} challengeInfo={challengeInfo} />
+      ))}
     </ScrollBackground>
   )
 }

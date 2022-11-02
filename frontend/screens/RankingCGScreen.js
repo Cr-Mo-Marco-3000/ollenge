@@ -5,7 +5,7 @@ import AppBoldText from "../components/common/AppBoldText"
 import { NavigationContainer } from "@react-navigation/native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import ColorSet from "../style/ColorSet"
-import Parcitipating from "../components/RankingCGScreen/Participating"
+import Participating from "../components/RankingCGScreen/Participating"
 import Proceeding from "../components/RankingCGScreen/Proceeeding"
 import TopMargin from "../components/common/TopMargin"
 
@@ -39,7 +39,7 @@ function RankingCGScreen() {
           }}
         >
           <Tab.Screen name="진행 중" component={Proceeding} />
-          <Tab.Screen name="참여 신청" component={Parcitipating} />
+          <Tab.Screen name="참여 신청" component={Participating} />
         </Tab.Navigator>
       </NavigationContainer>
       {/* 아래부분 */}
