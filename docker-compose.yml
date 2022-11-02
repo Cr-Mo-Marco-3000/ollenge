@@ -40,7 +40,7 @@ services:
     container_name: fastapi_auth
     restart: always
     ports:
-      - "9090:9090"
+      - "8090:8090"
     environment:
       TZ: "Asia/Seoul"
     networks:
