@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, File, UploadFile, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Header
 from fastapi.responses import JSONResponse
 import uvicorn
 from pydantic import BaseModel, Json
@@ -30,10 +30,12 @@ from datetime import datetime
 # S3연결
 from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name
 # DB 연결
-from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth
+from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id
 # model 연결
 from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput
-
+# Header token
+from typing import Optional
+import jwt
 
 def remove_img(img_dir):
     if os.path.isfile(img_dir):
@@ -89,7 +91,7 @@ stub = service_pb2_grpc.V2Stub(ClarifaiChannel.get_grpc_channel())
 # KEY 관리
 config = dotenv_values(".env")
 YOUR_CLARIFAI_API_KEY = config.get('CLARIFYKEY')
-YOUR_DEEP_API_KEY=os.environ.get('DEEPAIKEY')
+JWT_SECRET_KEY=config.get('JWTSECRETKEY')
 YOUR_APPLICATION_ID = "my-first-application"
 metadata = (("authorization", f"Key {YOUR_CLARIFAI_API_KEY}"),)
 
@@ -109,13 +111,35 @@ async def root():
 
 # 아무런 인증 방법이 없는 경우
 @app.post("/auth/common")
-async def authimgcommon(data: CommonInput):
+async def authimgcommon(data: CommonInput, authorization: Optional[str] = Header(None)):
     result = {}
+    if authorization:
+        btoken = authorization.split()[1]
+        try:
+            # dictionary{sub: userid(int), iss:"ollenge.com", exp, iat}
+            decoded = jwt.decode(btoken, JWT_SECRET_KEY, algorithms="HS512")
+            user_id = int(decoded["sub"])
+        except:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"토큰이 제대로 입력되지 않았습니다.",
+                    "errcode": 4,
+                    },
+            ) 
+
+    else:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": f"토큰이 입력되지 않았습니다.",
+                "errcode": 4,
+                },
+        ) 
     try:
-        data = str(data)
-        participation_id = data.split("'")[1]
-        feed_img = data.split("'")[3]
-        feed_content = data.split("'")[5]
+        participation_id = str(data.participation_id)
+        feed_img = data.feed_img
+        feed_content = data.feed_content
     except:
         return JSONResponse(
             status_code=400,
@@ -124,17 +148,34 @@ async def authimgcommon(data: CommonInput):
                 "errcode": 1,
                 },
         )
-    # 인증 시간 관련
-    time_flag = is_auth_intime(int(participation_id))
-    if time_flag[0] == 3:
-        feed_time = time_flag[1]
-    else:
-        # raise HTTPException(detail='시간이 아니요', status_code=400)
+    try:
+        if user_id != execute_select_token_user_id(participation_id):
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 5,
+                    },
+            ) 
+        # 인증 시간 관련
+        time_flag = is_auth_intime(int(participation_id))
+        if time_flag[0] == 3:
+            feed_time = time_flag[1]
+        else:
+            # raise HTTPException(detail='시간이 아니요', status_code=400)
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "message": f"인증 시간이 아닙니다.",
+                    "errcode": 2,
+                    },
+            )
+    except:
         return JSONResponse(
-            status_code=400,
+            status_code=500,
             content={
-                "message": f"인증 시간이 아닙니다.",
-                "errcode": 2,
+                "message": f"DB 접근 오류",
+                "errcode": 6,
                 },
         )
     
@@ -153,7 +194,7 @@ async def authimgcommon(data: CommonInput):
         return JSONResponse(
             status_code=500,
             content={
-                "message": f"S3 오류",
+                "message": f"S3 오류 혹은 DB 오류",
                 "errcode": 3
                 },
         )
@@ -169,14 +210,37 @@ async def authimgcommon(data: CommonInput):
 
 # base64를 통해 이미지 분류
 @app.post("/auth/classification")
-async def authimgclassification(data: classificationpicture):
+async def authimgclassification(data: classificationpicture, authorization: Optional[str] = Header(None)):
     result = {}
+    if authorization:
+        btoken = authorization.split()[1]
+        try:
+            # dictionary{sub: userid(int), iss:"ollenge.com", exp, iat}
+            decoded = jwt.decode(btoken, JWT_SECRET_KEY, algorithms="HS512")
+            user_id = int(decoded["sub"])
+        except:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"토큰이 제대로 입력되지 않았습니다.",
+                    "errcode": 5,
+                    },
+            ) 
+    else:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": f"토큰이 입력되지 않았습니다.",
+                "errcode": 5,
+                },
+        ) 
+
     try:
-        data = str(data)
-        participation_id = data.split("'")[1]
-        feed_img = data.split("'")[3]
-        feed_content = data.split("'")[5]
-        classification_keyword = data.split("'")[7]
+        # data = str(data)
+        participation_id = str(data.participation_id)
+        feed_img = data.feed_img
+        feed_content = data.feed_content
+        classification_keyword = data.classification_keyword
     except:
         return JSONResponse(
             status_code=400,
@@ -185,17 +249,34 @@ async def authimgclassification(data: classificationpicture):
                 "errcode": 1,
                 },
         )
-    # 인증 시간 관련
-    time_flag = is_auth_intime(int(participation_id))
-    if time_flag[0] == 3:
-        feed_time = time_flag[1]
-    else:
-        # raise HTTPException(detail='시간이 아니요', status_code=400)
+    try:
+        if user_id != execute_select_token_user_id(participation_id):
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 6,
+                    },
+            ) 
+        # 인증 시간 관련
+        time_flag = is_auth_intime(int(participation_id))
+        if time_flag[0] == 3:
+            feed_time = time_flag[1]
+        else:
+            # raise HTTPException(detail='시간이 아니요', status_code=400)
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "message": f"인증 시간이 아닙니다.",
+                    "errcode": 4,
+                    },
+            )
+    except:
         return JSONResponse(
-            status_code=400,
+            status_code=500,
             content={
-                "message": f"인증 시간이 아닙니다.",
-                "errcode": 4,
+                "message": f"DB 접근 오류",
+                "errcode": 7,
                 },
         )
     
@@ -279,12 +360,34 @@ async def authimgclassification(data: classificationpicture):
 
 # 이미지 특징점 확인
 @app.post("/auth/stdimg")
-async def test(data: StdImgInput):
+async def test(data: StdImgInput, authorization: Optional[str] = Header(None)):
     filename = ''
+    if authorization:
+        btoken = authorization.split()[1]
+        try:
+            # dictionary{sub: userid(int), iss:"ollenge.com", exp, iat}
+            decoded = jwt.decode(btoken, JWT_SECRET_KEY, algorithms="HS512")
+            user_id = int(decoded["sub"])
+        except:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"토큰이 제대로 입력되지 않았습니다.",
+                    "errcode": 5,
+                    },
+            ) 
+    else:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": f"토큰이 입력되지 않았습니다.",
+                "errcode": 5,
+                },
+        ) 
+
     try:
-        data = str(data)
-        participation_id = (data.split("'")[1])
-        std_img=data.split("'")[3]
+        participation_id = str(data.participation_id)
+        std_img=data.std_img
     except:
         return JSONResponse(
             status_code=400,
@@ -309,6 +412,24 @@ async def test(data: StdImgInput):
                 "errcode": 2
                 },
         )
+    try:
+        if user_id != execute_select_token_user_id(participation_id):
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 6,
+                    },
+            )
+    except:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": f"DB 접근 오류",
+                "errcode": 6,
+                },
+        )
+
     feature = cv2.AKAZE_create()
     kp1, desc1 = feature.detectAndCompute(src1, None)
 
@@ -354,14 +475,37 @@ async def test(data: StdImgInput):
 
 # 이미지 특징점 비교
 @app.post("/auth/feature")
-async def featimg(data:FeatureInput):
+async def featimg(data:FeatureInput, authorization: Optional[str] = Header(None)):
     # 영상 불러오기
     # image_nparray2 = np.asarray(bytearray(requests.get(url2).content), dtype=np.uint8)
+    if authorization:
+        btoken = authorization.split()[1]
+        try:
+            # dictionary{sub: userid(int), iss:"ollenge.com", exp, iat}
+            decoded = jwt.decode(btoken, JWT_SECRET_KEY, algorithms="HS512")
+            user_id = int(decoded["sub"])
+        except:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"토큰이 제대로 입력되지 않았습니다.",
+                    "errcode": 6,
+                    },
+            ) 
+
+    else:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": f"토큰이 입력되지 않았습니다.",
+                "errcode": 6,
+                },
+        ) 
+
     try:
-        data = str(data)    
-        participation_id = data.split("'")[1]
-        feed_img = data.split("'")[3]
-        feed_content = data.split("'")[5]
+        participation_id = str(data.participation_id)
+        feed_img = data.feed_img
+        feed_content = data.feed_content
     except:
         return JSONResponse(
             status_code=400,
@@ -379,19 +523,35 @@ async def featimg(data:FeatureInput):
                 "errcode": 2
                 },
         )
+    try:
+        if user_id != execute_select_token_user_id(participation_id):
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 7,
+                    },
+            ) 
         # 인증 시간 관련
-    time_flag = is_auth_intime(int(participation_id))
-    if time_flag[0] == 3:
-        feed_time = time_flag[1]
-    else:
+        time_flag = is_auth_intime(int(participation_id))
+        if time_flag[0] == 3:
+            feed_time = time_flag[1]
+        else:
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "message": f"인증 시간이 아닙니다.",
+                    "errcode": 3,
+                    },
+            )
+    except:
         return JSONResponse(
-            status_code=400,
+            status_code=500,
             content={
-                "message": f"인증 시간이 아닙니다.",
-                "errcode": 3,
+                "message": f"DB 접근 오류",
+                "errcode": 8,
                 },
         )
-    
     imgdata = base64.b64decode(feed_img)
 
     filename = "./imgs/"+make_feature_url_name(participation_id)
@@ -505,47 +665,64 @@ async def featimg(data:FeatureInput):
 
 @app.get("/auth/isauthtoday/{participation_id}")
 async def isauthedtoday(participation_id: int):
-    now = datetime.now()
-    today = current_time_date = now.strftime("%Y-%m-%d")
-    isauthed = execute_select_isauth(participation_id, today)
-    if isauthed:
+    try:
+        now = datetime.now()
+        today = current_time_date = now.strftime("%Y-%m-%d")
+        isauthed = execute_select_isauth(participation_id, today)
+        if isauthed:
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "message": f"이미 인증 되었습니다.",
+                    "isauthed": True
+                    },
+            )
+        else:
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "message": f"인증이 완료되지 않았습니다.",
+                    "isauthed": False
+                    },
+            )
+    except:
         return JSONResponse(
-            status_code=200,
+            status_code=500,
             content={
-                "message": f"이미 인증 되었습니다.",
-                "isauthed": True
-                },
-        )
-    else:
-        return JSONResponse(
-            status_code=200,
-            content={
-                "message": f"인증이 완료되지 않았습니다.",
-                "isauthed": False
+                "message": f"DB 접근 오류",
+                "errcode": 1,
                 },
         )
 
 
 @app.get("/auth/isstdimg/{participation_id}")
 async def isstdimg(participation_id: int):
-    isstdimg = execute_select_std_img(participation_id)
-    if isstdimg:
+    try:
+        isstdimg = execute_select_std_img(participation_id)
+        if isstdimg:
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "message": f"이미 기준 사진이 존재 합니다.",
+                    "isauthed": True
+                    },
+            )
+        else:
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "message": f"인증 사진이 존재하지 않습니다.",
+                    "isauthed": False
+                    },
+            )
+    except:
         return JSONResponse(
-            status_code=200,
+            status_code=500,
             content={
-                "message": f"이미 기준 사진이 존재 합니다.",
-                "isauthed": True
+                "message": f"DB 접근 오류",
+                "errcode": 1,
                 },
         )
-    else:
-        return JSONResponse(
-            status_code=200,
-            content={
-                "message": f"인증 사진이 존재하지 않습니다.",
-                "isauthed": False
-                },
-        )
-
 
 # reload app``
 if __name__ == '__main__':

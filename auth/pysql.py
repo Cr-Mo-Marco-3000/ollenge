@@ -8,7 +8,7 @@ def get_connection():
         user = "ollenge",
         password = DB_PASSWORD,
         host = DB_HOST,
-        port = 32000,
+        port = DB_PORT,
         db = "ollenge",
         charset = 'utf8'
     )
@@ -84,13 +84,6 @@ def execute_insert_feed(participation_id, url, feed_content, feed_time):
     conn.close()
 
 
-# classification 관련 sql
-# def execute_select_keyword(classification_keyword_id):
-#     classification_keyword_id = int(classification_keyword_id)
-#     sql = f"SELECT standard_img from classification_keyword WHERE classification_keyword_id = {classification_keyword_id}"
-#     return execute_select(sql)[0][0]
-
-
 # challenge 인증 시간 뽑아내는 용
 def execute_select_challenge_auth_time(participation_id):
     participation_id = int(participation_id)
@@ -110,7 +103,20 @@ def execute_select_isauth(participation_id, feed_time):
     else:
         return False 
 
+
+# 인증 관련 아이디 비교
+def execute_select_token_user_id(participation_id):
+    participation_id = int(participation_id)
+    sql = f"SELECT user_id from participation WHERE participation_id = {participation_id}"
+    result = execute_select(sql)
+    print(result)
+    if result:
+        return result[0][0]
+    else:
+        return False
+
         
 config = dotenv_values(".env")
 DB_PASSWORD = config.get('DB_PASSWORD')
 DB_HOST = config.get('DB_HOST')
+DB_PORT= config.get('DB_PORT')
