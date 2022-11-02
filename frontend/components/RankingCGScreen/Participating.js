@@ -50,7 +50,7 @@ const Participating = () => {
       {tempList
         .filter((listItem) => listItem.isChallenge)
         .map((challengeInfo, idx) => (
-          <ParticipatingCard />
+          <ParticipatingCard key={idx} />
         ))}
     </ScrollBackground>
   )

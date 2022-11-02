@@ -39,7 +39,10 @@ const Challenging = () => {
       endDate: "11.05",
     },
   ]
-
+  // 여기 함수를 넣자
+  const myFunc = () => {
+    console.log("앙냥냥")
+  }
   return (
     <ScrollBackground>
       <DivideView>
@@ -51,7 +54,7 @@ const Challenging = () => {
       {tempList
         .filter((listItem) => listItem.isChallenge)
         .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} />
+          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={myFunc} />
         ))}
       <DivideView>
         <IconView>
@@ -62,7 +65,7 @@ const Challenging = () => {
       {tempList
         .filter((listItem) => !listItem.isChallenge)
         .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} />
+          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={myFunc} />
         ))}
     </ScrollBackground>
   )

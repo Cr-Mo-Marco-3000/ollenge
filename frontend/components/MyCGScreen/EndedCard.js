@@ -220,7 +220,7 @@ export default function EndedCard(props) {
                   style={{
                     width: 30,
                     height: 30,
-                    bottom: 2,
+                    bottom: 5,
                     marginRight: 5,
                   }}
                 >

@@ -4,7 +4,7 @@ import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import AppCard from "../common/AppCard"
-import { ProgressBar } from "react-native-paper"
+import { ProgressBar, Badge } from "react-native-paper"
 import { ExampleIcon, RunningIcon } from "../../assets/images/MyCGScreen/MyCGScreen"
 
 export default function ChallengingCard(props) {
@@ -18,6 +18,9 @@ export default function ChallengingCard(props) {
   const endDate = props.challengeInfo.endDate
   // 카드 높이 * 70%(상단높이) * 상단높이 위쪽 깎기 * 보다 약간 작게
   const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
+
+  const func = props.func
+
   return (
     <View
       style={{
@@ -33,7 +36,7 @@ export default function ChallengingCard(props) {
           width: "90%",
         }}
       >
-        <AppCard>
+        <AppCard func={func}>
           {/* 상단  */}
           <View
             style={{
@@ -130,7 +133,7 @@ export default function ChallengingCard(props) {
                     }}
                   >
                     <AppText size="2">{teamName}</AppText>
-                    <View
+                    {/* <View
                       style={{
                         width: 200 * 0.7 * 0.95 * 0.9 * 0.6 * 0.5,
                         height: 200 * 0.7 * 0.95 * 0.9 * 0.6 * 0.5,
@@ -140,9 +143,17 @@ export default function ChallengingCard(props) {
                         justifyContent: "center",
                         alignItems: "center",
                       }}
+                    > */}
+                    <Badge
+                      size={35}
+                      style={{
+                        marginLeft: 5,
+                        backgroundColor: ColorSet.yellowColor(1),
+                      }}
                     >
                       <AppText size="2">{memberNumber}명</AppText>
-                    </View>
+                    </Badge>
+                    {/* </View> */}
                   </View>
                 </View>
               </View>

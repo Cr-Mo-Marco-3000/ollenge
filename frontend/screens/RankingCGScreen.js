@@ -19,7 +19,7 @@ function RankingCGScreen() {
       <Header>
         <HeaderTextView>
           <HeaderTextColumn>
-            <AppBoldText>내 챌린지</AppBoldText>
+            <AppBoldText>랭킹 챌린지</AppBoldText>
           </HeaderTextColumn>
           <HeaderTextColumn></HeaderTextColumn>
         </HeaderTextView>
@@ -38,8 +38,8 @@ function RankingCGScreen() {
             },
           }}
         >
-          <Tab.Screen name="진행 중" component={Parcitipating} />
-          <Tab.Screen name="참여 신청" component={Proceeding} />
+          <Tab.Screen name="진행 중" component={Proceeding} />
+          <Tab.Screen name="참여 신청" component={Parcitipating} />
         </Tab.Navigator>
       </NavigationContainer>
       {/* 아래부분 */}

@@ -13,7 +13,6 @@ size prop으로, 숫자를 넣습니다.
 const AppBoldText = (props) => {
   const selectedColor = props.color ? props.color : "navy"
   const selectedSize = props.size ? parseInt(props.size) : 3
-
   const theme = {
     orange: ColorSet.orangeColor(1),
     navy: ColorSet.navyColor(1),
@@ -30,7 +29,7 @@ const AppBoldText = (props) => {
     <Text
       style={{
         color: theme[selectedColor],
-        fontSize: RFPercentage(selectedSize),
+        fontSize: props.size ? selectedSize : RFPercentage(selectedSize),
         fontFamily: "HyeminBold",
       }}
     >
