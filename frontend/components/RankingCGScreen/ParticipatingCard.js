@@ -69,7 +69,7 @@ export default function ParticipatingCard(props) {
             >
               <View
                 style={{
-                  height: "60%",
+                  height: "70%",
                 }}
               >
                 <TextRow
@@ -85,7 +85,7 @@ export default function ParticipatingCard(props) {
                     top: 5,
                   }}
                 >
-                  <AppBoldText size="15" color="navy">
+                  <AppBoldText pxSize={15} color="navy">
                     {startDate} - {endDate} (2주)
                   </AppBoldText>
                 </TextRow>

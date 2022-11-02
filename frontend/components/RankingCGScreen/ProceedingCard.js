@@ -85,7 +85,7 @@ export default function ProceedingCard(props) {
                     top: 5,
                   }}
                 >
-                  <AppBoldText size="15" color="navy">
+                  <AppBoldText pxSize={15} color="navy">
                     {startDate} - {endDate} (2주)
                   </AppBoldText>
                 </TextRow>
@@ -126,7 +126,7 @@ export default function ProceedingCard(props) {
                           right: 3,
                         }}
                       >
-                        <AppBoldText color="white" size={14}>
+                        <AppBoldText color="white" pxSize={14}>
                           {peopleNumber}
                         </AppBoldText>
                       </View>
@@ -143,7 +143,7 @@ export default function ProceedingCard(props) {
                           justifyContent: "center",
                         }}
                       >
-                        <AppBoldText color="white" size={13}>
+                        <AppBoldText color="white" pxSize={13}>
                           참여 중
                         </AppBoldText>
                       </ButtonInner>
