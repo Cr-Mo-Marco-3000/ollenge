@@ -1,0 +1,89 @@
+# docker-compose version
+version: "3.8"
+
+#container list
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    volumes:
+      - /home/ubuntu/ollenge/deployment/db-init/:/docker-entrypoint-initdb.d/
+    networks:
+      - app-network
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: "Asia/Seoul"
+    privileged: true
+  spring_api:    
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: spring_backend
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: "Asia/Seoul"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/ollenge?userUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true"
+      server.address: 0.0.0.0
+    networks:
+      - app-network
+    depends_on:
+      - db
+  fastapi_auth:
+    build:
+      context: auth
+      dockerfile: Dockerfile
+    container_name: fastapi_auth
+    restart: always
+    ports:
+      - "9090:9090"
+    environment:
+      TZ: "Asia/Seoul"
+    networks:
+      - app-network
+    depends_on:
+      - db
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - /home/ubuntu/ollenge/deployment/certbot-etc:/etc/letsencrypt
+      - /home/ubuntu/ollenge/deployment/dist:/var/www/html
+    command: renew
+  nginx:
+    container_name: nginx
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /home/ubuntu/ollenge/deployment/dist:/var/www/html
+      - /home/ubuntu/ollenge/deployment/nginx-conf:/etc/nginx/conf.d
+      - /home/ubuntu/ollenge/deployment/certbot-etc:/etc/letsencrypt
+    networks:
+      - app-network
+    depends_on:
+      - certbot
+  jenkins:
+    restart: always
+    image: jenkins/jenkins:lts
+    user: root
+    container_name: jenkins
+    ports:
+      - "8000:8080"
+      - "50000:50000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  certbot-etc:
+  dist:
+  nginx-conf:
+
+networks:
+  app-network:
+    driver: bridge
