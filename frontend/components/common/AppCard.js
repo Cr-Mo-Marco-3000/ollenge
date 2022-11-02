@@ -25,7 +25,7 @@ export default function AppCard(props) {
   )
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   cardShadow: {
     backgroundColor: "white",
     borderRadius: 10,
