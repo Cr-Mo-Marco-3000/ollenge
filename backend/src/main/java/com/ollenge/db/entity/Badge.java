@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,6 +27,10 @@ public class Badge {
 
     @Column(length = 10, nullable = false)
     String type;
+
+    @Column(nullable = false)
+    @Positive
+    int grade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_preset_id")
