@@ -4,8 +4,6 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -40,5 +38,9 @@ public class User {
 
     @Column(nullable = false, columnDefinition = "int default 0")
     int userScore;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "selected_badge_id")
+    Badge badge;
 
 }

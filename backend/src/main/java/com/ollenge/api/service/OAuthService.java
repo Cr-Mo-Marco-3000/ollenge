@@ -27,6 +27,33 @@ public class OAuthService {
     @Autowired
     UserRepository userRepository;
 
+    public JSONObject getGoogleUser(String token) throws Exception {
+        String reqURL = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + token;
+        StringBuilder result = new StringBuilder();
+        BufferedReader br = null;
+
+        try {
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("GET");
+//            conn.setDoOutput(true);
+//            conn.setRequestProperty("Authorization", "Bearer " + token);
+
+            br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                result.append(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) br.close();
+        }
+
+        return new JSONObject(result.toString());
+    }
+
     public String getKakaoAccessToken(String code) {
         String accessToken="";
         String reqURL="https://kauth.kakao.com/oauth/token";
@@ -104,7 +131,9 @@ public class OAuthService {
 
     public User createUser(JSONObject jsonObject) throws JSONException {
         User user = new User();
-        user.setNickname(jsonObject.getString("id"));
+        String nickname = jsonObject.getString("id");
+        if (nickname.length() > 14) nickname = nickname.substring(0, 14);
+        user.setNickname(nickname);
         user.setAuthCode(jsonObject.getString("id"));
         user.setLoginType(jsonObject.getString("login_type"));
         user.setUserFlag(false);

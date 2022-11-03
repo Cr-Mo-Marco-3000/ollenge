@@ -5,13 +5,13 @@ import * as Font from "expo-font"
 import AppLoading from "expo-app-loading"
 import { useState } from "react"
 
-import StartScreen from "./screens/StartScreen"
-import MyCGScreen from "./screens/MyCGScreen"
-import RankingCGScreen from "./screens/RankingCGScreen"
-import UserRankScreen from "./screens/UserRankScreen"
-import MyPageScreen from "./screens/MyPageScreen"
+import StartScreen from "./src/screens/StartScreen"
+import MyCGScreen from "./src/screens/MyCGScreen"
+import RankingCGScreen from "./src/screens/RankingCGScreen"
+import UserRankScreen from "./src/screens/UserRankScreen"
+import MyPageScreen from "./src/screens/MyPageScreen"
 
-import ColorSet from "./style/ColorSet"
+import ColorSet from "./src/style/ColorSet"
 
 const MyCGRoute = () => <MyCGScreen />
 
@@ -25,9 +25,9 @@ const App = () => {
   const [isReady, setIsReady] = useState(false)
   const getFonts = async () => {
     await Font.loadAsync({
-      Recipekorea: require("./assets/fonts/Recipekorea.ttf"),
-      HyeminRegular: require("./assets/fonts/HyeminRegular.ttf"),
-      HyeminBold: require("./assets/fonts/HyeminBold.ttf"),
+      Recipekorea: require("./src/assets/fonts/Recipekorea.ttf"),
+      HyeminRegular: require("./src/assets/fonts/HyeminRegular.ttf"),
+      HyeminBold: require("./src/assets/fonts/HyeminBold.ttf"),
     })
   }
 

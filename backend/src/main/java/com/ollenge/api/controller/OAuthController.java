@@ -52,6 +52,33 @@ public class OAuthController {
         return ResponseEntity.status(200).body(UserLoginGetRes.of("카카오 로그인 성공", 200, JwtTokenUtil.getToken(Long.toString(userId)), userFlag));
     }
 
+    @GetMapping("/google")
+    public ResponseEntity<UserLoginGetRes> googleLogin(@RequestParam String accessToken) {
+        long userId;
+        String authCode;
+        User user;
+        boolean userFlag;
 
+        try {
+            JSONObject jsonObject = oAuthService.getGoogleUser(accessToken);
+            System.out.println(jsonObject);
+            jsonObject.put("login_type", "google");
+            authCode = jsonObject.getString("id");
+            // 존재하지 않으면 회원가입
+            if (!oAuthService.checkUser(jsonObject)) {
+                oAuthService.createUser(jsonObject);
+            }
+
+            userId = userService.getUserIdByAuthCode(authCode);
+            user = userService.getUserByUserId(userId);
+            userFlag = user.isUserFlag();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(UserLoginGetRes.of("구글 로그인 실패", 400, null, false));
+        }
+
+        return ResponseEntity.status(200).body(UserLoginGetRes.of("구글 로그인 성공", 200, JwtTokenUtil.getToken(Long.toString(userId)), userFlag));
+    }
 
 }

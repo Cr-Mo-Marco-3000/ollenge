@@ -12,7 +12,7 @@ import {
 } from "../../assets/images/RankingCGScreen/RankingCGScreen"
 import styled from "styled-components"
 
-export default function ProceedingCard(props) {
+export default function ParticipatingCard(props) {
   const windowWidth = Dimensions.get("window").width
 
   // 카드 정보
@@ -85,67 +85,18 @@ export default function ProceedingCard(props) {
                     top: 5,
                   }}
                 >
-                  <AppBoldText size="15" color="navy">
-                    {startDate} - {endDate}
+                  <AppBoldText pxSize={15} color="navy">
+                    {startDate} - {endDate} (2주)
                   </AppBoldText>
                 </TextRow>
-                {/* 얜 안씀 */}
-                <TextRow></TextRow>
                 <TextRow
                   style={{
-                    position: "relative",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    left: -5,
+                    top: 7,
                   }}
                 >
-                  <Button
-                    style={{
-                      backgroundColor: ColorSet.navyColor(1),
-                    }}
-                  >
-                    <ButtonInner>
-                      <View
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          width: "50%",
-                        }}
-                      >
-                        <BoyIcon />
-                      </View>
-                      <View
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          width: "50%",
-                          right: 3,
-                        }}
-                      >
-                        <AppBoldText color="white" size={14}>
-                          {peopleNumber}
-                        </AppBoldText>
-                      </View>
-                    </ButtonInner>
-                  </Button>
-                  {isParticipated && (
-                    <Button
-                      style={{
-                        backgroundColor: ColorSet.orangeColor(0.7),
-                      }}
-                    >
-                      <ButtonInner
-                        style={{
-                          justifyContent: "center",
-                        }}
-                      >
-                        <AppBoldText color="white" size={13}>
-                          참여 중
-                        </AppBoldText>
-                      </ButtonInner>
-                    </Button>
-                  )}
+                  <AppBoldText color="orange">D-11</AppBoldText>
                 </TextRow>
+                <TextRow></TextRow>
               </View>
             </View>
             {/* 오른쪽 => 이미지만 들어갈곳 */}
@@ -173,21 +124,4 @@ export default function ProceedingCard(props) {
 
 const TextRow = styled.View`
   height: 25%;
-`
-
-const Button = styled.View`
-  width: 65px;
-  border-radius: 20px;
-  height: 100%;
-  margin-right: 5px;
-  justify-content: center;
-  align-items: center;
-`
-
-const ButtonInner = styled.View`
-  width: 65%;
-  height: 90%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
 `

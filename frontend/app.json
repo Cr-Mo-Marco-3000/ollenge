@@ -16,7 +16,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.a501.Ollenge"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +28,11 @@
     },
     "web": {
       "favicon": "./assets/iamges/icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a69ffeed-7a6a-4e6f-ae90-c105edd2a93b"
+      }
     }
   }
 }
