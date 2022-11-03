@@ -32,7 +32,7 @@ function SignupScreen() {
     <LinearGradient style={styles.rootScreen} colors={["white", `${ColorSet.paleBlueColor(1)}`]}>
       <KeyboardAvoidingView style={{ width: "100%", flex: 1 }} behavior={"position"}>
         <View style={{ marginTop: "30%", width: "100%", alignItems: "center" }}>
-          <AppBoldText size={3}>회원 정보 설정</AppBoldText>
+          <AppBoldText>회원 정보 설정</AppBoldText>
         </View>
         <ImagePickerContainer
           imageUri={profileImageUri}
@@ -40,7 +40,7 @@ function SignupScreen() {
           defaultImageUri={defaultImageUri}
         />
         <View style={styles.textInputContainer}>
-          <AppBoldText size={3}>닉네임</AppBoldText>
+          <AppBoldText>닉네임</AppBoldText>
           <TextInputContainer inputHandler={nicknameInputHandler} inputText={nicknameInput} />
         </View>
         <View style={styles.buttonContainer}>
