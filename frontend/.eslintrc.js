@@ -15,6 +15,7 @@ module.exports = {
     "linebreak-style": ["error", require("os").EOL === "\r\n" ? "windows" : "unix"],
     quotes: ["error", "double"],
     semi: ["error", "never"],
+    "react/prop-types": 0,
   },
   settings: {
     react: { version: "detect" },
