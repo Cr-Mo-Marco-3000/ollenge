@@ -16,8 +16,8 @@ export default function UserInfoView() {
         />
       </View>
       <View alignItems="center">
-        <AppText size={8}>Chan</AppText>
-        <AppText size={4} color={"orange"}>
+        <AppText size={6}>Chan</AppText>
+        <AppText size={3} color={"orange"}>
           123점
         </AppText>
       </View>
