@@ -1,17 +1,24 @@
-import React from "react"
+import React, { useContext } from "react"
 
 import * as WebBrowser from "expo-web-browser"
 import * as Google from "expo-auth-session/providers/google"
 import { View } from "react-native"
 import styled from "styled-components/native"
+import { useNavigation } from "@react-navigation/native"
+import { createInstance } from "../../api/settings"
 
 import { EXPO_CLIENT_ID, ANDROID_CLIENT_ID, IOS_CLIENT_ID } from "@env"
 import { GoogleLogo } from "../../assets/images"
 import AppText from "../common/AppText"
+import { AuthContext } from "../../../store/auth-context"
 
 WebBrowser.maybeCompleteAuthSession()
 
 function GoogleButton(props) {
+  const navigation = useNavigation()
+  const instance = createInstance()
+  const authCtx = useContext(AuthContext)
+
   const [request, response, promptAsync] = Google.useAuthRequest({
     expoClientId: EXPO_CLIENT_ID,
     iosClientId: IOS_CLIENT_ID,
@@ -22,8 +29,15 @@ function GoogleButton(props) {
     if (response?.type === "success") {
       const { authentication } = response
       const accessToken = response.authentication.accessToken
-      console.log(accessToken)
-      props.startScreenChange()
+      instance.get("/oauth/google", { params: { accessToken: accessToken } }).then((res) => {
+        authCtx.authenticate(res.data.accessToken)
+
+        if (res.data.userFlag) {
+          props.startScreenChange()
+        } else {
+          navigation.push("Signup")
+        }
+      })
     }
   }, [response])
 

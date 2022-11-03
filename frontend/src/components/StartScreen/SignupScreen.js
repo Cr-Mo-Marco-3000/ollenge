@@ -2,7 +2,7 @@ import React from "react"
 
 import { StyleSheet, View, Image, KeyboardAvoidingView, Platform } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
-import { useState, useEffect } from "react"
+import { useState, useContext } from "react"
 
 import ColorSet from "../../style/ColorSet"
 import defaultImage from "../../assets/images/default-image.png"
@@ -11,8 +11,12 @@ import ImagePickerContainer from "../common/ImagePicker"
 import TextInputContainer from "../common/TextInputContainer"
 import AppButton from "../common/AppButton"
 import { RFPercentage } from "react-native-responsive-fontsize"
+import { AuthContext } from "./../../../store/auth-context"
 
 function SignupScreen() {
+  const AuthCtx = useContext(AuthContext)
+  console.log(AuthCtx.token)
+
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   const [profileImageUri, setProfileImageUri] = useState(defaultImageUri)
   const [nicknameInput, setNicknameInput] = useState("")

@@ -3,7 +3,7 @@ import { BottomNavigation } from "react-native-paper"
 import { View, StyleSheet } from "react-native"
 import * as Font from "expo-font"
 import AppLoading from "expo-app-loading"
-import { useState } from "react"
+import { useState, useContext } from "react"
 
 import StartScreen from "./src/screens/StartScreen"
 import MyCGScreen from "./src/screens/MyCGScreen"
@@ -12,6 +12,7 @@ import UserRankScreen from "./src/screens/UserRankScreen"
 import MyPageScreen from "./src/screens/MyPageScreen"
 
 import ColorSet from "./src/style/ColorSet"
+import AuthContextProvider, { AuthContext } from "./store/auth-context"
 
 const MyCGRoute = () => <MyCGScreen />
 
@@ -58,37 +59,44 @@ const App = () => {
     setIndex(0)
   }
   // index == 4인 경우 StartScreen 출력, 그 외엔 BottomNav랑 해당 스크린 출력
-  return isReady ? (
-    <View style={styles.rootScreen}>
-      {index == 4 ? (
-        <StartScreen startScreenChange={startScreenChange} />
+
+  const authCtx = useContext(AuthContext)
+  console.log(authCtx.isAuthenticated)
+  return (
+    <AuthContextProvider>
+      {isReady ? (
+        <View style={styles.rootScreen}>
+          {index == 4 ? (
+            <StartScreen startScreenChange={startScreenChange} />
+          ) : (
+            <BottomNavigation
+              navigationState={{ index, routes }}
+              onIndexChange={setIndex}
+              renderScene={renderScene}
+              compact={false}
+              sceneAnimationType={"shifting"}
+              barStyle={styles.bottomNavContainer}
+              activeColor={`${ColorSet.orangeColor(1)}`}
+              inactiveColor={`${ColorSet.navyColor(1)}`}
+              theme={{
+                fonts: {
+                  labelMedium: {
+                    fontFamily: "HyeminBold",
+                  },
+                },
+                colors: {
+                  onSurfaceVariant: `${ColorSet.navyColor(1)}`,
+                  onSurface: `${ColorSet.orangeColor(1)}`,
+                  secondaryContainer: "#FF999900",
+                },
+              }}
+            />
+          )}
+        </View>
       ) : (
-        <BottomNavigation
-          navigationState={{ index, routes }}
-          onIndexChange={setIndex}
-          renderScene={renderScene}
-          compact={false}
-          sceneAnimationType={"shifting"}
-          barStyle={styles.bottomNavContainer}
-          activeColor={`${ColorSet.orangeColor(1)}`}
-          inactiveColor={`${ColorSet.navyColor(1)}`}
-          theme={{
-            fonts: {
-              labelMedium: {
-                fontFamily: "HyeminBold",
-              },
-            },
-            colors: {
-              onSurfaceVariant: `${ColorSet.navyColor(1)}`,
-              onSurface: `${ColorSet.orangeColor(1)}`,
-              secondaryContainer: "#FF999900",
-            },
-          }}
-        />
+        <AppLoading startAsync={getFonts} onFinish={() => setIsReady(true)} onError={() => {}} />
       )}
-    </View>
-  ) : (
-    <AppLoading startAsync={getFonts} onFinish={() => setIsReady(true)} onError={() => {}} />
+    </AuthContextProvider>
   )
 }
 
