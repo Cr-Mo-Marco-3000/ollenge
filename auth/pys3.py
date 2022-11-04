@@ -71,7 +71,7 @@ def make_profile_url_name(user_id):
     user_id = str(user_id)
     now = datetime.now()
     current_time = now.strftime("%Y_%m_%d_%H_%M_%S.jpg")
-    name = "profile"+participation_id + "_" + current_time
+    name = "profile"+user_id + "_" + current_time
     return name
 
 
