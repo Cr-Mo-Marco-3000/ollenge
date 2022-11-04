@@ -36,6 +36,10 @@ export default function ParticipatingCard(props) {
   // 카드 높이 * 70%(상단높이) * 상단높이 위쪽 깎기 * 보다 약간 작게
   // const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
 
+  const openAndClose = () => {
+    props.openAndClose()
+  }
+
   return (
     <View
       style={{
@@ -51,7 +55,7 @@ export default function ParticipatingCard(props) {
           width: "90%",
         }}
       >
-        <AppCard>
+        <AppCard func={openAndClose}>
           <View
             style={{
               flexDirection: "row",

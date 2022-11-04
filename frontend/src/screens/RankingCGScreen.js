@@ -8,6 +8,7 @@ import ColorSet from "../style/ColorSet"
 import Participating from "../components/RankingCGScreen/Participating"
 import Proceeding from "../components/RankingCGScreen/Proceeeding"
 import TopMargin from "../components/common/TopMargin"
+import ParticipatingDetail from "../components/RankingCGScreen/ParticipatingDetail"
 
 function RankingCGScreen() {
   const Tab = createMaterialTopTabNavigator()
@@ -15,7 +16,6 @@ function RankingCGScreen() {
   return (
     <Body>
       <TopMargin />
-      {/* Header부분 */}
       <Header>
         <HeaderTextView>
           <HeaderTextColumn>
