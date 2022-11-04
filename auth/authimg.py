@@ -28,7 +28,7 @@ from PIL import Image
 from datetime import datetime
 
 # S3연결
-from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name
+from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name, make_profile_url_name
 # DB 연결
 from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img
 # model 연결
@@ -124,7 +124,6 @@ async def uploadimg(data: uploadImg, authorization: Optional[str] = Header(None)
                     "errcode": 3,
                     },
             )
-
     else:
         return JSONResponse(
             status_code=403,
@@ -134,13 +133,52 @@ async def uploadimg(data: uploadImg, authorization: Optional[str] = Header(None)
                 },
         ) 
 
-    img = data.profile_img
-    execute_update_profile_img(user_id,img)
+    try:
+        profile_img = data.profile_img
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1,
+                },
+        )
+
+    try:
+        imgdata = base64.b64decode(profile_img)
+        filename = "./imgs/"+make_profile_url_name(user_id)
+        with open(filename, 'wb') as f:
+            f.write(imgdata)
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1,
+                },
+        )
+
+    try:
+        to = make_profile_url_name(user_id)
+        file_url = s3_upload(filename, 'homybk', to)
+        if file_url:
+            execute_insert_feed(participation_id, file_url, feed_content,feed_time)
+    except:
+        remove_img(filename)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": f"S3 오류 혹은 DB 오류",
+                "errcode": 2
+                },
+        )
+
+    remove_img(filename)
     return JSONResponse(
         status_code=200,
         content={
-            "message": f"Oops! did something. There goes a rainbow...",
-            "errcode": 0,
+            "message": f"완료 되었습니다.",
+            "profile_img": file_url
             },
     )
 
