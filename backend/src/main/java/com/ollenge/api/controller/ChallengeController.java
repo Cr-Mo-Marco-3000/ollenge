@@ -3,23 +3,28 @@ package com.ollenge.api.controller;
 import com.ollenge.api.exception.*;
 import com.ollenge.api.request.ChallengeParticipationPostReq;
 import com.ollenge.api.request.ChallengePostReq;
-import com.ollenge.api.response.ChallengeInfoGetRes;
-import com.ollenge.api.response.ChallengePostRes;
-import com.ollenge.api.response.ChallengeStateGetRes;
-import com.ollenge.api.response.data.ChallengeCreatedData;
-import com.ollenge.api.response.data.ChallengeInfoData;
-import com.ollenge.api.response.data.ChallengeStateData;
+import com.ollenge.api.response.*;
+import com.ollenge.api.response.data.*;
 import com.ollenge.api.service.ChallengeService;
+import com.ollenge.api.service.UserService;
 import com.ollenge.common.model.response.BaseResponseBody;
+import com.ollenge.common.util.JwtTokenUtil;
+import com.ollenge.db.entity.ChallengePreset;
+import com.ollenge.db.entity.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,6 +34,9 @@ import java.util.NoSuchElementException;
 public class ChallengeController {
 
     private final ChallengeService challengeService;
+
+    @Autowired
+    UserService userService;
 
     @PostMapping
     @ApiOperation(value = "챌린지 생성", notes = "챌린지를 생성합니다.")
@@ -171,6 +179,30 @@ public class ChallengeController {
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "해당하는 챌린지가 없습니다."));
         } catch (Exception exception) {
             exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
+
+    @GetMapping("/scheduled")
+    @ApiOperation(value = "모집 중인 랭킹 챌린지 조회", notes = "모집 중인 랭킹 챌린지를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 400, message = "권한이 없습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> getChallengeScheduled(@ApiIgnore Authentication authentication) {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userService.getUserByUserId(userId);
+
+        if (user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
+        try {
+            List<ChallengePreset> challengePresetList = challengeService.getChallengePreset();
+            LocalDate now = LocalDate.now();
+            LocalDate start = challengeService.getChallengePresetStartDate(now);
+            LocalDate end = challengeService.getChallengePresetEndDate(now);
+            return ResponseEntity.status(200).body(ChallengePresetGetRes.of(200, "모집 중인 랭킹 챌린지 조회 성공", start, end, challengePresetList));
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
         }
     }
