@@ -60,7 +60,7 @@ public class UserRepositorySupport {
         if (type.equals("scheduled")) return formattedStartDate.gt(formatedToday);
         else if (type.equals("ongoing")) return formattedStartDate.loe(formatedToday).and(formattedEndDate.goe(formatedToday));
         else if (type.equals("completed")) return formattedEndDate.lt(formatedToday);
-        return qParticipation.challenge.challengePreset.isNull();
+        return null;
     }
 
     private BooleanExpression challengPreseteNotNull(boolean isRankingChallenge) {
