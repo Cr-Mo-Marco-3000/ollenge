@@ -1,21 +1,27 @@
 package com.ollenge.api.service;
 
-import com.ollenge.api.exception.DuplicatedNicknameException;
-import com.ollenge.api.exception.InvalidNicknameException;
-import com.ollenge.api.exception.InvalidUserDescriptionException;
+import com.ollenge.api.exception.*;
+import com.ollenge.api.response.data.UserParticipatedChallengeData;
+import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.StringUtils;
+import com.ollenge.db.entity.Challenge;
 import com.ollenge.db.entity.User;
 import com.ollenge.db.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ollenge.db.repository.UserRepositorySupport;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserRepositorySupport userRepositorySupport;
 
     public User getUserByUserId(long userId) {
         Optional<User> user = userRepository.findById(userId);
@@ -54,6 +60,30 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    public List<UserParticipatedChallengeData> getUserOngoingRankingChallenge(Authentication authentication) throws InvalidChallengeIdException, InvalidUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        List<Challenge> challenge = userRepositorySupport.getUserOngoingUserChallenge(user, true);
+        List<UserParticipatedChallengeData> rankingChallengeList = new ArrayList<>();
+        for (Challenge item : challenge) {
+            rankingChallengeList.add(UserParticipatedChallengeData.of(item));
+        }
+        return rankingChallengeList;
+    }
+
+    public List<UserParticipatedChallengeData> getUserOngoingUserChallenge(Authentication authentication) throws InvalidChallengeIdException, InvalidUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        List<Challenge> challenge = userRepositorySupport.getUserOngoingUserChallenge(user, false);
+        List<UserParticipatedChallengeData> userChallengeList = new ArrayList<>();
+        for (Challenge item : challenge) {
+            userChallengeList.add(UserParticipatedChallengeData.of(item));
+        }
+        return userChallengeList;
     }
 
 }

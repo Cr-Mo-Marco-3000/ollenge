@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,4 +27,9 @@ public class Participation {
     @JoinColumn(name = "challenge_id", nullable = false)
     Challenge challenge;
 
+    @OneToMany(mappedBy = "participation")
+    List<Feed> feed;
+
+    @OneToOne(mappedBy = "participation")
+    AuthStandardImg authStandardImg;
 }
