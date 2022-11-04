@@ -230,7 +230,7 @@ const PageView = styled.View`
   width: ${screenWidth}px;
   justify-content: center;
   align-items: center;
-  bottom: ${(screenHeight * 0.1) / 2}px;
+  /* bottom: ${(screenHeight * 0.1) / 3}px; */
 `
 
 const CardView = styled.View`
