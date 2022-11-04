@@ -1,49 +1,54 @@
-import React, { useState } from "react"
-import { Image, View } from "react-native"
-import TopMargin from "../common/TopMargin"
-import { LinearGradient } from "expo-linear-gradient"
-import ColorSet from "../../style/ColorSet"
-import AppButton from "../common/AppButton"
-import DeviceInfo from "../../style/DeviceInfo"
-import AppText from "../common/AppText"
-import TextInputContainer from "../common/TextInputContainer"
-import { useNavigation } from "@react-navigation/native"
+import React from "react"
+import { Text, View } from "react-native"
+import PageBase, { fontStyles } from "./PageBase"
 
-const { dw, dh } = DeviceInfo
-
-export default function Page2({ info, setInfo }) {
-  const { challengeName, challengeImg } = info
-  const navigation = useNavigation()
-  const [name, setName] = useState(challengeName)
-  const [img, setImg] = useState(challengeImg)
-
-  const toNext = () => {
-    navigation.navigate("Page2")
-  }
+export default function Page2() {
   return (
-    <LinearGradient
-      style={{ flex: 1 }}
-      colors={[`${ColorSet.paleBlueColor(1)}`, `${ColorSet.yellowColor(1)}`]}
-      end={{ x: 0, y: 1 }}
-      locations={[0.8, 1]}
-    >
-      <View
-        alignSelf="center"
-        alignItems="center"
-        justifyContent="center"
-        style={{ width: "90%", height: "100%", position: "relative" }}
-      >
-        <TopMargin />
-        <AppText>챌린지 팀 정보 설정</AppText>
-        <Image source={{ uri: img }} style={{ width: dw * 0.8, height: dw * 0.8 }} />
+    <PageBase toNext={"Page3"}>
+      <View style={{ justifyContent: "space-between" }}>
+        {/* Choiced Topic */}
+        <Text style={styles.Title}>선택한 목표: 물 마시기</Text>
 
-        <AppText>챌린지 팀 이름</AppText>
-        <TextInputContainer inputText={name} inputHandler={setName} />
+        {/* Top Area */}
+        <View flex={2}>
+          <Text style={styles.TopTitle}>{words.TopTitle}</Text>
+          <Text style={styles.TopContent}>{words.TopContent}</Text>
+        </View>
 
-        <View style={{ width: "100%", height: dh * 0.08 }}>
-          <AppButton boldFlag="bold" title="다음" handler={toNext} />
+        {/* Bottom Area */}
+        <View flex={1}>
+          <Text style={styles.BotTitle}>{words.BotTitle}</Text>
+          <Text style={styles.BotContent}>{words.BotContent}</Text>
         </View>
       </View>
-    </LinearGradient>
+    </PageBase>
   )
+}
+
+const words = {
+  TopTitle: "🍊 오랭지 목표 🍊",
+  TopContent: `오랭지에서 지정한${"\n"}목표와 인증 방식을 사용합니다.`,
+
+  BotTitle: "원하시는 미션이 없나요?",
+  BotContent: "자유롭게 생성해보세요!",
+}
+
+const styles = {
+  Title: {
+    ...fontStyles.HyeminBold({ size: 6 }),
+    marginBottom: 15,
+  },
+  TopTitle: {
+    ...fontStyles.HyeminBold({ size: 6 }),
+    marginBottom: 15,
+  },
+  TopContent: {
+    ...fontStyles.HyeminBold({ size: 5 }),
+  },
+  BotTitle: {
+    ...fontStyles.HyeminBold({ size: 6 }),
+  },
+  BotContent: {
+    ...fontStyles.HyeminBold({ size: 5 }),
+  },
 }
