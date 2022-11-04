@@ -1,10 +1,10 @@
 import * as React from "react"
 import { BottomNavigation } from "react-native-paper"
-import { View, StyleSheet } from "react-native"
+import { StyleSheet } from "react-native"
 import * as Font from "expo-font"
 import AppLoading from "expo-app-loading"
 import { useState, useContext, useEffect } from "react"
-import { NavigationContainer } from "@react-navigation/native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 import StartScreen from "./src/screens/StartScreen"
 import MyCGScreen from "./src/screens/MyCGScreen"
@@ -12,12 +12,9 @@ import RankingCGScreen from "./src/screens/RankingCGScreen"
 import UserRankScreen from "./src/screens/UserRankScreen"
 import MyPageScreen from "./src/screens/MyPageScreen"
 import CreateCGScreen from "./src/screens/CreateCGScreen"
-import LoginScreen from "./src/components/StartScreen/LoginScreen"
-import SignupScreen from "./src/components/StartScreen/SignupScreen"
 
 import ColorSet from "./src/style/ColorSet"
 import AuthContextProvider, { AuthContext } from "./store/auth-context"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const MyCGRoute = () => <MyCGScreen />
 
@@ -92,6 +89,7 @@ function AuthenticatedStack() {
 function Navigation() {
   const authCtx = useContext(AuthContext)
   const [authFlag, setAuthFlag] = useState(false)
+  console.log(authCtx.isAuthenticated, authCtx.isSigned)
   useEffect(() => {
     if (authCtx.isAuthenticated && authCtx.isSigned) {
       setAuthFlag(true)
@@ -111,7 +109,7 @@ function Root() {
   async function fetchToken() {
     const storedToken = await AsyncStorage.getItem("token")
     const storedUserFlag = await AsyncStorage.getItem("userFlag")
-
+    console.log(":store", storedToken, storedUserFlag)
     if (storedToken) {
       authCtx.authenticate(storedToken)
     }

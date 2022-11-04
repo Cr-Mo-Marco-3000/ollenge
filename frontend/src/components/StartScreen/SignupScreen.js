@@ -1,35 +1,57 @@
 import React from "react"
 
-import { StyleSheet, View, Image, KeyboardAvoidingView, Platform } from "react-native"
+import { StyleSheet, View, KeyboardAvoidingView } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { useState, useContext } from "react"
+import { RFPercentage } from "react-native-responsive-fontsize"
 
 import ColorSet from "../../style/ColorSet"
-import defaultImage from "../../assets/images/default-image.png"
 import AppBoldText from "../common/AppBoldText"
 import ImagePickerContainer from "../common/ImagePicker"
 import TextInputContainer from "../common/TextInputContainer"
 import AppButton from "../common/AppButton"
-import { RFPercentage } from "react-native-responsive-fontsize"
-import { AuthContext } from "./../../../store/auth-context"
+import { AuthorizationInstance } from "../../api/settings"
+import { AuthContext } from "../../../store/auth-context"
 
 function SignupScreen() {
-  const AuthCtx = useContext(AuthContext)
-  console.log(AuthCtx.token)
-
-  const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
-  const [profileImageUri, setProfileImageUri] = useState(defaultImageUri)
+  const instance = AuthorizationInstance()
+  const authCxt = useContext(AuthContext)
+  const [profileImageUri, setProfileImageUri] = useState()
+  const [profileImageBase64, setProfileImageBase64] = useState()
   const [nicknameInput, setNicknameInput] = useState("")
 
   function profileImageUriHandler(uri) {
     setProfileImageUri(uri)
   }
+
+  function profileImageBase64Handler(base64) {
+    setProfileImageBase64(base64)
+  }
   function nicknameInputHandler(text) {
     setNicknameInput(text)
   }
 
-  function buttonHandler() {
-    console.log("버튼 클릭")
+  async function buttonHandler() {
+    const data = new Object()
+    // 프로필 이미지 등록
+    if (profileImageBase64) {
+      instance
+        .post("/auth/upload", { profile_img: profileImageBase64 }, {})
+        .then((res) => {
+          console.log(res.data.profile_img)
+          data.profileImg = `${res.data.profile_img}`
+        })
+        .catch((err) => console.log(err))
+    }
+
+    // const data = {}
+    // instance
+    //   .patch("/api/user", { nickname: "웅야" })
+    //   .then((res) => {
+    //     console.log(res.data)
+    //     authCxt.signed(true)
+    //   })
+    //   .catch((err) => console.log(err.response.data))
   }
 
   return (
@@ -41,7 +63,7 @@ function SignupScreen() {
         <ImagePickerContainer
           imageUri={profileImageUri}
           imageUriHandler={profileImageUriHandler}
-          defaultImageUri={defaultImageUri}
+          imageBase64Handler={profileImageBase64Handler}
         />
         <View style={styles.textInputContainer}>
           <AppBoldText>닉네임</AppBoldText>

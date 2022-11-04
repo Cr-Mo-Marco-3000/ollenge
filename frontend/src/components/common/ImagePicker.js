@@ -7,18 +7,23 @@ import { LinearGradient } from "expo-linear-gradient"
 import styled from "styled-components"
 
 import ColorSet from "../../style/ColorSet"
+import defaultImage from "../../assets/images/default-image.png"
 import { PlusIcon } from "../../assets/images"
 
-function ImagePickerContainer({ imageUri, imageUriHandler, defaultImageUri }) {
+function ImagePickerContainer({ imageUri, imageUriHandler, imageBase64Handler }) {
+  const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
+  console.log(defaultImageUri)
   const photoHandler = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     })
     if (!result.cancelled) {
       imageUriHandler(result.uri)
+      imageBase64Handler(result.base64)
     }
   }
 
@@ -29,14 +34,19 @@ function ImagePickerContainer({ imageUri, imageUriHandler, defaultImageUri }) {
       return
     }
 
-    const result = await ImagePicker.launchCameraAsync()
+    const result = await ImagePicker.launchCameraAsync({
+      base64: true,
+      quality: 1,
+    })
     if (!result.cancelled) {
       imageUriHandler(result.uri)
+      imageBase64Handler(result.base64)
     }
   }
 
   const defaultHandler = () => {
-    imageUriHandler(defaultImageUri)
+    imageUriHandler(null)
+    imageBase64Handler(null)
   }
   function pressHandler() {
     Alert.alert(
@@ -54,7 +64,11 @@ function ImagePickerContainer({ imageUri, imageUriHandler, defaultImageUri }) {
   return (
     <RootScreen>
       <View style={styles.imageContainer}>
-        <Image style={styles.profileImage} source={{ uri: imageUri }} resizeMode="cover" />
+        <Image
+          style={styles.profileImage}
+          source={imageUri ? { uri: imageUri } : { uri: defaultImageUri }}
+          resizeMode="cover"
+        />
       </View>
       <Pressable style={styles.editButton} onPress={pressHandler}>
         <LinearGradient

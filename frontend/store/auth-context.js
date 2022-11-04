@@ -14,7 +14,7 @@ export const AuthContext = createContext({
 
 function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState()
-  const [userFalg, setUserFlag] = useState()
+  const [userFlag, setUserFlag] = useState()
 
   function authenticate(token) {
     setAuthToken(token)
@@ -23,7 +23,7 @@ function AuthContextProvider({ children }) {
 
   function signed(flag) {
     setUserFlag(flag)
-    AsyncStorage.setItem("userFlag", userFalg)
+    AsyncStorage.setItem("userFlag", flag)
   }
 
   function logout() {
@@ -35,7 +35,7 @@ function AuthContextProvider({ children }) {
   const value = {
     token: authToken,
     isAuthenticated: !!authToken,
-    isSigned: userFalg,
+    isSigned: userFlag,
     authenticate: authenticate,
     signed: signed,
     logout: logout,
