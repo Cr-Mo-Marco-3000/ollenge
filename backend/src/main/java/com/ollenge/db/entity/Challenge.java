@@ -63,6 +63,9 @@ public class Challenge {
     @Column(nullable = false, columnDefinition = "int default 0")
     int challengeScore;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    int peopleCnt;
+
     @Column(length = 300)
     String challengeDescription;
 

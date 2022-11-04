@@ -23,3 +23,7 @@ class classificationpicture(BaseModel):
     feed_img: str
     feed_content: str
     classification_keyword: str
+
+
+class uploadImg(BaseModel):
+    profile_img: str

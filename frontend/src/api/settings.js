@@ -1,6 +1,7 @@
 import axios from "axios"
+import { BASE_URL as BU } from "@env"
 
-const BASE_URL = "localhost:3000/api"
+const BASE_URL = BU + "/api"
 // BASE_URL = "http://i7a501.p.ssafy.io/api"
 
 const getToken = async () => {

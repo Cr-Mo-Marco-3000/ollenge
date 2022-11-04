@@ -3,14 +3,13 @@ package com.ollenge.api.service;
 import com.ollenge.api.exception.*;
 import com.ollenge.api.request.ChallengeParticipationPostReq;
 import com.ollenge.api.request.ChallengePostReq;
-import com.ollenge.api.response.data.ChallengeCreatedData;
-import com.ollenge.api.response.data.ChallengeInfoData;
-import com.ollenge.api.response.data.ChallengeStateData;
+import com.ollenge.api.response.data.*;
 import com.ollenge.common.util.LocalDateTimeUtils;
 import com.ollenge.db.entity.*;
 import com.ollenge.db.repository.*;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,6 +27,8 @@ public class ChallengeService {
     private final ClassificationTypeRepository classificationTypeRepository;
     private final AuthClassificationRepository authClassificationRepository;
     private final ParticipationRepository participationRepository;
+
+    private final ChallengePresetRepository challengePresetRepository;
 
     public ChallengeCreatedData createChallenge(ChallengePostReq challengePostReq) throws NoSuchElementException, InvalidDateTimeException, DuplicatedPeriodTopicRankingChallengeException, InvalidAuthTypeException, InvalidFieldException {
         ChallengePreset challengePreset = null;
@@ -67,13 +68,12 @@ public class ChallengeService {
                 .challengeDescription(challengePostReq.getChallengeDescription())
                 .build();
 
-        long challengeId = challengeRepository.save(challenge).getChallengeId();
+        challenge = challengeRepository.save(challenge);
         if (challengePostReq.getAuthType().equals("classifi")) {
             if(challengePostReq.getClassificationTypeID() == null) {
                 throw new InvalidFieldException("Cannot match auth type to classification type");
             }
             ClassificationType classificationType = classificationTypeRepository.findById(challengePostReq.getClassificationTypeID()).orElseThrow(() -> { return new InvalidFieldException("Not exist classification type ID"); });
-            challenge.setChallengeId(challengeId);
             AuthClassification authClassification = AuthClassification.builder()
                     .classificationType(classificationType)
                     .challenge(challenge)
@@ -81,13 +81,14 @@ public class ChallengeService {
             authClassificationRepository.save(authClassification);
         }
 
+        challenge.setPeopleCnt(challenge.getPeopleCnt()+1);
         Participation participation = Participation.builder()
                 .user(User.builder().userId(challengePostReq.getUserId()).build())
                 .challenge(challenge)
                 .build();
         participationRepository.save(participation);
 
-        return ChallengeCreatedData.of(challengeId, inviteCode);
+        return ChallengeCreatedData.of(challenge.getChallengeId(), inviteCode);
     }
 
     public void participateChallenge(ChallengeParticipationPostReq challengeParticipationPostReq) throws NoSuchElementException, DuplicatedPeriodTopicRankingChallengeException, InvalidChallengeIdException, InvalidParticipationException, InvalidDateTimeException, InvalidInviteCodeException {
@@ -107,6 +108,8 @@ public class ChallengeService {
         else if (!LocalDateTimeUtils.isValidStartDate(challenge.getStartDate())) {
             throw new InvalidDateTimeException("Already started challenge.");
         }
+
+        challenge.setPeopleCnt(challenge.getPeopleCnt()+1);
         Participation participation = Participation.builder()
                 .user(user)
                 .challenge(challenge)
@@ -127,6 +130,7 @@ public class ChallengeService {
             throw new InvalidDateTimeException("Already started challenge.");
         }
 
+        challenge.setPeopleCnt(challenge.getPeopleCnt()-1);
         participationRepository.deleteByChallengeAndUser(challenge, user);
         if (participationRepository.findByChallenge(challenge).isEmpty()) {
             challengeRepository.delete(challenge);
@@ -159,4 +163,18 @@ public class ChallengeService {
         List<Challenge> challengeList = challengeRepositorySupport.getRankingChallengeTopicPeriod(user, startDate, endDate, challengePreset);
         return !challengeList.isEmpty();
     }
+
+    public List<ChallengePreset> getChallengePreset() {
+        return challengePresetRepository.findAll();
+    }
+
+    public LocalDate getChallengePresetStartDate(LocalDate today) {
+        return today.plusDays(today.lengthOfMonth() - today.getDayOfMonth() + 1);
+    }
+
+    public LocalDate getChallengePresetEndDate(LocalDate today) {
+        LocalDate start = getChallengePresetStartDate(today);
+        return start.plusDays(start.lengthOfMonth() - 1);
+    }
+
 }

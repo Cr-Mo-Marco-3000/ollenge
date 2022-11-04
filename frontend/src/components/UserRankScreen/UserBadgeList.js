@@ -5,7 +5,7 @@ import styled from "styled-components/native"
 
 const { dw, dh } = DeviceInfo
 
-const cw = (dw * 5) / 6
+const cw = (dw * 4.5) / 6
 
 const Case = styled.View`
   width: ${cw};

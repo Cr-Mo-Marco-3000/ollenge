@@ -1,13 +1,14 @@
 {
   "expo": {
     "name": "frontend",
+    "scheme": "com.a501.ollenge",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./src/assets/images/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "icon": "./assets/images/icon.png",
+      "icon": "./src/assets/images/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,17 +18,17 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.a501.Ollenge"
+      "bundleIdentifier": "com.a501.ollenge"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./src/assets/images/icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.a501.Ollenge"
+      "package": "com.a501.ollenge"
     },
     "web": {
-      "favicon": "./assets/iamges/icon.png"
+      "favicon": "./src/assets/iamges/icon.png"
     },
     "extra": {
       "eas": {

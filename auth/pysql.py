@@ -8,7 +8,7 @@ def get_connection():
         user = "ollenge",
         password = DB_PASSWORD,
         host = DB_HOST,
-        port = DB_PORT,
+        port = int(DB_PORT),
         db = "ollenge",
         charset = 'utf8'
     )
@@ -109,11 +109,24 @@ def execute_select_token_user_id(participation_id):
     participation_id = int(participation_id)
     sql = f"SELECT user_id from participation WHERE participation_id = {participation_id}"
     result = execute_select(sql)
-    print(result)
     if result:
         return result[0][0]
     else:
         return False
+
+
+# 프로필 이미지 업로드
+def execute_update_profile_img(user_id, img):
+    user_id = int(user_id)
+    sql = """UPDATE user SET profile_img=%s WHERE user_id=%s"""
+    vals = (img, user_id)
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(sql,vals)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return 0
 
         
 config = dotenv_values(".env")

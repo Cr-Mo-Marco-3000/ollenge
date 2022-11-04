@@ -34,7 +34,7 @@ pxSize={24}
 */
 const AppText = (props) => {
   const selectedColor = props.color ? props.color : "navy"
-
+  const align = props.align ? props.align : "center"
   let selectedSize = 24
 
   if (!props.size && !props.pxSize) {
@@ -65,7 +65,7 @@ const AppText = (props) => {
         color: theme[selectedColor],
         fontSize: selectedSize,
         fontFamily: "HyeminRegular",
-        textAlign: "center",
+        textAlign: align,
       }}
       numberOfLines={props.lineNumber ? props.lineNumber : 0}
     >

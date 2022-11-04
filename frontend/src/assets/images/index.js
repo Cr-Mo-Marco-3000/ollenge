@@ -13,6 +13,9 @@ import Heart4 from "./heart-icon-4.png"
 
 import { Image } from "react-native"
 
+import Triangle from "./triangle-icon.png"
+import Triangle2 from "./triangle-icon2.png"
+
 export function OrangeLogo() {
   return <Image source={Orange} style={{ width: "100%", zIndex: -1 }} resizeMode="contain" />
 }
@@ -56,4 +59,12 @@ export function HeartIcon3() {
 }
 export function HeartIcon4() {
   return <Image source={Heart4} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function TriangleIcon() {
+  return <Image source={Triangle} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function TriangleIcon2() {
+  return <Image source={Triangle2} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
 }

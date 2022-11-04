@@ -28,11 +28,11 @@ from PIL import Image
 from datetime import datetime
 
 # S3연결
-from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name
+from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name, make_profile_url_name
 # DB 연결
-from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id
+from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img
 # model 연결
-from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput
+from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput, uploadImg
 # Header token
 from typing import Optional
 import jwt
@@ -105,6 +105,80 @@ async def root():
         content={
             "message": f"Oops! did something. There goes a rainbow...",
             "errcode": 0,
+            },
+    )
+
+@app.post("/auth/upload")
+async def uploadimg(data: uploadImg, authorization: Optional[str] = Header(None)):
+    if authorization:
+        btoken = authorization.split()[1]
+        try:
+            # dictionary{sub: userid(int), iss:"ollenge.com", exp, iat}
+            decoded = jwt.decode(btoken, JWT_SECRET_KEY, algorithms="HS512")
+            user_id = int(decoded["sub"])
+        except:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"토큰이 제대로 입력되지 않았습니다.",
+                    "errcode": 3,
+                    },
+            )
+    else:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": f"토큰이 입력되지 않았습니다.",
+                "errcode": 3,
+                },
+        ) 
+
+    try:
+        profile_img = data.profile_img
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1,
+                },
+        )
+
+    try:
+        imgdata = base64.b64decode(profile_img)
+        filename = "./imgs/"+make_profile_url_name(user_id)
+        with open(filename, 'wb') as f:
+            f.write(imgdata)
+    except:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"입력이 바르지 않습니다.",
+                "errcode": 1,
+                },
+        )
+
+    try:
+        to = make_profile_url_name(user_id)
+        file_url = s3_upload(filename, 'homybk', to)
+        if file_url:
+            execute_insert_feed(participation_id, file_url, feed_content,feed_time)
+    except:
+        remove_img(filename)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "message": f"S3 오류 혹은 DB 오류",
+                "errcode": 2
+                },
+        )
+
+    remove_img(filename)
+    return JSONResponse(
+        status_code=200,
+        content={
+            "message": f"완료 되었습니다.",
+            "profile_img": file_url
             },
     )
 
@@ -626,9 +700,9 @@ async def featimg(data:FeatureInput, authorization: Optional[str] = Header(None)
     xy_e=explode_xy(sqs)
     A=shoelace_area(xy_e[0],xy_e[1])
     print(A)
-    plt.imshow(dst,),plt.show()
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    # plt.imshow(dst,),plt.show()
+    # cv2.waitKey()
+    # cv2.destroyAllWindows()
     # # 사각형의 넓이에 따라 출력
     if A<=30:
         remove_img(filename)
@@ -696,7 +770,7 @@ async def isauthedtoday(participation_id: int):
 
 
 @app.get("/auth/isstdimg/{participation_id}")
-async def isstdimg(participation_id: int):
+async def isstdimg(participation_id: str):
     try:
         isstdimg = execute_select_std_img(participation_id)
         if isstdimg:
@@ -704,7 +778,8 @@ async def isstdimg(participation_id: int):
                 status_code=200,
                 content={
                     "message": f"이미 기준 사진이 존재 합니다.",
-                    "isauthed": True
+                    "isauthed": True,
+                    "stdimg": isstdimg
                     },
             )
         else:
@@ -715,7 +790,8 @@ async def isstdimg(participation_id: int):
                     "isauthed": False
                     },
             )
-    except:
+    except Exception as e:
+        print(e)
         return JSONResponse(
             status_code=500,
             content={

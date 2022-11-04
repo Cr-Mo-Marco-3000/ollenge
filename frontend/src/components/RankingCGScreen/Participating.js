@@ -1,5 +1,5 @@
 import React from "react-native"
-import { View, ScrollView, Image, Dimensions } from "react-native"
+import { View, ScrollView, Image, Dimensions, Modal, Pressable } from "react-native"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import styled from "styled-components"
@@ -9,7 +9,19 @@ import {
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 
+import { useState, useEffect } from "react"
+
+import ParticipatingDetail from "./ParticipatingDetail"
+
+import AppModal from "../common/AppModal"
+
 const Participating = () => {
+  const [openModal, setOpenModal] = useState(false)
+
+  const openAndClose = () => {
+    setOpenModal(!openModal)
+  }
+
   const tempList = [
     {
       presetTopic: "운동 하기",
@@ -45,13 +57,19 @@ const Participating = () => {
 
   return (
     <ScrollBackground>
+      {/* 모달 */}
+      {openModal && (
+        <AppModal openAndClose={openAndClose}>
+          <ParticipatingDetail />
+        </AppModal>
+      )}
       <View
         style={{
           height: 20,
         }}
       ></View>
       {tempList.map((challengeInfo, idx) => (
-        <ParticipatingCard key={idx} challengeInfo={challengeInfo} />
+        <ParticipatingCard key={idx} challengeInfo={challengeInfo} openAndClose={openAndClose} />
       ))}
     </ScrollBackground>
   )

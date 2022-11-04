@@ -1,5 +1,16 @@
 import { createInstance, AuthorizationInstance } from "../settings.js"
 
+export const googleLogin = async (data) => {
+  const instance = createInstance()
+  await instance
+    .get("/oauth/google", { params: { accessToken: data } })
+    .then((res) => {
+      return res.data
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 /**
  * 회원가입 요청하는 API입니다.
  * @param {Object[]} data

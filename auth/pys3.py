@@ -67,6 +67,14 @@ def make_classification_url_name(participation_id):
     return name
 
 
+def make_profile_url_name(user_id):
+    user_id = str(user_id)
+    now = datetime.now()
+    current_time = now.strftime("%Y_%m_%d_%H_%M_%S.jpg")
+    name = "profile"+participation_id + "_" + current_time
+    return name
+
+
 # S3 key관리
 BUCKET_NAME = 'homybk'
 config = dotenv_values(".env")
