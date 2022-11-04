@@ -57,6 +57,7 @@ const Participating = () => {
 
   return (
     <ScrollBackground>
+      {/* 모달 */}
       {openModal && (
         <AppModal openAndClose={openAndClose}>
           <ParticipatingDetail />
