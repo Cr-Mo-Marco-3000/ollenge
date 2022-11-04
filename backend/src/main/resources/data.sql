@@ -1,0 +1,2 @@
+use ollenge;
+INSERT INTO `user`(`auth_code`, `login_type`, `nickname`, `profile_img`, `user_description`, `user_flag`) VALUES ('11111111','kakao','EUN',NULL,'hello',true),('11111111','kakao','subUser',NULL,'hello', true);
