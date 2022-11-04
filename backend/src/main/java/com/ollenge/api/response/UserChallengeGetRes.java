@@ -9,13 +9,13 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UserOngoingGetRes extends BaseResponseBody {
+public class UserChallengeGetRes extends BaseResponseBody {
 
     List<UserParticipatedChallengeData> rankingChallengeList;
     List<UserParticipatedChallengeData> userChallengeList;
 
-    public static UserOngoingGetRes of(int status, String msg, List<UserParticipatedChallengeData> rankingChallengeList, List<UserParticipatedChallengeData> userChallengeList) {
-        UserOngoingGetRes challengeInfoGetRes = new UserOngoingGetRes();
+    public static UserChallengeGetRes of(int status, String msg, List<UserParticipatedChallengeData> rankingChallengeList, List<UserParticipatedChallengeData> userChallengeList) {
+        UserChallengeGetRes challengeInfoGetRes = new UserChallengeGetRes();
         challengeInfoGetRes.setStatusCode(status);
         challengeInfoGetRes.setMessage(msg);
         challengeInfoGetRes.rankingChallengeList = rankingChallengeList;

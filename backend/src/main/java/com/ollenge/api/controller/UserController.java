@@ -3,9 +3,10 @@ package com.ollenge.api.controller;
 import com.ollenge.api.exception.DuplicatedNicknameException;
 import com.ollenge.api.exception.InvalidNicknameException;
 import com.ollenge.api.exception.InvalidUserDescriptionException;
+import com.ollenge.api.exception.InvalidUserException;
 import com.ollenge.api.request.UserPostReq;
+import com.ollenge.api.response.UserChallengeGetRes;
 import com.ollenge.api.response.UserGetRes;
-import com.ollenge.api.response.UserOngoingGetRes;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.api.service.UserService;
 import com.ollenge.common.model.response.BaseResponseBody;
@@ -87,19 +88,37 @@ public class UserController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
   public ResponseEntity<? extends BaseResponseBody> getUserOngoingChallenge(@ApiIgnore Authentication authentication) {
-//        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
-//        User user = userService.getUserByUserId(userId);
-//
-//        if (user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
-
         try {
             List<UserParticipatedChallengeData> userChallengeList = userService.getUserOngoingUserChallenge(authentication);
             List<UserParticipatedChallengeData> rankingChallengeList = userService.getUserOngoingRankingChallenge(authentication);
-            return ResponseEntity.status(200).body(UserOngoingGetRes.of(200, "유저별 참여 중인 챌린지 조회 성공", rankingChallengeList, userChallengeList));
+            return ResponseEntity.status(200).body(UserChallengeGetRes.of(200, "유저별 참여 중인 챌린지 조회 성공", rankingChallengeList, userChallengeList));
+        } catch (InvalidUserException invalidUserException) {
+            invalidUserException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
         }
     }
 
+    @GetMapping("/scheduled")
+    @ApiOperation(value = "유저별 참여 예정 챌린지 조회", notes = "유저별 참여 예정인 챌린지를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "유저별 참여 예정 챌린지 조회 성공"),
+            @ApiResponse(code = 400, message = "권한이 없습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> getUserScheduledChallenge(@ApiIgnore Authentication authentication) {
+        try {
+            List<UserParticipatedChallengeData> userChallengeList = userService.getUserScheduledUserChallenge(authentication);
+            List<UserParticipatedChallengeData> rankingChallengeList = userService.getUserScheduledRankingChallenge(authentication);
+            return ResponseEntity.status(200).body(UserChallengeGetRes.of(200, "유저별 참여 예정 챌린지 조회 성공", rankingChallengeList, userChallengeList));
+        } catch (InvalidUserException invalidUserException) {
+            invalidUserException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
 }
