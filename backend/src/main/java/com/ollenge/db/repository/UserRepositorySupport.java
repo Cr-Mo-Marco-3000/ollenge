@@ -57,9 +57,9 @@ public class UserRepositorySupport {
     }
 
     private BooleanExpression challengeDate(String type, String formatedToday) {
-        if (type.equals("scheduled")) return formattedEndDate.lt(formatedToday);
+        if (type.equals("scheduled")) return formattedStartDate.gt(formatedToday);
         else if (type.equals("ongoing")) return formattedStartDate.loe(formatedToday).and(formattedEndDate.goe(formatedToday));
-        else if (type.equals("completed")) return formattedStartDate.gt(formatedToday);
+        else if (type.equals("completed")) return formattedEndDate.lt(formatedToday);
         return qParticipation.challenge.challengePreset.isNull();
     }
 
