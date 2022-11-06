@@ -31,27 +31,43 @@ function SignupScreen() {
     setNicknameInput(text)
   }
 
+  function nicknameCheck(str) {
+    const regex = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/
+    if (regex.test(str) && 2 <= str.length && str.length <= 12) {
+      return true
+    }
+    return false
+  }
+
   async function buttonHandler() {
+    console.log(nicknameInput)
     const data = new Object()
     // 프로필 이미지 등록
     if (profileImageBase64) {
-      instance
+      await instance
         .post("/auth/upload", { profile_img: profileImageBase64 }, {})
         .then((res) => {
-          console.log(res.data.profile_img)
           data.profileImg = `${res.data.profile_img}`
         })
         .catch((err) => console.log(err))
     }
-
-    // const data = {}
-    // instance
-    //   .patch("/api/user", { nickname: "웅야" })
-    //   .then((res) => {
-    //     console.log(res.data)
-    //     authCxt.signed(true)
-    //   })
-    //   .catch((err) => console.log(err.response.data))
+    // 닉네임
+    if (nicknameCheck(nicknameInput)) {
+      data.nickname = nicknameInput
+      instance
+        .patch("/api/user", data)
+        .then((res) => {
+          authCxt.signed("signedUser")
+        })
+        .catch((err) => {
+          console.log(err)
+          if (err.response.data.message === "이미 존재하는 닉네임입니다") {
+            alert(err.response.data.message)
+          }
+        })
+    } else {
+      alert("닉네임 형식이 틀렸습니다")
+    }
   }
 
   return (

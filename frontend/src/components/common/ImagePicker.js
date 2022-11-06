@@ -12,7 +12,6 @@ import { PlusIcon } from "../../assets/images"
 
 function ImagePickerContainer({ imageUri, imageUriHandler, imageBase64Handler }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
-  console.log(defaultImageUri)
   const photoHandler = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,

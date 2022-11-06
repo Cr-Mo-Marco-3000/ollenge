@@ -27,14 +27,11 @@ const MyPageRoute = () => <MyPageScreen />
 const CreateCGRoute = () => <CreateCGScreen />
 
 function AuthStack() {
-  const authCtx = useContext(AuthContext)
-  console.log("000", authCtx.token)
   return <StartScreen />
 }
 
 function AuthenticatedStack() {
   const authCtx = useContext(AuthContext)
-  console.log("111", authCtx.token)
   const [index, setIndex] = React.useState(4)
   const [routes] = React.useState([
     {
@@ -89,7 +86,6 @@ function AuthenticatedStack() {
 function Navigation() {
   const authCtx = useContext(AuthContext)
   const [authFlag, setAuthFlag] = useState(false)
-  console.log(authCtx.isAuthenticated, authCtx.isSigned)
   useEffect(() => {
     if (authCtx.isAuthenticated && authCtx.isSigned) {
       setAuthFlag(true)
@@ -108,11 +104,13 @@ function Root() {
   const authCtx = useContext(AuthContext)
   async function fetchToken() {
     const storedToken = await AsyncStorage.getItem("token")
-    const storedUserFlag = await AsyncStorage.getItem("userFlag")
-    console.log(":store", storedToken, storedUserFlag)
     if (storedToken) {
       authCtx.authenticate(storedToken)
     }
+  }
+
+  async function fetchSigned() {
+    const storedUserFlag = await AsyncStorage.getItem("userFlag")
     if (storedUserFlag) {
       authCtx.signed(storedUserFlag)
     }
@@ -128,6 +126,7 @@ function Root() {
   }
   useEffect(() => {
     fetchToken()
+    fetchSigned()
     getFonts()
   }, [])
 
