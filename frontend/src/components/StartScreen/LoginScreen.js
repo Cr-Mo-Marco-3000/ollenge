@@ -9,7 +9,6 @@ import { useNavigation } from "@react-navigation/native"
 
 import ColorSet from "../../style/ColorSet"
 import { OrangeLogo } from "../../assets/images"
-import KakaoButton from "./KakaoButton"
 import GoogleButton from "./GoogleButton"
 
 function LoginScreen({ startScreenChange }) {
@@ -37,7 +36,6 @@ function LoginScreen({ startScreenChange }) {
         <OrangeLogo />
       </BottomArea>
       <ButtonContainer windowHeight={windowHeight}>
-        <KakaoButton handler={screenHandler} />
         <GoogleButton startScreenChange={startScreenChange} />
       </ButtonContainer>
     </LinearGradient>

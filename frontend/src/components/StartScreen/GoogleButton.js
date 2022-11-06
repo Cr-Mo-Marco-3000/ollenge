@@ -32,7 +32,7 @@ function GoogleButton(props) {
       instance.get("/api/oauth/google", { params: { accessToken: accessToken } }).then((res) => {
         authCtx.authenticate(res.data.accessToken)
         if (res.data.userFlag) {
-          authCtx.signed(true)
+          authCtx.signed("signedUser")
         } else {
           navigation.push("Signup")
         }

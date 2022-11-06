@@ -3,7 +3,9 @@ import React from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { useNavigation } from "@react-navigation/native"
+import { Button } from "react-native-paper"
 import styled from "styled-components"
+import { useContext } from "react"
 
 import { DefaultImage, PencilIcon, HeartIcon1 } from "../../assets/images/index"
 import ColorSet from "../../style/ColorSet"
@@ -12,9 +14,12 @@ import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import BedgeCard from "./BedgeCard"
 import TopMargin from "../common/TopMargin"
+import { AuthContext } from "../../../store/auth-context"
 
 function MyInfoScreen() {
   const navigation = useNavigation()
+  const authCtx = useContext(AuthContext)
+
   function editPressHandler() {
     navigation.push("EditInfo")
   }
@@ -22,6 +27,22 @@ function MyInfoScreen() {
   return (
     <ScrollView style={styles.rootScreen}>
       <TopMargin />
+      <View style={styles.logoutBox}>
+        <Button
+          icon="logout"
+          textColor={`${ColorSet.navyColor(1)}`}
+          onPress={authCtx.logout}
+          theme={{
+            fonts: {
+              labelLarge: {
+                fontFamily: "HyeminBold",
+              },
+            },
+          }}
+        >
+          로그아웃
+        </Button>
+      </View>
       <View style={styles.scrollContainer}>
         <View style={styles.imageBox}>
           <DefaultImage />
@@ -77,6 +98,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: `${ColorSet.paleBlueColor(1)}`,
   },
+  logoutBox: {
+    width: "100%",
+    alignItems: "flex-end",
+  },
   scrollContainer: {
     flex: 1,
     alignItems: "center",
@@ -84,7 +109,7 @@ const styles = StyleSheet.create({
   imageBox: {
     width: RFPercentage(15),
     height: RFPercentage(15),
-    top: RFPercentage(5),
+    top: RFPercentage(1),
     zIndex: 100,
     borderRadius: 100,
     shadowColor: "#000",
@@ -102,7 +127,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: "auto",
     width: "100%",
+    top: -RFPercentage(5),
     paddingTop: RFPercentage(7),
+    paddingBottom: RFPercentage(3),
+    marginBottom: -RFPercentage(5),
     paddingHorizontal: "5%",
     shadowColor: "#000",
     shadowOffset: {
