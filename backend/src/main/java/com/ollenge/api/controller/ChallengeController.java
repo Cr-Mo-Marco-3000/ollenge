@@ -20,7 +20,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
@@ -39,8 +38,7 @@ public class ChallengeController {
 
     private final ChallengeService challengeService;
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
     @PostMapping
     @ApiOperation(value = "챌린지 생성", notes = "챌린지를 생성합니다.")
