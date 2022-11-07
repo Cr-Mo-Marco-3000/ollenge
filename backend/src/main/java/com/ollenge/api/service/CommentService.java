@@ -47,4 +47,16 @@ public class CommentService {
         comment.setCommentContent(commentPatchReq.getCommentContent());
         commentRepository.save(comment);
     }
+
+    public void deleteComment(Authentication authentication, long commentId) throws InvalidUserException, InvalidCommentException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> { return new InvalidCommentException("Invalid Comment ID " + commentId); });
+        if(!comment.getUser().equals(user)) {
+            throw new InvalidUserException("Only comment's owner can delete comment");
+        }
+        commentRepository.delete(comment);
+    }
 }

@@ -89,7 +89,7 @@ public class ChallengeService {
 
         challenge.setPeopleCnt(challenge.getPeopleCnt()+1);
         Participation participation = Participation.builder()
-                .user(User.builder().userId(challengePostReq.getUserId()).build())
+                .user(user)
                 .challenge(challenge)
                 .build();
         participationRepository.save(participation);

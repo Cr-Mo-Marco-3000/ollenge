@@ -89,4 +89,28 @@ public class CommentController {
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
         }
     }
+
+    @DeleteMapping("/{commentId}")
+    @ApiOperation(value = "피드 댓글 삭제", notes = "피드 댓글을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "피드 댓글 삭제 성공"),
+            @ApiResponse(code = 400, message = "존재하지 않는 댓글입니다."),
+            @ApiResponse(code = 400, message = "권한이 없습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> updateComment(@ApiIgnore Authentication authentication, @PathVariable long commentId) {
+        try {
+            commentService.deleteComment(authentication, commentId);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "피드 댓글 삭제 성공"));
+        } catch (InvalidCommentException invalidCommentException) {
+            invalidCommentException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "존재하지 않는 댓글입니다."));
+        } catch (InvalidUserException invalidUserException) {
+            invalidUserException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
 }
