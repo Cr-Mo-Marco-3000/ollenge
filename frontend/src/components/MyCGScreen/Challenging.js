@@ -8,7 +8,9 @@ import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
-
+import { useState } from "react"
+import AppModal from "../common/AppModal"
+import Feed from "./Feed"
 const Challenging = () => {
   const tempList = [
     {
@@ -43,8 +45,19 @@ const Challenging = () => {
   const myFunc = () => {
     console.log("앙냥냥")
   }
+  const [openModal, setOpenModal] = useState(false)
+
+  const openAndClose = () => {
+    setOpenModal(!openModal)
+  }
+
   return (
     <ScrollBackground>
+      {openModal && (
+        <AppModal openAndClose={openAndClose} title={myFunc}>
+          <Feed />
+        </AppModal>
+      )}
       <DivideView>
         <IconView>
           <RankingChallengeIcon />
@@ -54,7 +67,7 @@ const Challenging = () => {
       {tempList
         .filter((listItem) => listItem.isChallenge)
         .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={myFunc} />
+          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={openAndClose} />
         ))}
       <DivideView>
         <IconView>
@@ -65,7 +78,7 @@ const Challenging = () => {
       {tempList
         .filter((listItem) => !listItem.isChallenge)
         .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={myFunc} />
+          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={openAndClose} />
         ))}
     </ScrollBackground>
   )

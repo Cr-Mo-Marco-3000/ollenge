@@ -9,7 +9,7 @@ import {
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 import ParticipatingDetail from "./ParticipatingDetail"
 

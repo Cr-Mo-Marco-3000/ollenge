@@ -3,7 +3,6 @@ import { View, Dimensions, Text } from "react-native"
 import { Pressable } from "react-native"
 import AppCard from "../common/AppCard"
 
-AppText
 import styled from "styled-components"
 import { TriangleIcon } from "../../assets/images"
 import { TriangleIcon2 } from "../../assets/images"
