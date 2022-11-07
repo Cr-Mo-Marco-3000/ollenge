@@ -1,6 +1,9 @@
 package com.ollenge.api.service;
 
-import com.ollenge.api.exception.*;
+import com.ollenge.api.exception.DuplicatedNicknameException;
+import com.ollenge.api.exception.InvalidNicknameException;
+import com.ollenge.api.exception.InvalidUserDescriptionException;
+import com.ollenge.api.exception.InvalidUserException;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.StringUtils;
@@ -60,7 +63,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<UserParticipatedChallengeData> getUserOngoingRankingChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserOngoingRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -68,7 +71,7 @@ public class UserService {
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserOngoingUserChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserOngoingUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -76,7 +79,7 @@ public class UserService {
         return userChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserScheduledRankingChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserScheduledRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -84,7 +87,7 @@ public class UserService {
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserScheduledUserChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserScheduledUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -92,7 +95,7 @@ public class UserService {
         return userChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -100,7 +103,7 @@ public class UserService {
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });

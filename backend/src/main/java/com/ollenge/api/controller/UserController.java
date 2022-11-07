@@ -7,7 +7,9 @@ import com.ollenge.api.exception.InvalidUserException;
 import com.ollenge.api.request.UserPostReq;
 import com.ollenge.api.response.UserChallengeGetRes;
 import com.ollenge.api.response.UserGetRes;
+import com.ollenge.api.response.data.BadgeGetData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
+import com.ollenge.api.service.BadgeService;
 import com.ollenge.api.service.UserService;
 import com.ollenge.common.model.response.BaseResponseBody;
 import com.ollenge.common.util.JwtTokenUtil;
@@ -15,7 +17,7 @@ import com.ollenge.db.entity.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +27,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+    private final BadgeService badgeService;
+
 
     @GetMapping
     @ApiOperation(value = "회원 정보 조회", notes = "회원 정보를 조회합니다.")
@@ -40,10 +44,9 @@ public class UserController {
     public ResponseEntity<? extends BaseResponseBody> getUserInfo(@ApiIgnore Authentication authentication) {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userService.getUserByUserId(userId);
-
         if (user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
-
-        return ResponseEntity.status(200).body(UserGetRes.of(200, "회원 정보 조회 성공", user));
+        List<BadgeGetData> badgeList = badgeService.getBadgeList(user);
+        return ResponseEntity.status(200).body(UserGetRes.of(200, "회원 정보 조회 성공", user, badgeList));
     }
 
     @PatchMapping
