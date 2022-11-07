@@ -1,6 +1,6 @@
 /** react-native 시스템 Import */
-import React from "react"
-import { Pressable, View, Text, KeyboardAvoidingView } from "react-native"
+import React, { useEffect, useState } from "react"
+import { Pressable, View, Text, Keyboard } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 
 /** Component Import */
@@ -32,6 +32,16 @@ const NextBtn = ({ toNext }) => {
 
 /** 모든 페이지의 기본 배경 설정 */
 export default function PageBase(props) {
+  const [showKey, setShowKey] = useState(false)
+
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", () => {
+      setShowKey(true)
+    })
+    Keyboard.addListener("keyboardDidHide", () => {
+      setShowKey(false)
+    })
+  }, [])
   return (
     <LinearGradient
       style={{ flex: 1 }}
@@ -41,18 +51,19 @@ export default function PageBase(props) {
     >
       <View style={styles.TopArea}>
         <View style={styles.ContentArea}>{props.children}</View>
-
-        <View style={styles.BottomArea}>
-          <NextBtn toNext={props.toNext} />
-          <CancelBtn />
-        </View>
+        {showKey === false && (
+          <View style={styles.BottomArea}>
+            <NextBtn toNext={props.toNext} />
+            <CancelBtn />
+          </View>
+        )}
       </View>
     </LinearGradient>
   )
 }
 
 export const fontStyles = StyleSheet.create({
-  HyeminBold: (props = {}) => {
+  HyeminBold: (props) => {
     return {
       fontFamily: "HyeminBold",
       fontSize: props.size !== undefined ? (props.size * dw) / 100 : 24,
@@ -62,9 +73,9 @@ export const fontStyles = StyleSheet.create({
     }
   },
 
-  Hyemin: (props = {}) => {
+  Hyemin: (props) => {
     return {
-      fontFamily: "Hyemin",
+      fontFamily: "HyeminRegular",
       fontSize: props.size !== undefined ? (props.size * dw) / 100 : 24,
       fontWeight: props.bold !== undefined ? props.bold : "100",
       color: props.color !== undefined ? props.color : ColorSet.navyColor(1),
