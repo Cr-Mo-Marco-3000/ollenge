@@ -141,4 +141,20 @@ public class UserService {
         user.setBadge(badge);
         userRepository.save(user);
     }
+
+    public void updateBadgeStatus(Authentication authentication, BadgePatchReq badgePatchReq) throws InvalidUserException, InvalidBadgeException, InvalidBadgeStatusException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        Badge badge = badgeRepository.findById(badgePatchReq.getBadgeId())
+                .orElseThrow(() -> { return new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId()); });
+        if(badge.getUser() != user) {
+            throw new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId());
+        }
+        if (badge.isBadgeFlag()) {
+            throw new InvalidBadgeStatusException("Already activated badge");
+        }
+        badge.setBadgeFlag(true);
+        badgeRepository.save(badge);
+    }
 }
