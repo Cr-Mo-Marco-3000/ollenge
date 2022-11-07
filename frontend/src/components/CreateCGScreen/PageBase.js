@@ -1,6 +1,6 @@
 /** react-native 시스템 Import */
 import React, { useEffect, useState } from "react"
-import { Pressable, View, Text, Keyboard } from "react-native"
+import { Pressable, View, Text, Keyboard, TouchableWithoutFeedback } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 
 /** Component Import */
@@ -43,22 +43,24 @@ export default function PageBase(props) {
     })
   }, [])
   return (
-    <LinearGradient
-      style={{ flex: 1 }}
-      colors={[`${ColorSet.paleBlueColor(1)}`, `${ColorSet.yellowColor(1)}`]}
-      end={{ x: 0.5, y: 1 }}
-      locations={[0.1, 1]}
-    >
-      <View style={styles.TopArea}>
-        <View style={styles.ContentArea}>{props.children}</View>
-        {showKey === false && (
-          <View style={styles.BottomArea}>
-            <NextBtn toNext={props.toNext} />
-            <CancelBtn />
-          </View>
-        )}
-      </View>
-    </LinearGradient>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <LinearGradient
+        style={{ flex: 1 }}
+        colors={[`${ColorSet.paleBlueColor(1)}`, `${ColorSet.yellowColor(1)}`]}
+        end={{ x: 0.5, y: 1 }}
+        locations={[0.2, 1]}
+      >
+        <View style={styles.TopArea}>
+          <View style={styles.ContentArea}>{props.children}</View>
+          {showKey !== true && props.hideBtn !== true && (
+            <View style={styles.BottomArea}>
+              <NextBtn toNext={props.toNext} />
+              <CancelBtn />
+            </View>
+          )}
+        </View>
+      </LinearGradient>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -95,6 +97,7 @@ const styles = {
 
   CancelBtn: {
     fontSize: dw * 0.05,
+    padding: 8,
     textDecorationLine: "underline",
     textAlign: "center",
   },
@@ -103,11 +106,11 @@ const styles = {
     ...baseStyle,
     backgroundColor: ColorSet.orangeColor(1),
     borderRadius: 15,
-    padding: 8,
+    padding: 12,
     marginBottom: 10,
+    elevation: 12,
   },
   NextBtnText: {
-    fontSize: dw * 0.08,
-    color: ColorSet.whiteColor(1),
+    ...fontStyles.HyeminBold({ size: 5, color: "white" }),
   },
 }
