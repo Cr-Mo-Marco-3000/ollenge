@@ -11,10 +11,6 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class ChallengePostReq {
-    @ApiParam(value = "유저 ID", required = true)
-    @Positive
-    private Long userId;
-
     @ApiParam(value = "챌린지 프리셋 ID")
     @Positive
     private Long challengePresetId;
