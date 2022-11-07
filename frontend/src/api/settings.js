@@ -1,21 +1,12 @@
 import axios from "axios"
-import { BASE_URL as BU } from "@env"
+import { BASE_URL } from "@env"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const BASE_URL = BU + "/api"
+// const BASE_URL = BU + "/api"
 // BASE_URL = "http://i7a501.p.ssafy.io/api"
 
 const getToken = async () => {
-  let tempToken = "아직 토큰이 없어요"
-  //   try {
-  //     await AsyncStorage.getItem("jwt").then((jwt) => {
-  //       tempToken = jwt
-  //     })
-  //     if (tempToken) {
-  //       return tempToken
-  //     }
-  //   } catch (e) {
-  //     console.error(e)
-  //   }
+  let tempToken = await AsyncStorage.getItem("token")
   return tempToken
 }
 

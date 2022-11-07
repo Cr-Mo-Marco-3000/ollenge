@@ -3,7 +3,6 @@ import { View, Dimensions, Text } from "react-native"
 import { Pressable } from "react-native"
 import AppCard from "../common/AppCard"
 
-AppText
 import styled from "styled-components"
 import { TriangleIcon } from "../../assets/images"
 import { TriangleIcon2 } from "../../assets/images"
@@ -230,7 +229,7 @@ const PageView = styled.View`
   width: ${screenWidth}px;
   justify-content: center;
   align-items: center;
-  bottom: ${(screenHeight * 0.1) / 2}px;
+  /* bottom: ${(screenHeight * 0.1) / 3}px; */
 `
 
 const CardView = styled.View`

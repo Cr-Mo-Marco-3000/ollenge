@@ -1,5 +1,6 @@
 import React from "react-native"
 import { View, ScrollView, Image, Dimensions } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import styled from "styled-components"
@@ -8,41 +9,62 @@ import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
+import { useState, useEffect } from "react"
+import AppModal from "../common/AppModal"
+import Feed from "./Feed"
+import { AuthorizationInstance } from "../../api/settings"
 
-const Challenging = () => {
-  const tempList = [
+const Challenging = (props) => {
+  const navigation = useNavigation()
+  const [rankingCGList, setRankingCGList] = useState([])
+  const [userCGList, setUserCGList] = useState([])
+
+  const instance = AuthorizationInstance()
+
+  const tempRankingCGList = [
     {
-      isChallenge: true,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
-      memberNumber: 4,
-      progress: 20,
-      startDate: "10.26",
-      endDate: "11.05",
+      challengeId: 34,
+      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+      challengeName: "찬호와 아이들",
+      challengeTopic: "하루 3잔 물마시기",
+      startDate: new Date(2022, 10, 5),
+      endDate: new Date(2022, 10, 10),
+      peopleCnt: 4,
     },
+  ]
+
+  const tempUserCGList = [
     {
-      isChallenge: true,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
-      memberNumber: 4,
-      progress: 50,
-      startDate: "10.26",
-      endDate: "11.05",
-    },
-    {
-      isChallenge: false,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
-      memberNumber: 4,
-      progress: 50,
-      startDate: "10.26",
-      endDate: "11.05",
+      challengeId: 34,
+      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+      challengeName: "찬호와 아이들",
+      challengeTopic: "하루 3잔 물마시기",
+      startDate: new Date(2022, 10, 5),
+      endDate: new Date(2022, 10, 10),
+      peopleCnt: 4,
     },
   ]
   // 여기 함수를 넣자
-  const myFunc = () => {
-    console.log("앙냥냥")
+  function pressHandler(id) {
+    props.idHandler(id)
+    navigation.push("CGRoom")
   }
+
+  useEffect(() => {
+    const getChallenge = async () => {
+      try {
+        const res = await instance.get("/api/user/ongoing")
+        const NewRankingCGList = res.data.rankingChallengeList
+        const NewUserCGList = res.data.userChallengeList
+        setRankingCGList(NewRankingCGList)
+        setUserCGList(NewUserCGList)
+      } catch (err) {
+        // console.log(err)
+      }
+    }
+    getChallenge()
+  }, [])
+
   return (
     <ScrollBackground>
       <DivideView>
@@ -51,22 +73,46 @@ const Challenging = () => {
         </IconView>
         <AppBoldText>랭킹 챌린지</AppBoldText>
       </DivideView>
-      {tempList
-        .filter((listItem) => listItem.isChallenge)
-        .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={myFunc} />
-        ))}
+      {tempRankingCGList.map((challengeInfo) => (
+        <ChallengingCard
+          key={challengeInfo.challengeId}
+          challengeInfo={challengeInfo}
+          func={() => {
+            pressHandler(challengeInfo.challengeId)
+          }}
+        />
+      ))}
+      {/* 나중에 얘로 갈아끼우죠 */}
+      {/* {rankingCGList.map((challengeInfo, idx) => (
+        <ChallengingCard
+          key={challengeInfo.challengeId}
+          challengeInfo={challengeInfo}
+          func={pressHandler}
+        />
+      ))} */}
       <DivideView>
         <IconView>
           <NormalChallengeIcon />
         </IconView>
         <AppBoldText>일반 챌린지</AppBoldText>
       </DivideView>
-      {tempList
-        .filter((listItem) => !listItem.isChallenge)
-        .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={myFunc} />
-        ))}
+      {tempUserCGList.map((challengeInfo, idx) => (
+        <ChallengingCard
+          key={challengeInfo.challengeId * 2}
+          challengeInfo={challengeInfo}
+          func={() => {
+            pressHandler(challengeInfo.challengeId)
+          }}
+        />
+      ))}
+      {/* 나중에 얘로 갈아끼우죠 */}
+      {/* {userCGList.map((challengeInfo, idx) => (
+        <ChallengingCard
+          key={challengeInfo.challengeId}
+          challengeInfo={challengeInfo}
+          func={pressHandler}
+        />
+      ))} */}
     </ScrollBackground>
   )
 }

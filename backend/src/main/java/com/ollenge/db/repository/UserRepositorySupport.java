@@ -1,7 +1,10 @@
 package com.ollenge.db.repository;
 
+import com.ollenge.api.response.data.ChallengeStateData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
+import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.db.entity.*;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTemplate;
@@ -11,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ public class UserRepositorySupport {
     QParticipation qParticipation = QParticipation.participation;
 
     QFeed qFeed = QFeed.feed;
+
+    QUser qUser = QUser.user;
 
     DateTemplate formattedStartDate = Expressions.dateTemplate(
             LocalDate.class
@@ -60,7 +66,7 @@ public class UserRepositorySupport {
         if (type.equals("scheduled")) return formattedStartDate.gt(formatedToday);
         else if (type.equals("ongoing")) return formattedStartDate.loe(formatedToday).and(formattedEndDate.goe(formatedToday));
         else if (type.equals("completed")) return formattedEndDate.lt(formatedToday);
-        return qParticipation.challenge.challengePreset.isNull();
+        return null;
     }
 
     private BooleanExpression challengPreseteNotNull(boolean isRankingChallenge) {
@@ -68,6 +74,48 @@ public class UserRepositorySupport {
         return qParticipation.challenge.challengePreset.isNull();
     }
 
+    public List<TotalUserRankData> getTotalUserRank(){
+        List<User> userList = jpaQueryFactory
+                .selectFrom(qUser)
+                .orderBy(qUser.userScore.desc())
+                .limit(100)
+                .fetch();
+        List<TotalUserRankData> totalUserRankDataList = new ArrayList<>();
+
+//        userList.stream()
+//                .forEach(item -> {
+//                    totalUserRankDataList.add(TotalUserRankData.of(item));
+//                });
+        int i = 1;
+        for(User item: userList) {
+            totalUserRankDataList.add(TotalUserRankData.of(item, i++));
+        }
+
+        return totalUserRankDataList;
+    }
+
+
+    public TotalUserRankData getUserRank(User userIdentification){
+        long userId = userIdentification.getUserId();
+        int score = userIdentification.getUserScore();
+        List<User> user = jpaQueryFactory
+                .selectFrom(qUser)
+                .where(qUser.userId.eq(userId))
+                .fetch();
+        long rank = jpaQueryFactory
+                .select(qUser.count())
+                .from(qUser)
+                .where(qUser.userScore.gt(score))
+                .fetchFirst();
+
+        int intRank = (int)rank+1;
+        TotalUserRankData userRankData = null;
+        for(User item: user) {
+            userRankData = TotalUserRankData.of(item, intRank);
+        }
+
+        return userRankData;
+    }
     /*
             select c.*, p.*, (CASE WHEN f.participation_id IS NOT NULL THEN true ELSE false END) as todayAuthStat from participation p
             left outer join (select participation_id from feed where DATE_FORMAT(created_datetime, '%Y-%m-%d')="2022-11-03") f on p.participation_id=f.participation_id

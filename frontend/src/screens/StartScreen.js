@@ -8,7 +8,7 @@ import SignupScreen from "../components/StartScreen/SignupScreen"
 
 const Stack = createNativeStackNavigator()
 
-function StartScreen({ startScreenChange }) {
+function StartScreen() {
   return (
     <NavigationContainer style={{ flex: 1 }}>
       <Stack.Navigator
@@ -16,9 +16,7 @@ function StartScreen({ startScreenChange }) {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="Login">
-          {(props) => <LoginScreen startScreenChange={startScreenChange} />}
-        </Stack.Screen>
+        <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
         <Stack.Screen name="Signup" component={SignupScreen} />
       </Stack.Navigator>
     </NavigationContainer>

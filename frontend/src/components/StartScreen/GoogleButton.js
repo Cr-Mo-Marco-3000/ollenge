@@ -29,11 +29,10 @@ function GoogleButton(props) {
     if (response?.type === "success") {
       const { authentication } = response
       const accessToken = response.authentication.accessToken
-      instance.get("/oauth/google", { params: { accessToken: accessToken } }).then((res) => {
+      instance.get("/api/oauth/google", { params: { accessToken: accessToken } }).then((res) => {
         authCtx.authenticate(res.data.accessToken)
         if (res.data.userFlag) {
-          authCtx.signed(true)
-          props.startScreenChange()
+          authCtx.signed("signedUser")
         } else {
           navigation.push("Signup")
         }

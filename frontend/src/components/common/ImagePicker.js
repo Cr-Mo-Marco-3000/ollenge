@@ -7,18 +7,22 @@ import { LinearGradient } from "expo-linear-gradient"
 import styled from "styled-components"
 
 import ColorSet from "../../style/ColorSet"
+import defaultImage from "../../assets/images/default-image.png"
 import { PlusIcon } from "../../assets/images"
 
-function ImagePickerContainer({ imageUri, imageUriHandler, defaultImageUri }) {
+function ImagePickerContainer({ imageUri, imageUriHandler, imageBase64Handler }) {
+  const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   const photoHandler = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      base64: true,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.3,
     })
     if (!result.cancelled) {
       imageUriHandler(result.uri)
+      imageBase64Handler(result.base64)
     }
   }
 
@@ -29,14 +33,19 @@ function ImagePickerContainer({ imageUri, imageUriHandler, defaultImageUri }) {
       return
     }
 
-    const result = await ImagePicker.launchCameraAsync()
+    const result = await ImagePicker.launchCameraAsync({
+      base64: true,
+      quality: 0.3,
+    })
     if (!result.cancelled) {
       imageUriHandler(result.uri)
+      imageBase64Handler(result.base64)
     }
   }
 
   const defaultHandler = () => {
-    imageUriHandler(defaultImageUri)
+    imageUriHandler(null)
+    imageBase64Handler(null)
   }
   function pressHandler() {
     Alert.alert(
@@ -53,9 +62,13 @@ function ImagePickerContainer({ imageUri, imageUriHandler, defaultImageUri }) {
   }
   return (
     <RootScreen>
-      <View style={styles.imageContainer}>
-        <Image style={styles.profileImage} source={{ uri: imageUri }} resizeMode="cover" />
-      </View>
+      <Pressable style={styles.imageContainer} onPress={pressHandler}>
+        <Image
+          style={styles.profileImage}
+          source={imageUri ? { uri: imageUri } : { uri: defaultImageUri }}
+          resizeMode="cover"
+        />
+      </Pressable>
       <Pressable style={styles.editButton} onPress={pressHandler}>
         <LinearGradient
           colors={[`${ColorSet.orangeColor(1)}`, `${ColorSet.yellowColor(1)}`]}
@@ -88,11 +101,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.38,
     shadowRadius: 12.0,
     marginTop: "10%",
+    backgroundColor: "white",
   },
   profileImage: {
     width: "100%",
     height: "100%",
-    backgroundColor: "blue",
     borderRadius: 200,
   },
   editButton: {

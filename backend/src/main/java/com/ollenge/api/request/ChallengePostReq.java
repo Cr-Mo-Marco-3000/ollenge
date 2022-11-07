@@ -11,10 +11,6 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class ChallengePostReq {
-    @ApiParam(value = "유저 ID", required = true)
-    @Positive
-    private Long userId;
-
     @ApiParam(value = "챌린지 프리셋 ID")
     @Positive
     private Long challengePresetId;
@@ -26,13 +22,13 @@ public class ChallengePostReq {
     @ApiParam(value = "챌린지 이름", required = true)
     @NotBlank
     @Size(min = 1, max = 50)
-    @Pattern(regexp="^[가-힣a-zA-Z ]*$")
+    @Pattern(regexp="^[가-힣a-zA-Z0-9 ]*$")
     private String challengeName;
 
     @ApiParam(value = "챌린지 주제", required = true)
     @NotBlank
     @Size(min = 1, max = 50)
-    @Pattern(regexp="^[가-힣a-zA-Z ]*$")
+    @Pattern(regexp="^[가-힣a-zA-Z0-9 ]*$")
     private String challengeTopic;
 
     @ApiParam(value = "인증 방식", required = true)
@@ -58,16 +54,16 @@ public class ChallengePostReq {
 
     @ApiParam(value = "챌린지 보상")
     @Size(max = 100)
-    @Pattern(regexp="^[가-힣a-zA-Z ]*$")
+    @Pattern(regexp="^[가-힣a-zA-Z0-9 ]*$")
     private String rewardContent;
 
     @ApiParam(value = "챌린지 벌칙")
     @Size(max = 100)
-    @Pattern(regexp="^[가-힣a-zA-Z ]*$")
+    @Pattern(regexp="^[가-힣a-zA-Z0-9 ]*$")
     private String penaltyContent;
 
     @ApiParam(value = "챌린지 설명")
-    @Pattern(regexp="^[가-힣a-zA-Z ]*$")
+    @Pattern(regexp="^[가-힣a-zA-Z0-9 ]*$")
     @Size(max = 300)
     private String challengeDescription;
 

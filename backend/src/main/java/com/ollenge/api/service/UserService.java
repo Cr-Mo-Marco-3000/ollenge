@@ -1,10 +1,14 @@
 package com.ollenge.api.service;
 
 import com.ollenge.api.exception.*;
+import com.ollenge.api.request.BadgePatchReq;
+import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.StringUtils;
+import com.ollenge.db.entity.Badge;
 import com.ollenge.db.entity.User;
+import com.ollenge.db.repository.BadgeRepository;
 import com.ollenge.db.repository.UserRepository;
 import com.ollenge.db.repository.UserRepositorySupport;
 import lombok.AllArgsConstructor;
@@ -20,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserRepositorySupport userRepositorySupport;
+    private final BadgeRepository badgeRepository;
 
     public User getUserByUserId(long userId) {
         Optional<User> user = userRepository.findById(userId);
@@ -60,7 +65,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<UserParticipatedChallengeData> getUserOngoingRankingChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserOngoingRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -68,7 +73,7 @@ public class UserService {
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserOngoingUserChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserOngoingUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -76,7 +81,7 @@ public class UserService {
         return userChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserScheduledRankingChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserScheduledRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -84,7 +89,7 @@ public class UserService {
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserScheduledUserChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserScheduledUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -92,7 +97,7 @@ public class UserService {
         return userChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
@@ -100,11 +105,56 @@ public class UserService {
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException, InvalidUserException {
+    public List<UserParticipatedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
         List<UserParticipatedChallengeData> userChallengeList = userRepositorySupport.getUserChallenge(user, "completed", false);
         return userChallengeList;
+    }
+    public List<TotalUserRankData> getTotalUserRank(Authentication authentication) throws InvalidUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        List<TotalUserRankData> totalUserRankDataList = userRepositorySupport.getTotalUserRank();
+
+        return totalUserRankDataList;
+    }
+
+    public TotalUserRankData getUserRank(Authentication authentication) throws InvalidUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        TotalUserRankData userRank = userRepositorySupport.getUserRank(user);
+        return userRank;
+    }
+
+    public void updateProfileBadge(Authentication authentication, BadgePatchReq badgePatchReq) throws InvalidUserException, InvalidBadgeException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        Badge badge = badgeRepository.findById(badgePatchReq.getBadgeId())
+                .orElseThrow(() -> { return new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId()); });
+        if(badge.getUser() != user) {
+            throw new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId());
+        }
+        user.setBadge(badge);
+        userRepository.save(user);
+    }
+
+    public void updateBadgeStatus(Authentication authentication, BadgePatchReq badgePatchReq) throws InvalidUserException, InvalidBadgeException, InvalidBadgeStatusException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        Badge badge = badgeRepository.findById(badgePatchReq.getBadgeId())
+                .orElseThrow(() -> { return new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId()); });
+        if(badge.getUser() != user) {
+            throw new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId());
+        }
+        if (badge.isBadgeFlag()) {
+            throw new InvalidBadgeStatusException("Already activated badge");
+        }
+        badge.setBadgeFlag(true);
+        badgeRepository.save(badge);
     }
 }
