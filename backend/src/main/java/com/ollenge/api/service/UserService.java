@@ -1,15 +1,14 @@
 package com.ollenge.api.service;
 
 import com.ollenge.api.exception.*;
+import com.ollenge.api.request.BadgePatchReq;
 import com.ollenge.api.response.data.TotalUserRankData;
-import com.ollenge.api.exception.DuplicatedNicknameException;
-import com.ollenge.api.exception.InvalidNicknameException;
-import com.ollenge.api.exception.InvalidUserDescriptionException;
-import com.ollenge.api.exception.InvalidUserException;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.StringUtils;
+import com.ollenge.db.entity.Badge;
 import com.ollenge.db.entity.User;
+import com.ollenge.db.repository.BadgeRepository;
 import com.ollenge.db.repository.UserRepository;
 import com.ollenge.db.repository.UserRepositorySupport;
 import lombok.AllArgsConstructor;
@@ -25,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserRepositorySupport userRepositorySupport;
+    private final BadgeRepository badgeRepository;
 
     public User getUserByUserId(long userId) {
         Optional<User> user = userRepository.findById(userId);
@@ -127,5 +127,18 @@ public class UserService {
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
         TotalUserRankData userRank = userRepositorySupport.getUserRank(user);
         return userRank;
+    }
+
+    public void updateProfileBadge(Authentication authentication, BadgePatchReq badgePatchReq) throws InvalidUserException, InvalidBadgeException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        Badge badge = badgeRepository.findById(badgePatchReq.getBadgeId())
+                .orElseThrow(() -> { return new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId()); });
+        if(badge.getUser() != user) {
+            throw new InvalidBadgeException("Invalid Badge Id " + badgePatchReq.getBadgeId());
+        }
+        user.setBadge(badge);
+        userRepository.save(user);
     }
 }

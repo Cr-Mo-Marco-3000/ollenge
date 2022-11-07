@@ -1,9 +1,8 @@
 package com.ollenge.api.controller;
 
-import com.ollenge.api.exception.DuplicatedNicknameException;
-import com.ollenge.api.exception.InvalidNicknameException;
-import com.ollenge.api.exception.InvalidUserDescriptionException;
-import com.ollenge.api.exception.InvalidUserException;
+import com.ollenge.api.exception.*;
+import com.ollenge.api.request.BadgePatchReq;
+import com.ollenge.api.request.ChallengePostReq;
 import com.ollenge.api.request.UserPostReq;
 import com.ollenge.api.response.UserChallengeGetRes;
 import com.ollenge.api.response.UserGetRes;
@@ -22,6 +21,8 @@ import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -163,6 +164,36 @@ public class UserController {
         } catch (InvalidUserException invalidUserException) {
             invalidUserException.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
+
+    @PatchMapping("/badge/profile")
+    @ApiOperation(value = "대표 뱃지 설정", notes = "대표 뱃지를 설정합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "대표 뱃지 설정 성공"),
+            @ApiResponse(code = 400, message = "요청한 뱃지가 존재하지 않습니다."),
+            @ApiResponse(code = 400, message = "권한이 없습니다."),
+            @ApiResponse(code = 400, message = "입력 형식에 맞지 않습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> updateProfileBadge(@ApiIgnore Authentication authentication, @Validated @RequestBody BadgePatchReq badgePatchReq,
+                                                                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "입력 형식에 맞지 않습니다."));
+        }
+
+        try {
+            userService.updateProfileBadge(authentication, badgePatchReq);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "대표 뱃지 설정 성공"));
+        } catch (InvalidUserException invalidUserException) {
+            invalidUserException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
+        } catch (InvalidBadgeException invalidBadgeException) {
+            invalidBadgeException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "요청한 뱃지가 존재하지 않습니다."));
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
