@@ -7,6 +7,8 @@ import com.ollenge.api.exception.InvalidUserException;
 import com.ollenge.api.request.UserPostReq;
 import com.ollenge.api.response.UserChallengeGetRes;
 import com.ollenge.api.response.UserGetRes;
+import com.ollenge.api.response.TotalUserRankGetRes;
+import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.api.response.data.BadgeGetData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.api.service.BadgeService;
@@ -140,6 +142,27 @@ public class UserController {
         } catch (InvalidUserException invalidUserException) {
             invalidUserException.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
+
+    @GetMapping("/ranking")
+    @ApiOperation(value = "전체 유저 랭킹 조회", notes = "전체 유저 랭킹을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "전체 유저 랭킹 조회 성공"),
+            @ApiResponse(code = 400, message = "권한이 없습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> getUserRanking(@ApiIgnore Authentication authentication) {
+        try {
+            List<TotalUserRankData> totalUserRankDataList = userService.getTotalUserRank(authentication);
+            TotalUserRankData userRank = userService.getUserRank(authentication);
+            return ResponseEntity.status(200).body(TotalUserRankGetRes.of(200, "유저별 참여 완료 챌린지 조회 성공", userRank,totalUserRankDataList));
+        } catch (InvalidUserException invalidUserException) {
+            invalidUserException.printStackTrace();
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));

@@ -1,5 +1,7 @@
 package com.ollenge.api.service;
 
+import com.ollenge.api.exception.*;
+import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.api.exception.DuplicatedNicknameException;
 import com.ollenge.api.exception.InvalidNicknameException;
 import com.ollenge.api.exception.InvalidUserDescriptionException;
@@ -109,5 +111,21 @@ public class UserService {
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
         List<UserParticipatedChallengeData> userChallengeList = userRepositorySupport.getUserChallenge(user, "completed", false);
         return userChallengeList;
+    }
+    public List<TotalUserRankData> getTotalUserRank(Authentication authentication) throws InvalidUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        List<TotalUserRankData> totalUserRankDataList = userRepositorySupport.getTotalUserRank();
+
+        return totalUserRankDataList;
+    }
+
+    public TotalUserRankData getUserRank(Authentication authentication) throws InvalidUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        TotalUserRankData userRank = userRepositorySupport.getUserRank(user);
+        return userRank;
     }
 }

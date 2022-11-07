@@ -1,2 +1,2 @@
 use ollenge;
-INSERT INTO `user`(`auth_code`, `login_type`, `nickname`, `profile_img`, `user_description`, `user_flag`) VALUES ('11111111','kakao','EUN',NULL,'hello',true),('11111111','kakao','subUser',NULL,'hello', true);
+INSERT INTO `user`(`auth_code`, `login_type`, `nickname`, `profile_img`, `user_description`, `user_flag`, `user_score`) VALUES ('11111111','kakao','EUN',NULL,'hello',true, 5),('11111111','kakao','subUser',NULL,'hello', true, 2),('11111111','kakao','Hong',NULL,'hello', true, 3);
