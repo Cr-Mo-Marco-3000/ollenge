@@ -6,6 +6,7 @@ import P5 from "./Page5"
 import P6 from "./Page6"
 import P7 from "./Page7"
 import PF from "./PageFinal"
+import CTI from "./CustomTopicInput"
 
 export const Page1 = P1
 export const Page2 = P2
@@ -15,3 +16,4 @@ export const Page5 = P5
 export const Page6 = P6
 export const Page7 = P7
 export const Final = PF
+export const CustomTopicInput = CTI

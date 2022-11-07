@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Text, View } from "react-native"
+import { Text, TextInput, View } from "react-native"
 import TextInputContainer from "../common/TextInputContainer"
 import PageBase, { fontStyles } from "./PageBase"
 
@@ -15,13 +15,16 @@ export default function Page4({ info, setInfo }) {
     <PageBase toNext={"Page5"}>
       <View style={{ width: "100%", height: "100%", flex: 1, justifyContent: "center" }}>
         <View>
-          <Text style={styles.Title}>챌린지 설명</Text>
+          {/* <Text style={styles.Title}>챌린지 설명</Text> */}
           <Text style={styles.Content}>챌린지에 대한 설명을 간략히 입력해주세요!</Text>
         </View>
-        <TextInputContainer
-          inputText={description}
-          inputHandler={setDescription}
-          errorMsg={false}
+        <TextInput
+          multiline
+          editable
+          numberOfLines={4}
+          style={styles.inputArea}
+          value={description}
+          onChangeText={setDescription}
         />
       </View>
     </PageBase>
@@ -29,13 +32,25 @@ export default function Page4({ info, setInfo }) {
 }
 
 const styles = {
+  inputArea: {
+    backgroundColor: "white",
+    textAlignVertical: "top",
+    height: 300,
+    borderRadius: 24,
+    marginTop: 36,
+    elevation: 12,
+    padding: 36,
+    ...fontStyles.Hyemin({ size: 5, align: "left", color: "black" }),
+  },
   Title: {
     ...fontStyles.HyeminBold({ size: 9, bold: "bold", align: "center" }),
     marginBottom: 15,
+    width: "100%",
   },
 
   Content: {
     ...fontStyles.Hyemin({ size: 5, align: "center" }),
+    width: "100%",
   },
   Card: {
     width: "100%",

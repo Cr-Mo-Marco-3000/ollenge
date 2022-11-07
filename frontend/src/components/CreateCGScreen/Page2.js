@@ -1,14 +1,17 @@
+import { useNavigation } from "@react-navigation/native"
 import React, { useEffect, useState } from "react"
 import { Pressable, ScrollView, Text, View } from "react-native"
 import ColorSet from "../../style/ColorSet"
 import DeviceInfo from "../../style/DeviceInfo"
 import PageBase, { fontStyles } from "./PageBase"
+import CustomTopicInput from "./CustomTopicInput"
 
 const RankingCGs = ["아침 기상", "공부하기", "운동하기", "1일 1영양제", "1일 1샐러드", "정리정돈"]
 const { dw, dh } = DeviceInfo
 
 export default function Page2({ info, setInfo }) {
   const [topic, setTopic] = useState(info.challengeTopic)
+  const navigation = useNavigation()
   const [clicked, setClicked] = useState(false)
 
   useEffect(() => {
@@ -16,6 +19,10 @@ export default function Page2({ info, setInfo }) {
       return { ...prev, challengeTopic: topic }
     })
   }, [topic, setTopic])
+
+  useEffect(() => {
+    setTopic(info.challengeTopic)
+  }, [info, setTopic])
 
   const RankingCard = ({ title = "아직 지정 값 없음" }) => {
     return (
@@ -42,32 +49,43 @@ export default function Page2({ info, setInfo }) {
 
   return (
     <PageBase toNext={"Page3"}>
-      {/* Choiced Topic */}
-      <View style={{ width: "100%" }}>
-        <Text style={textStyles.Title}>선택한 목표: {topic}</Text>
-      </View>
+      {clicked === false && (
+        <>
+          {/* Choiced Topic */}
+          <View style={{ width: "100%" }}>
+            <Text style={textStyles.Title}>선택한 목표: {topic}</Text>
+          </View>
 
-      {/* Ranking CG Area */}
-      <View flex={2} style={{ width: "100%" }}>
-        <Text style={textStyles.TopTitle}>{words.TopTitle}</Text>
-        <Text style={textStyles.TopContent}>{words.TopContent}</Text>
-        <ScrollView style={frameStyles.rankingCGList}>
-          {RankingCGs.map((rcg, index) => {
-            return <RankingCard title={rcg} key={index} />
-          })}
-        </ScrollView>
-      </View>
+          {/* Ranking CG Area */}
+          <View flex={2} style={{ width: "100%" }}>
+            {/* <Text style={textStyles.TopTitle}>{words.TopTitle}</Text> */}
+            <Text style={textStyles.TopContent}>{words.TopContent}</Text>
+            <ScrollView style={frameStyles.rankingCGList}>
+              {RankingCGs.map((rcg, index) => {
+                return <RankingCard title={rcg} key={index} />
+              })}
+            </ScrollView>
+          </View>
 
-      {/* User CG Area */}
-      <View flex={1} style={{ width: "100%", justifyContent: "space-around" }}>
-        <View>
-          <Text style={textStyles.BotTitle}>{words.BotTitle}</Text>
-          <Text style={textStyles.BotContent}>{words.BotContent}</Text>
-        </View>
-        <View style={frameStyles.customArea}>
-          <Text style={textStyles.customArea}>{words.customContent}</Text>
-        </View>
-      </View>
+          {/* User CG Area */}
+          <View flex={1} style={{ width: "100%", justifyContent: "space-around" }}>
+            <View>
+              <Text style={textStyles.BotTitle}>{words.BotTitle}</Text>
+              <Text style={textStyles.BotContent}>{words.BotContent}</Text>
+            </View>
+            <Pressable onPress={() => setClicked(true)}>
+              <View style={frameStyles.customArea}>
+                <Text style={textStyles.customArea}>{words.customContent}</Text>
+              </View>
+            </Pressable>
+          </View>
+        </>
+      )}
+      {clicked === true && (
+        <>
+          <CustomTopicInput topic={topic} setTopic={setTopic} setClicked={setClicked} />
+        </>
+      )}
     </PageBase>
   )
 }
@@ -100,7 +118,7 @@ const frameStyles = {
     marginBottom: 12,
     backgroundColor: `${ColorSet.navyColor(1)}`,
     borderRadius: 12,
-    padding: 12,
+    padding: 18,
   },
 }
 
@@ -116,6 +134,8 @@ const textStyles = {
   },
   TopContent: {
     ...fontStyles.HyeminBold({ size: 5 }),
+    width: "100%",
+    borderBottomWidth: 2,
   },
   rankingCard: {
     ...fontStyles.HyeminBold({ size: 7, bold: "bold" }),
