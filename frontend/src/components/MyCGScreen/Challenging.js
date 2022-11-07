@@ -1,5 +1,6 @@
 import React from "react-native"
 import { View, ScrollView, Image, Dimensions } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import styled from "styled-components"
@@ -12,6 +13,7 @@ import { useState } from "react"
 import AppModal from "../common/AppModal"
 import Feed from "./Feed"
 const Challenging = () => {
+  const navigation = useNavigation()
   const tempList = [
     {
       isChallenge: true,
@@ -45,19 +47,12 @@ const Challenging = () => {
   const myFunc = () => {
     console.log("앙냥냥")
   }
-  const [openModal, setOpenModal] = useState(false)
-
-  const openAndClose = () => {
-    setOpenModal(!openModal)
+  function pressHandler() {
+    navigation.push("CGRoom")
   }
 
   return (
     <ScrollBackground>
-      {openModal && (
-        <AppModal openAndClose={openAndClose} title={myFunc}>
-          <Feed />
-        </AppModal>
-      )}
       <DivideView>
         <IconView>
           <RankingChallengeIcon />
@@ -67,7 +62,7 @@ const Challenging = () => {
       {tempList
         .filter((listItem) => listItem.isChallenge)
         .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={openAndClose} />
+          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={pressHandler} />
         ))}
       <DivideView>
         <IconView>
@@ -78,7 +73,7 @@ const Challenging = () => {
       {tempList
         .filter((listItem) => !listItem.isChallenge)
         .map((challengeInfo, idx) => (
-          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={openAndClose} />
+          <ChallengingCard key={idx} challengeInfo={challengeInfo} func={pressHandler} />
         ))}
     </ScrollBackground>
   )
