@@ -32,7 +32,10 @@ function AuthContextProvider({ children }) {
     instance
       .get("/api/user")
       .then((res) => setInfo(res.data))
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        logout()
+      })
   }
 
   function signed(flag) {

@@ -28,6 +28,7 @@ export default function Page2({ info, setInfo }) {
             onPress={() => {
               setSelIndex(ind)
             }}
+            style={{ width: "100%" }}
           >
             <View
               style={{
@@ -50,12 +51,12 @@ export default function Page2({ info, setInfo }) {
 
 const styles = {
   Title: {
-    ...fontStyles.HyeminBold({ size: 7, bold: "bold", align: "left" }),
+    ...fontStyles.HyeminBold({ size: 6, bold: "bold", align: "left" }),
     marginBottom: 15,
   },
 
   Content: {
-    ...fontStyles.Hyemin({ size: 5, align: "left" }),
+    ...fontStyles.Hyemin({ size: 4, align: "left" }),
   },
   Card: {
     width: "100%",
@@ -63,6 +64,6 @@ const styles = {
     marginBottom: 12,
     borderRadius: 12,
     elevation: 12,
-    padding: 12,
+    padding: 6,
   },
 }

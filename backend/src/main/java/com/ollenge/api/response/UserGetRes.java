@@ -29,7 +29,6 @@ public class UserGetRes extends BaseResponseBody {
         response.setLoginType(user.getLoginType());
         response.setUserDescription(user.getUserDescription());
         response.setUserScore(user.getUserScore());
-        System.out.println(user.getBadge() + " " + user.getBadge().getType());
         if(user.getBadge() != null) {
             response.selectedBadge = new BadgeGetData();
             response.selectedBadge.setBadgeId(user.getBadge().getBadgeId());

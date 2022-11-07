@@ -30,7 +30,7 @@ export default function Page5({ info, setInfo }) {
 
   return (
     <PageBase toNext={"Page6"}>
-      <Text style={fontStyles.HyeminBold({ size: 9 })}>챌린지 기간 설정</Text>
+      {/* <Text style={fontStyles.HyeminBold({ size: 9 })}>챌린지 기간 설정</Text> */}
       <Text style={fontStyles.HyeminBold({ size: 5 })}>챌린지를 진행할 기간을 입력해주세요</Text>
       <View
         style={{ flex: 1, marginTop: 24, marginBottom: 24, borderRadius: 12, overflow: "hidden" }}
