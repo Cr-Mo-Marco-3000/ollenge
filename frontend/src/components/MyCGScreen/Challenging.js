@@ -14,7 +14,7 @@ import AppModal from "../common/AppModal"
 import Feed from "./Feed"
 import { AuthorizationInstance } from "../../api/settings"
 
-const Challenging = () => {
+const Challenging = (props) => {
   const navigation = useNavigation()
   const [rankingCGList, setRankingCGList] = useState([])
   const [userCGList, setUserCGList] = useState([])
@@ -45,7 +45,8 @@ const Challenging = () => {
     },
   ]
   // 여기 함수를 넣자
-  function pressHandler() {
+  function pressHandler(id) {
+    props.idHandler(id)
     navigation.push("CGRoom")
   }
 
@@ -58,7 +59,7 @@ const Challenging = () => {
         setRankingCGList(NewRankingCGList)
         setUserCGList(NewUserCGList)
       } catch (err) {
-        console.log(err.response.data)
+        // console.log(err)
       }
     }
     getChallenge()
@@ -72,11 +73,13 @@ const Challenging = () => {
         </IconView>
         <AppBoldText>랭킹 챌린지</AppBoldText>
       </DivideView>
-      {tempRankingCGList.map((challengeInfo, idx) => (
+      {tempRankingCGList.map((challengeInfo) => (
         <ChallengingCard
           key={challengeInfo.challengeId}
           challengeInfo={challengeInfo}
-          func={pressHandler}
+          func={() => {
+            pressHandler(challengeInfo.challengeId)
+          }}
         />
       ))}
       {/* 나중에 얘로 갈아끼우죠 */}
@@ -95,9 +98,11 @@ const Challenging = () => {
       </DivideView>
       {tempUserCGList.map((challengeInfo, idx) => (
         <ChallengingCard
-          key={challengeInfo.challengeId}
+          key={challengeInfo.challengeId * 2}
           challengeInfo={challengeInfo}
-          func={pressHandler}
+          func={() => {
+            pressHandler(challengeInfo.challengeId)
+          }}
         />
       ))}
       {/* 나중에 얘로 갈아끼우죠 */}

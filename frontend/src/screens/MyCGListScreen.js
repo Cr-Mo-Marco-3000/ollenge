@@ -9,7 +9,7 @@ import Challenging from "../components/MyCGScreen/Challenging"
 import Ended from "../components/MyCGScreen/Ended"
 import ColorSet from "../style/ColorSet"
 import TopMargin from "../components/common/TopMargin"
-function MyCGListScreen() {
+function MyCGListScreen({ idHandler }) {
   const Tab = createMaterialTopTabNavigator()
 
   return (
@@ -39,7 +39,7 @@ function MyCGListScreen() {
           },
         }}
       >
-        <Tab.Screen name="도전 중" component={Challenging} />
+        <Tab.Screen name="도전 중">{(props) => <Challenging idHandler={idHandler} />}</Tab.Screen>
         <Tab.Screen name="시작 전" component={BeforeStart} />
         <Tab.Screen name="종료" component={Ended} />
       </Tab.Navigator>
