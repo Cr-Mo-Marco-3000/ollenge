@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 
 import { View, StyleSheet, KeyboardAvoidingView } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
@@ -13,14 +13,16 @@ import ImagePickerContainer from "../common/ImagePicker"
 import TextInputContainer from "../common/TextInputContainer"
 import AppButton from "../common/AppButton"
 import { AuthorizationInstance } from "../../api/settings"
+import { AuthContext } from "../../../store/auth-context"
 
-function MyInfoEditScreen() {
+function MyInfoEditScreen({ userInfo }) {
   const instance = AuthorizationInstance()
   const navigation = useNavigation()
+  const authCtx = useContext(AuthContext)
   // props로 기본 유저 정보 받아와야하는 부분 (imageuri, nickname)
-  const [profileImageUri, setProfileImageUri] = useState()
+  const [profileImageUri, setProfileImageUri] = useState(userInfo.profileImg)
   const [profileImageBase64, setProfileImageBase64] = useState()
-  const [nicknameInput, setNicknameInput] = useState("")
+  const [nicknameInput, setNicknameInput] = useState(userInfo.nickname)
 
   function profileImageUriHandler(uri) {
     setProfileImageUri(uri)
@@ -51,13 +53,23 @@ function MyInfoEditScreen() {
           data.profileImg = `${res.data.profile_img}`
         })
         .catch((err) => console.log(err))
+    } else if (!profileImageBase64 && !profileImageUri) {
+      data.profileImg = ""
     }
     // 닉네임
-    if (nicknameCheck(nicknameInput)) {
-      data.nickname = nicknameInput
+    if (nicknameInput !== userInfo.nickname) {
+      if (nicknameCheck(nicknameInput)) {
+        data.nickname = nicknameInput
+      } else {
+        alert("닉네임 형식이 틀렸습니다")
+      }
+    }
+    if (data) {
+      console.log(data)
       instance
         .patch("/api/user", data)
         .then((res) => {
+          authCtx.getInfo()
           navigation.goBack("MyInfo")
         })
         .catch((err) => {
@@ -66,8 +78,6 @@ function MyInfoEditScreen() {
             alert(err.response.data.message)
           }
         })
-    } else {
-      alert("닉네임 형식이 틀렸습니다")
     }
   }
 

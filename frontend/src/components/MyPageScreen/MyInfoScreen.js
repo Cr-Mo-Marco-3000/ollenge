@@ -1,6 +1,6 @@
 import React from "react"
 
-import { ScrollView, StyleSheet, View } from "react-native"
+import { ScrollView, StyleSheet, View, Image } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { useNavigation } from "@react-navigation/native"
 import { Button } from "react-native-paper"
@@ -16,7 +16,7 @@ import BedgeCard from "./BedgeCard"
 import TopMargin from "../common/TopMargin"
 import { AuthContext } from "../../../store/auth-context"
 
-function MyInfoScreen() {
+function MyInfoScreen({ userInfo }) {
   const navigation = useNavigation()
   const authCtx = useContext(AuthContext)
 
@@ -45,12 +45,19 @@ function MyInfoScreen() {
       </View>
       <View style={styles.scrollContainer}>
         <View style={styles.imageBox}>
-          <DefaultImage />
+          {userInfo.profileImg ? (
+            <Image
+              source={{ url: userInfo.profileImg }}
+              style={{ width: "100%", height: "100%", borderRadius: 100 }}
+            />
+          ) : (
+            <DefaultImage />
+          )}
         </View>
         <View style={styles.infoContainer}>
           <UserInfoBox>
             <UserNicknameBox onPress={editPressHandler}>
-              <AppBoldText>userNickname</AppBoldText>
+              <AppBoldText>{userInfo.nickname}</AppBoldText>
               <View
                 style={{
                   width: RFPercentage(3),
@@ -61,7 +68,7 @@ function MyInfoScreen() {
                 <PencilIcon />
               </View>
             </UserNicknameBox>
-            <AppText>userScore</AppText>
+            <AppText>{userInfo.userScore}점</AppText>
             <View style={{ width: RFPercentage(8), height: RFPercentage(8) }}>
               <HeartIcon1 />
             </View>

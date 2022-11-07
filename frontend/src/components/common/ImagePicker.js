@@ -18,7 +18,7 @@ function ImagePickerContainer({ imageUri, imageUriHandler, imageBase64Handler })
       base64: true,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0.3,
     })
     if (!result.cancelled) {
       imageUriHandler(result.uri)
@@ -35,7 +35,7 @@ function ImagePickerContainer({ imageUri, imageUriHandler, imageBase64Handler })
 
     const result = await ImagePicker.launchCameraAsync({
       base64: true,
-      quality: 1,
+      quality: 0.3,
     })
     if (!result.cancelled) {
       imageUriHandler(result.uri)
@@ -62,13 +62,13 @@ function ImagePickerContainer({ imageUri, imageUriHandler, imageBase64Handler })
   }
   return (
     <RootScreen>
-      <View style={styles.imageContainer}>
+      <Pressable style={styles.imageContainer} onPress={pressHandler}>
         <Image
           style={styles.profileImage}
           source={imageUri ? { uri: imageUri } : { uri: defaultImageUri }}
           resizeMode="cover"
         />
-      </View>
+      </Pressable>
       <Pressable style={styles.editButton} onPress={pressHandler}>
         <LinearGradient
           colors={[`${ColorSet.orangeColor(1)}`, `${ColorSet.yellowColor(1)}`]}
@@ -101,11 +101,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.38,
     shadowRadius: 12.0,
     marginTop: "10%",
+    backgroundColor: "white",
   },
   profileImage: {
     width: "100%",
     height: "100%",
-    backgroundColor: "blue",
     borderRadius: 200,
   },
   editButton: {

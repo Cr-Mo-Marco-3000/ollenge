@@ -92,7 +92,7 @@ function Navigation() {
     } else {
       setAuthFlag(false)
     }
-  }, [authCtx])
+  }, [])
   return (
     <>
       {!authFlag && <AuthStack />}
@@ -130,7 +130,7 @@ function Root() {
     fetchToken()
     fetchSigned()
     getFonts()
-  }, [authCtx])
+  }, [])
 
   if (isTryingLogin) {
     return <AppLoading />
