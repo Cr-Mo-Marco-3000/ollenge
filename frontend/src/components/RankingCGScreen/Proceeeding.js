@@ -9,7 +9,11 @@ import {
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 
+import { useState, useEffect } from "react"
+
 const Proceeding = () => {
+  useEffect(() => {}, [])
+
   const tempList = [
     {
       presetTopic: "운동 하기",
