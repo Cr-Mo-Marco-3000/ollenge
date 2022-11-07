@@ -66,6 +66,7 @@ const AppBoldText = (props) => {
         fontSize: selectedSize,
         fontFamily: "HyeminBold",
       }}
+      numberOfLines={props.lineNumber ? props.lineNumber : 0}
     >
       {props.children}
     </Text>

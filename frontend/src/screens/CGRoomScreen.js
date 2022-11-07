@@ -8,7 +8,7 @@ import ColorSet from "../style/ColorSet"
 
 import TopMargin from "./../components/common/TopMargin"
 import AppButton from "./../components/common/AppButton"
-import UserListTap from "../components/CGRoomScreen.js/UserListTap"
+import UserListTap from "../components/CGRoomScreen/UserListTap"
 
 function CGRoomScreen() {
   const navigation = useNavigation()

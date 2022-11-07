@@ -5,9 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 
 import MyCGListScreen from "./MyCGListScreen"
 import CGRoomScreen from "./CGRoomScreen"
-import CGUserScreen from "../components/CGRoomScreen.js/CGUserScreen"
-import AuthScreen from "../components/CGRoomScreen.js/AuthScreen"
-import ImageRegisterPage from "../components/CGRoomScreen.js/ImageRegisterScreen"
+import CGUserScreen from "../components/CGRoomScreen/CGUserScreen/CGUserScreen"
+import AuthScreen from "../components/CGRoomScreen/AuthScreen"
+import ImageRegisterPage from "../components/CGRoomScreen/ImageRegisterScreen"
 
 import ColorSet from "../style/ColorSet"
 
