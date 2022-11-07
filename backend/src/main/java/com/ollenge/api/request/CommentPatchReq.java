@@ -11,11 +11,11 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class FeedCommentPostReq {
+public class CommentPatchReq {
 
-    @ApiParam(value = "피드 ID")
+    @ApiParam(value = "댓글 ID")
     @Positive
-    Long feedId;
+    Long commentId;
 
     @ApiParam(value = "댓글 내용")
     @NotBlank
