@@ -6,7 +6,6 @@ import com.ollenge.api.request.UserPostReq;
 import com.ollenge.api.response.TotalUserRankGetRes;
 import com.ollenge.api.response.UserChallengeGetRes;
 import com.ollenge.api.response.UserGetRes;
-import com.ollenge.api.response.data.BadgeGetData;
 import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.api.service.BadgeService;
@@ -47,8 +46,7 @@ public class UserController {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userService.getUserByUserId(userId);
         if (user == null) return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
-        List<BadgeGetData> badgeList = badgeService.getBadgeList(user);
-        return ResponseEntity.status(200).body(UserGetRes.of(200, "회원 정보 조회 성공", user, badgeList));
+        return ResponseEntity.status(200).body(UserGetRes.of(200, "회원 정보 조회 성공", user));
     }
 
     @PatchMapping
@@ -170,40 +168,6 @@ public class UserController {
     }
 
     @PatchMapping("/badge")
-    @ApiOperation(value = "뱃지 획득", notes = "뱃지를 획득 처리합니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "뱃지 획득 성공"),
-            @ApiResponse(code = 400, message = "요청한 뱃지가 존재하지 않습니다."),
-            @ApiResponse(code = 400, message = "이미 획득한 뱃지 입니다."),
-            @ApiResponse(code = 400, message = "권한이 없습니다."),
-            @ApiResponse(code = 400, message = "입력 형식에 맞지 않습니다."),
-            @ApiResponse(code = 500, message = "서버 에러 발생")
-    })
-    public ResponseEntity<? extends BaseResponseBody> updateBadgeStatus(@ApiIgnore Authentication authentication, @Validated @RequestBody BadgePatchReq badgePatchReq,
-                                                                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "입력 형식에 맞지 않습니다."));
-        }
-
-        try {
-            userService.updateBadgeStatus(authentication, badgePatchReq);
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "뱃지 획득 성공"));
-        } catch (InvalidUserException invalidUserException) {
-            invalidUserException.printStackTrace();
-            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
-        } catch (InvalidBadgeStatusException invalidUserException) {
-            invalidUserException.printStackTrace();
-            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "이미 획득한 뱃지 입니다."));
-        } catch (InvalidBadgeException invalidBadgeException) {
-            invalidBadgeException.printStackTrace();
-            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "요청한 뱃지가 존재하지 않습니다."));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
-        }
-    }
-
-    @PatchMapping("/badge/profile")
     @ApiOperation(value = "대표 뱃지 설정", notes = "대표 뱃지를 설정합니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "대표 뱃지 설정 성공"),

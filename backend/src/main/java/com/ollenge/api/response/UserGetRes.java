@@ -6,8 +6,6 @@ import com.ollenge.db.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 public class UserGetRes extends BaseResponseBody {
@@ -20,9 +18,8 @@ public class UserGetRes extends BaseResponseBody {
     String userDescription;
     int userScore;
     BadgeGetData selectedBadge;
-    List<BadgeGetData> badgeList;
 
-    public static UserGetRes of(Integer statusCode, String message, User user, List<BadgeGetData> badgeList) {
+    public static UserGetRes of(Integer statusCode, String message, User user) {
         UserGetRes response = new UserGetRes();
         response.setMessage(message);
         response.setStatusCode(statusCode);
@@ -43,7 +40,6 @@ public class UserGetRes extends BaseResponseBody {
         } else {
             response.selectedBadge = null;
         }
-        response.setBadgeList(badgeList);
         return response;
     }
 }
