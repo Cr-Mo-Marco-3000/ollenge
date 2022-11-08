@@ -32,6 +32,7 @@ export default function ParticipatingCard(props) {
   // 레이아웃 정보
   const spaceHeight = 180
   const cardHeight = spaceHeight * 0.9
+  const pxSize = windowWidth * 0.05
 
   // 카드 높이 * 70%(상단높이) * 상단높이 위쪽 깎기 * 보다 약간 작게
   // const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
@@ -81,7 +82,9 @@ export default function ParticipatingCard(props) {
                     justifyContent: "center",
                   }}
                 >
-                  <AppBoldText color="navy">{presetTopic}</AppBoldText>
+                  <AppBoldText lineNumber={1} pxSize={pxSize} color="navy">
+                    {presetTopic}
+                  </AppBoldText>
                 </TextRow>
                 <TextRow
                   style={{
@@ -89,7 +92,7 @@ export default function ParticipatingCard(props) {
                     top: 5,
                   }}
                 >
-                  <AppBoldText pxSize={15} color="navy">
+                  <AppBoldText pxSize={pxSize * 0.7} color="navy">
                     {startDate} - {endDate} (2주)
                   </AppBoldText>
                 </TextRow>

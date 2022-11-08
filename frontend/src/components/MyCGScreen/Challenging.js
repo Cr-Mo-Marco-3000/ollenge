@@ -35,7 +35,7 @@ const Challenging = (props) => {
 
   const tempUserCGList = [
     {
-      challengeId: 34,
+      challengeId: 35,
       challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
       challengeName: "찬호와 아이들",
       challengeTopic: "하루 3잔 물마시기",
@@ -45,7 +45,7 @@ const Challenging = (props) => {
     },
   ]
   // 여기 함수를 넣자
-  function pressHandler(id) {
+  const pressHandler = (id) => {
     props.idHandler(id)
     navigation.push("CGRoom")
   }
@@ -87,7 +87,9 @@ const Challenging = (props) => {
         <ChallengingCard
           key={challengeInfo.challengeId}
           challengeInfo={challengeInfo}
-          func={pressHandler}
+          func={() => {
+            pressHandler(challengeInfo.challengeId)
+          }}
         />
       ))} */}
       <DivideView>
@@ -96,9 +98,9 @@ const Challenging = (props) => {
         </IconView>
         <AppBoldText>일반 챌린지</AppBoldText>
       </DivideView>
-      {tempUserCGList.map((challengeInfo, idx) => (
+      {tempUserCGList.map((challengeInfo) => (
         <ChallengingCard
-          key={challengeInfo.challengeId * 2}
+          key={challengeInfo.challengeId}
           challengeInfo={challengeInfo}
           func={() => {
             pressHandler(challengeInfo.challengeId)
@@ -110,7 +112,9 @@ const Challenging = (props) => {
         <ChallengingCard
           key={challengeInfo.challengeId}
           challengeInfo={challengeInfo}
-          func={pressHandler}
+          func={() => {
+            pressHandler(challengeInfo.challengeId)
+          }}
         />
       ))} */}
     </ScrollBackground>

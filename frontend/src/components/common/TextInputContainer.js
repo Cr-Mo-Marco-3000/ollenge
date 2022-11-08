@@ -7,8 +7,9 @@ import { useState } from "react"
 
 import AppText from "./AppText"
 
-function TextInputContainer({ inputText, inputHandler }) {
+function TextInputContainer({ inputText, inputHandler, subminHandler }) {
   const [inputErrorText, setInputErrorText] = useState("2~12자, 특수문자 사용 금지")
+
   return (
     <RootScreen>
       <TextInput
@@ -16,6 +17,7 @@ function TextInputContainer({ inputText, inputHandler }) {
         style={styles.textInputBox}
         maxLength={12}
         onChangeText={inputHandler}
+        onSubmitEditing={subminHandler}
       />
       <AppText color={"deepOrange"} size={2}>
         {inputErrorText}
