@@ -30,12 +30,42 @@ from datetime import datetime
 # S3연결
 from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name, make_profile_url_name
 # DB 연결
-from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img
+from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
 # model 연결
 from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput, uploadImg
 # Header token
 from typing import Optional
 import jwt
+
+
+# 예외 처리
+# 이미 기준 사진이 있는 경우
+def isStdimgException(participation_id: str):
+    try:
+        isstdimg = execute_select_std_img(participation_id)
+        if isstdimg:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return True
+
+
+# 이미 당일 피드를 생성한 경우
+def isAuthedTodayException(participation_id: int):
+    try:
+        now = datetime.now()
+        today = current_time_date = now.strftime("%Y-%m-%d")
+        isauthed = execute_select_isauth(participation_id, today)
+        if isauthed:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return True
+
 
 def remove_img(img_dir):
     if os.path.isfile(img_dir):
@@ -93,7 +123,7 @@ config = dotenv_values(".env")
 YOUR_CLARIFAI_API_KEY = config.get('CLARIFYKEY')
 JWT_SECRET_KEY=config.get('JWTSECRETKEY')
 YOUR_APPLICATION_ID = "my-first-application"
-metadata = (("Authorization", f"Key {YOUR_CLARIFAI_API_KEY}"),)
+metadata = (("authorization", f"Key {YOUR_CLARIFAI_API_KEY}"),)
 
 app = FastAPI()
 
@@ -228,6 +258,14 @@ async def authimgcommon(data: CommonInput, Authorization: Optional[str] = Header
                 "errcode": 1,
                 },
         )
+    if isAuthedTodayException(participation_id):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"오늘 인증이 이미 완료 되었습니다.",
+                "errcode": 0,
+                },
+        )
     try:
         if user_id != execute_select_token_user_id(participation_id):
             return JSONResponse(
@@ -270,6 +308,8 @@ async def authimgcommon(data: CommonInput, Authorization: Optional[str] = Header
         file_url = s3_upload(filename, 'homybk', to)
         if file_url:
             execute_insert_feed(participation_id, file_url, feed_content,feed_time)
+        execute_feed_cnt_increase(participation_id)
+        execute_challenge_score_increase(participation_id)
     except Exception as e:
         print(e)
         remove_img(filename)
@@ -364,7 +404,14 @@ async def authimgclassification(data: classificationpicture, Authorization: Opti
                 "errcode": 5,
                 },
         )
-    
+    if isAuthedTodayException(participation_id):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"오늘 인증이 이미 완료 되었습니다.",
+                "errcode": 0,
+                },
+        )
     imgdata = base64.b64decode(feed_img)
     filename = "./imgs/"+make_classification_url_name(participation_id)
     with open(filename, 'wb') as f:
@@ -416,6 +463,8 @@ async def authimgclassification(data: classificationpicture, Authorization: Opti
             file_url = s3_upload(filename, 'homybk', to)
             if file_url:
                 execute_insert_feed(participation_id, file_url, feed_content, feed_time)
+            execute_feed_cnt_increase(participation_id)
+            execute_challenge_score_increase(participation_id)
         except Exception as e:
             print(e)
             remove_img(filename)
@@ -476,6 +525,7 @@ async def test(data: StdImgInput, Authorization: Optional[str] = Header(None)):
     try:
         participation_id = str(data.participation_id)
         std_img=data.std_img
+        time_flag = is_auth_intime(int(participation_id))
     except Exception as e:
         print(e)
         return JSONResponse(
@@ -485,6 +535,15 @@ async def test(data: StdImgInput, Authorization: Optional[str] = Header(None)):
                 "errcode": 1
                 },
         )
+    
+    if isStdimgException(participation_id) and time_flag[0]!=1:
+        return JSONResponse(
+                status_code=400,
+                content={
+                    "message": f"이미 기준 사진이 존재 합니다.",
+                    "errcode": 0
+                    },
+            )
     try:
         imgdata = base64.b64decode(std_img)
         filename = "./imgs/"+make_std_url_name(participation_id)
@@ -647,6 +706,14 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
                 "errcode": 5,
                 },
         )
+    if isAuthedTodayException(participation_id):
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"오늘 인증이 이미 완료 되었습니다.",
+                "errcode": 0,
+                },
+        )
     imgdata = base64.b64decode(feed_img)
 
     filename = "./imgs/"+make_feature_url_name(participation_id)
@@ -740,6 +807,8 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
             file_url = s3_upload(filename, 'homybk', to)
             if file_url:
                 execute_insert_feed(participation_id, file_url, feed_content, feed_time)
+            execute_feed_cnt_increase(participation_id)
+            execute_challenge_score_increase(participation_id)
         except Exception as e:
             print(e)
             remove_img(filename)
