@@ -30,11 +30,9 @@ Caution!!!
 props를 넘겨줄 때의 형식은 아래와 같습니다.
 size={3}
 pxSize={24}
-
 */
 const AppBoldText = (props) => {
   const selectedColor = props.color ? props.color : "navy"
-
   let selectedSize = 24
 
   if (!props.size && !props.pxSize) {
@@ -66,6 +64,7 @@ const AppBoldText = (props) => {
         fontSize: selectedSize,
         fontFamily: "HyeminBold",
       }}
+      numberOfLines={props.lineNumber ? props.lineNumber : 0}
     >
       {props.children}
     </Text>

@@ -13,7 +13,7 @@ import OrangeSquare from "./orange_square_icon.png"
 import Stopwatch from "./stopwatch_icon.png"
 
 export function GymIcon(props) {
-  const left = props.left ? props.left : "-15%"
+  const left = props.left ? props.left : "-7%"
   const top = props.top ? props.top : "-15%"
 
   return (
@@ -51,8 +51,8 @@ export function NotebookIcon(props) {
   )
 }
 export function SunIcon(props) {
-  const left = props.left ? props.left : "-14%"
-  const top = props.top ? props.top : "-15%"
+  const left = props.left ? props.left : "-10%"
+  const top = props.top ? props.top : "-10%"
 
   return (
     <Image

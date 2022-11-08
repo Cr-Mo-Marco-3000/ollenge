@@ -6,6 +6,7 @@ import Kakao from "./kakao-icon.png"
 import Plus from "./plus-icon.png"
 import Defalut from "./default-image.png"
 import Pencil from "./pencil-icon.png"
+import Crown from "./crown.png"
 import Heart1 from "./heart-icon-1.png"
 import Heart2 from "./heart-icon-2.png"
 import Heart3 from "./heart-icon-3.png"
@@ -67,4 +68,8 @@ export function TriangleIcon() {
 
 export function TriangleIcon2() {
   return <Image source={Triangle2} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function CrownIcon() {
+  return <Image source={Crown} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
 }

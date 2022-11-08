@@ -1,5 +1,5 @@
 import React from "react-native"
-import { View, Text, Dimensions } from "react-native"
+import { View, Text, Dimensions, Image } from "react-native"
 import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
@@ -72,6 +72,11 @@ export default function EndedCard(props) {
                 >
                   {/* 나중에 여기에도 예시파일처럼 직접 borderRadius 먹여주어야 함 */}
                   <ExampleIcon />
+                  {/* <Image
+                    source={{ uri: challengeInfo.challengeImg }}
+                    style={{ height: "100%", width: "100%", borderRadius: 200 * 0.7 * 0.95 * 0.75 }}
+                    resizeMode="cover"
+                  /> */}
                 </View>
                 {/* 사진 옆 뿔 */}
                 <View

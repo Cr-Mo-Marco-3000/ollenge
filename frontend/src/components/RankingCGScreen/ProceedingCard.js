@@ -35,7 +35,7 @@ export default function ProceedingCard(props) {
 
   // 카드 높이 * 70%(상단높이) * 상단높이 위쪽 깎기 * 보다 약간 작게
   // const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
-
+  const pxSize = windowWidth * 0.05
   return (
     <View
       style={{
@@ -77,7 +77,9 @@ export default function ProceedingCard(props) {
                     justifyContent: "center",
                   }}
                 >
-                  <AppBoldText color="navy">{presetTopic}</AppBoldText>
+                  <AppBoldText lineNumber={1} pxSize={pxSize} color="navy">
+                    {presetTopic}
+                  </AppBoldText>
                 </TextRow>
                 <TextRow
                   style={{
@@ -85,7 +87,7 @@ export default function ProceedingCard(props) {
                     top: 5,
                   }}
                 >
-                  <AppBoldText pxSize={15} color="navy">
+                  <AppBoldText pxSize={pxSize * 0.7} color="navy">
                     {startDate} - {endDate} (2주)
                   </AppBoldText>
                 </TextRow>
@@ -126,7 +128,7 @@ export default function ProceedingCard(props) {
                           right: 3,
                         }}
                       >
-                        <AppBoldText color="white" pxSize={14}>
+                        <AppBoldText color="white" pxSize={65 * 0.2}>
                           {peopleNumber}
                         </AppBoldText>
                       </View>
@@ -143,7 +145,7 @@ export default function ProceedingCard(props) {
                           justifyContent: "center",
                         }}
                       >
-                        <AppBoldText color="white" pxSize={13}>
+                        <AppBoldText color="white" pxSize={65 * 0.2}>
                           참여 중
                         </AppBoldText>
                       </ButtonInner>

@@ -31,7 +31,6 @@ function AuthStack() {
 }
 
 function AuthenticatedStack() {
-  const authCtx = useContext(AuthContext)
   const [index, setIndex] = React.useState(4)
   const [routes] = React.useState([
     {
@@ -85,20 +84,7 @@ function AuthenticatedStack() {
 
 function Navigation() {
   const authCtx = useContext(AuthContext)
-  const [authFlag, setAuthFlag] = useState(false)
-  useEffect(() => {
-    if (authCtx.isAuthenticated && authCtx.isSigned) {
-      setAuthFlag(true)
-    } else {
-      setAuthFlag(false)
-    }
-  }, [])
-  return (
-    <>
-      {!authFlag && <AuthStack />}
-      {authFlag && <AuthenticatedStack />}
-    </>
-  )
+  return <>{authCtx.token && authCtx.isSigned ? <AuthenticatedStack /> : <AuthStack />}</>
 }
 
 function Root() {
@@ -106,6 +92,7 @@ function Root() {
   const authCtx = useContext(AuthContext)
   async function fetchToken() {
     const storedToken = await AsyncStorage.getItem("token")
+    console.log(storedToken)
     if (storedToken) {
       authCtx.authenticate(storedToken)
     }
@@ -113,6 +100,7 @@ function Root() {
 
   async function fetchSigned() {
     const storedUserFlag = await AsyncStorage.getItem("userFlag")
+    console.log(storedUserFlag)
     if (storedUserFlag) {
       authCtx.signed(storedUserFlag)
     }

@@ -83,7 +83,11 @@ function SignupScreen() {
         />
         <View style={styles.textInputContainer}>
           <AppBoldText>닉네임</AppBoldText>
-          <TextInputContainer inputHandler={nicknameInputHandler} inputText={nicknameInput} />
+          <TextInputContainer
+            inputHandler={nicknameInputHandler}
+            inputText={nicknameInput}
+            subminHandler={buttonHandler}
+          />
         </View>
         <View style={styles.buttonContainer}>
           <AppButton title={"완료"} handler={buttonHandler} />
