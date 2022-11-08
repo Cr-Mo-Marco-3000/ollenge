@@ -187,13 +187,4 @@ public class ChallengeService {
         return challengePresetRepository.findAll();
     }
 
-    public LocalDate getChallengePresetStartDate(LocalDate today) {
-        return today.plusDays(today.lengthOfMonth() - today.getDayOfMonth() + 1);
-    }
-
-    public LocalDate getChallengePresetEndDate(LocalDate today) {
-        LocalDate start = getChallengePresetStartDate(today);
-        return start.plusDays(start.lengthOfMonth() - 1);
-    }
-
 }
