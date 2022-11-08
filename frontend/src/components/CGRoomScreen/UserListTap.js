@@ -57,7 +57,7 @@ function UserListTap({ navigation }) {
         showsHorizontalScrollIndicator={false}
       >
         {userList.map((user, index) => {
-          return <ProfileBedge key={index} url={user.profileImg} isActive={false} />
+          return <ProfileBedge key={index} uri={user.profileImg} isActive={false} />
         })}
       </ScrollView>
       <LinearGradient

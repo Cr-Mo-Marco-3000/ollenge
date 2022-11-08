@@ -42,6 +42,12 @@ const userList = [
     profileImg: "",
     dateTimeList: ["2022-11-07 10:11:10"],
   },
+  {
+    userId: 4,
+    nickname: "메롱",
+    profileImg: "",
+    dateTimeList: ["2022-11-07 10:11:10"],
+  },
 ]
 
 function UserRanking() {
@@ -51,20 +57,22 @@ function UserRanking() {
   return (
     <View style={styles.rootScreen}>
       <ScrollView style={styles.scrollScreen}>
-        {userList.map((user, key) => {
-          if (!myInfo && user.userId == authCtx.userInfo.userId) {
-            setMyInfo(user)
-            setMyRank(key + 1)
-          }
+        <View style={styles.scrollInnerScreen}>
+          {userList.map((user, key) => {
+            if (!myInfo && user.userId == authCtx.userInfo.userId) {
+              setMyInfo(user)
+              setMyRank(key + 1)
+            }
 
-          if (key == 0) {
-            return <FirtstUserItem user={user} key={key} />
-          } else {
-            return <RankUserItem user={user} key={key} rank={key + 1} />
-          }
-        })}
+            if (key == 0) {
+              return <FirtstUserItem user={user} key={key} />
+            } else {
+              return <RankUserItem user={user} key={key} rank={key + 1} />
+            }
+          })}
+        </View>
       </ScrollView>
-      {myInfo ? <MyRankItem user={myInfo} rank={myRank} /> : null}
+      {/* {myInfo ? <MyRankItem user={myInfo} rank={myRank} /> : null} */}
     </View>
   )
 }
@@ -81,5 +89,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: "10%",
     width: "100%",
     flex: 1,
+  },
+  scrollInnerScreen: {
+    paddingBottom: "40%",
   },
 })

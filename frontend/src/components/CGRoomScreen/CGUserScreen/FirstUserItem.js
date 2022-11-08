@@ -24,7 +24,7 @@ function FirtstUserItem({ user }) {
           <View style={styles.imgBox}>
             <View style={styles.profileImgBox}>
               <Image
-                source={user.profileImg ? { url: user.profileImg } : { url: defaultImageUri }}
+                source={user.profileImg ? { uri: user.profileImg } : { uri: defaultImageUri }}
                 style={{ width: "100%", height: "100%", borderRadius: 10 }}
                 resizeMode="cover"
               />
