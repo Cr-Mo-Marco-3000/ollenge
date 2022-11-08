@@ -1,6 +1,6 @@
 import React from "react"
 
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Provider } from "react-native-paper"
@@ -11,9 +11,11 @@ import TopMargin from "./../components/common/TopMargin"
 import AppButton from "./../components/common/AppButton"
 import UserListTap from "../components/CGRoomScreen/UserListTap"
 import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
+import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
 
 function CGRoomScreen({ roomInfo }) {
   const navigation = useNavigation()
+
   return (
     <Provider>
       <LinearGradient
@@ -24,17 +26,21 @@ function CGRoomScreen({ roomInfo }) {
         <TopMargin />
         <UserListTap navigation={navigation} />
         <CGRoomInfoTag roomInfo={roomInfo} />
-        <View style={{ height: 50, marginTop: 100 }}>
-          <AppButton
-            title={"인증이미지등록"}
-            handler={() => navigation.push("CGImg", { methodNum: 0, participationId: 3 })}
-          ></AppButton>
-        </View>
-        <View style={{ height: 50 }}>
-          <AppButton
-            title={"인증"}
-            handler={() => navigation.push("CGAuth", { methodNum: 1, participationId: 3 })}
-          ></AppButton>
+
+        <View style={styles.buttonContainer}>
+          <InviteCodeBtn inviteCode={roomInfo.inviteCode} />
+          <View style={{ height: 50, marginTop: 100 }}>
+            <AppButton
+              title={"인증이미지등록"}
+              handler={() => navigation.push("CGImg", { methodNum: 0, participationId: 3 })}
+            ></AppButton>
+          </View>
+          <View style={{ height: 50 }}>
+            <AppButton
+              title={"인증"}
+              handler={() => navigation.push("CGAuth", { methodNum: 1, participationId: 3 })}
+            ></AppButton>
+          </View>
         </View>
       </LinearGradient>
     </Provider>
@@ -42,4 +48,13 @@ function CGRoomScreen({ roomInfo }) {
 }
 export default CGRoomScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  buttonContainer: {
+    paddingHorizontal: "5%",
+  },
+  buttonBox: {
+    width: "100%",
+    height: "15%",
+    marginTop: "5%",
+  },
+})

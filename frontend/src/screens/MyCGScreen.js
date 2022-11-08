@@ -51,7 +51,7 @@ function MyCGScreen() {
     endDate: "2022-11-30",
     startTime: "09:40:00",
     endTime: "20:20:00",
-    inviteCode: "초대코드",
+    inviteCode: "R92DFG21",
     rewardContent: "상금",
     penaltyContent: "엉덩이로 이름쓰기",
     challengeScore: 3400,

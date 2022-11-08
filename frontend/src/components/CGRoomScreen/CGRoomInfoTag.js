@@ -9,7 +9,6 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 import ColorSet from "../../style/ColorSet"
 import { DefaultImage } from "../../assets/images"
 import AppBoldText from "../common/AppBoldText"
-import AppText from "../common/AppText"
 import RoomInfoModalContent from "./RoomInfoModalContent"
 
 function CGRoomInfoTag({ roomInfo }) {
