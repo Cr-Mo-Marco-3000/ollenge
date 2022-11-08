@@ -1,6 +1,14 @@
 /** react-native 시스템 Import */
 import React, { useEffect, useState } from "react"
-import { Pressable, View, Text, Keyboard, TouchableWithoutFeedback } from "react-native"
+import {
+  Pressable,
+  View,
+  Text,
+  Keyboard,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 
 /** Component Import */
@@ -21,12 +29,26 @@ const CancelBtn = () => {
   )
 }
 
-const NextBtn = ({ toNext }) => {
+const NextBtn = ({ toNext, disabled, toSubmit }) => {
   const navigation = useNavigation()
+
   return (
-    <Pressable style={styles.NextBtn} onPress={() => navigation.navigate(toNext)}>
-      <Text style={styles.NextBtnText}>다음</Text>
-    </Pressable>
+    <TouchableOpacity
+      activeOpacity={0.7}
+      disabled={disabled}
+      style={{ ...styles.NextBtn, backgroundColor: disabled ? "grey" : ColorSet.orangeColor(1) }}
+      onPress={() => {
+        if (!disabled) {
+          if (toNext === "Submit") {
+            toSubmit()
+          } else {
+            navigation.navigate(toNext)
+          }
+        }
+      }}
+    >
+      <Text style={styles.NextBtnText}>{toNext !== "Submit" ? "다음" : "챌린지 생성"}</Text>
+    </TouchableOpacity>
   )
 }
 
@@ -54,7 +76,12 @@ export default function PageBase(props) {
           <View style={styles.ContentArea}>{props.children}</View>
           {showKey !== true && props.hideBtn !== true && (
             <View style={styles.BottomArea}>
-              <NextBtn toNext={props.toNext} />
+              <NextBtn
+                toNext={props.toNext}
+                disabled={false}
+                toSubmit={props.toSubmit ? props.toSubmit : false}
+              />
+              {/* props.disabled */}
               <CancelBtn />
             </View>
           )}
@@ -104,7 +131,6 @@ const styles = {
 
   NextBtn: {
     ...baseStyle,
-    backgroundColor: ColorSet.orangeColor(1),
     borderRadius: 15,
     padding: 12,
     marginBottom: 10,

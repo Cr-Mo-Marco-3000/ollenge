@@ -47,8 +47,14 @@ export default function Final({ info }) {
     벌칙: [info.penaltyContent, "Page7"],
   }
   const navigation = useNavigation()
+
+  const createCG = () => {
+    console.log("CG Room 생성 API")
+    console.log(info)
+  }
+
   return (
-    <PageBase toNext={"Final"}>
+    <PageBase toNext={"Submit"} toSubmit={() => createCG()}>
       <View style={frameStyles.wholeArea}>
         <WarnSign />
         <ScrollView style={{ width: "100%", marginBottom: 24 }}>
