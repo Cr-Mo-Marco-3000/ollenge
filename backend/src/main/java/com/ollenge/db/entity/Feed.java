@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,4 +37,7 @@ public class Feed {
 
     @Column(length = 300)
     String feedContent;
+
+    @OneToMany(mappedBy = "feed")
+    List<Comment> comment;
 }
