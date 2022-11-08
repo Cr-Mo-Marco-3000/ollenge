@@ -3,6 +3,7 @@ package com.ollenge.api.service;
 import com.ollenge.api.exception.*;
 import com.ollenge.api.request.BadgePatchReq;
 import com.ollenge.api.response.data.TotalUserRankData;
+import com.ollenge.api.response.data.UserCompletedChallengeData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.StringUtils;
@@ -97,19 +98,19 @@ public class UserService {
         return userChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserCompletedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> rankingChallengeList = userRepositorySupport.getUserChallenge(user, "completed", true);
+        List<UserCompletedChallengeData> rankingChallengeList = userRepositorySupport.getUserCompletedChallenge(user, true);
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserCompletedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> userChallengeList = userRepositorySupport.getUserChallenge(user, "completed", false);
+        List<UserCompletedChallengeData> userChallengeList = userRepositorySupport.getUserCompletedChallenge(user, false);
         return userChallengeList;
     }
     public List<TotalUserRankData> getTotalUserRank(Authentication authentication) throws InvalidUserException {

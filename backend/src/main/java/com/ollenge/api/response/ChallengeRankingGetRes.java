@@ -1,6 +1,6 @@
 package com.ollenge.api.response;
 
-import com.ollenge.api.response.data.RankingData;
+import com.ollenge.api.response.data.UserRankingData;
 import com.ollenge.api.response.data.UserRankData;
 import com.ollenge.common.model.response.BaseResponseBody;
 import lombok.Getter;
@@ -13,9 +13,9 @@ import java.util.List;
 public class ChallengeRankingGetRes extends BaseResponseBody {
 
     UserRankData userRank;
-    List<RankingData> rankingList;
+    List<UserRankingData> rankingList;
 
-    public static ChallengeRankingGetRes of(int status, String message, UserRankData userRankData, List<RankingData> rankingList) {
+    public static ChallengeRankingGetRes of(int status, String message, UserRankData userRankData, List<UserRankingData> rankingList) {
         ChallengeRankingGetRes challengeRankingGetRes = new ChallengeRankingGetRes();
         challengeRankingGetRes.setMessage(message);
         challengeRankingGetRes.setStatusCode(status);

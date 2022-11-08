@@ -5,8 +5,10 @@ import com.ollenge.api.request.BadgePatchReq;
 import com.ollenge.api.request.UserPostReq;
 import com.ollenge.api.response.TotalUserRankGetRes;
 import com.ollenge.api.response.UserChallengeGetRes;
+import com.ollenge.api.response.UserCompletedGetRes;
 import com.ollenge.api.response.UserGetRes;
 import com.ollenge.api.response.data.TotalUserRankData;
+import com.ollenge.api.response.data.UserCompletedChallengeData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.api.service.BadgeService;
 import com.ollenge.api.service.UserService;
@@ -134,9 +136,9 @@ public class UserController {
     })
     public ResponseEntity<? extends BaseResponseBody> getUserCompletedChallenge(@ApiIgnore Authentication authentication) {
         try {
-            List<UserParticipatedChallengeData> userChallengeList = userService.getUserCompletedUserChallenge(authentication);
-            List<UserParticipatedChallengeData> rankingChallengeList = userService.getUserCompletedRankingChallenge(authentication);
-            return ResponseEntity.status(200).body(UserChallengeGetRes.of(200, "유저별 참여 완료 챌린지 조회 성공", rankingChallengeList, userChallengeList));
+            List<UserCompletedChallengeData> userChallengeList = userService.getUserCompletedUserChallenge(authentication);
+            List<UserCompletedChallengeData> rankingChallengeList = userService.getUserCompletedRankingChallenge(authentication);
+            return ResponseEntity.status(200).body(UserCompletedGetRes.of(200, "유저별 참여 완료 챌린지 조회 성공", rankingChallengeList, userChallengeList));
         } catch (InvalidUserException invalidUserException) {
             invalidUserException.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
