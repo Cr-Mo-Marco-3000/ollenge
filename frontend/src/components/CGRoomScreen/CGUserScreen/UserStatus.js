@@ -1,7 +1,6 @@
 import React from "react"
 import { StyleSheet, View, ScrollView } from "react-native"
 
-import AppText from "../../common/AppText"
 import ColorSet from "../../../style/ColorSet"
 import UserStatusItem from "./UserStatusItem"
 import { Provider } from "react-native-paper"
