@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { KeyboardAvoidingView, Pressable, ScrollView, Text, View } from "react-native"
 import ColorSet from "../../style/ColorSet"
-import DeviceInfo from "../../style/DeviceInfo"
+import { dw, dh } from "../../style/DeviceInfo"
 import PageBase, { fontStyles } from "./PageBase"
 import CustomTopicInput from "./CustomTopicInput"
 
@@ -16,8 +16,6 @@ const words = {
 
   customContent: "클릭하여 작성하기",
 }
-
-const { dw } = DeviceInfo
 
 export default function Page2({ info, setInfo }) {
   const [topic, setTopic] = useState(info.challengeTopic)

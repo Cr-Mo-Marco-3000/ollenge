@@ -5,9 +5,11 @@ import PageBase, { fontStyles } from "./PageBase"
 import DeviceInfo from "../../style/DeviceInfo"
 import { styles } from "../common/AppCard"
 import { useNavigation } from "@react-navigation/native"
-
+import apiSet from "../../api/index"
 const { dw } = DeviceInfo
 const topText = `챌린지 정보는 시작 이후 변경이${"\n"}불가하니 신중히 입력 부탁드립니다.`
+
+const { challAPI } = apiSet
 
 const WarnSign = () => {
   return (
@@ -48,13 +50,15 @@ export default function Final({ info }) {
   }
   const navigation = useNavigation()
 
-  const createCG = () => {
-    console.log("CG Room 생성 API")
-    console.log(info)
+  const createChallenge = async () => {
+    console.log(
+      "[PageFinal.js] ☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆",
+    )
+    await challAPI.createCG(info)
   }
 
   return (
-    <PageBase toNext={"Submit"} toSubmit={() => createCG()}>
+    <PageBase toNext={"Submit"} toSubmit={() => createChallenge()}>
       <View style={frameStyles.wholeArea}>
         <WarnSign />
         <ScrollView style={{ width: "100%", marginBottom: 24 }}>
