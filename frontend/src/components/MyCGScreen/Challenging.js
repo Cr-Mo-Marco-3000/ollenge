@@ -36,7 +36,7 @@ const Challenging = (props) => {
   const tempUserCGList = [
     {
       challengeId: 35,
-      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+      // challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
       challengeName: "찬호와 아이들",
       challengeTopic: "하루 3잔 물마시기",
       startDate: new Date(2022, 10, 5),

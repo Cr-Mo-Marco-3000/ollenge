@@ -9,58 +9,51 @@ import {
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import ParticipatingDetail from "./ParticipatingDetail"
-
+import { AuthorizationInstance } from "../../api/settings"
 import AppModal from "../common/AppModal"
 
 const Participating = () => {
   const [openModal, setOpenModal] = useState(false)
+  const [nowPage, setNowPage] = useState(0)
+  const instance = AuthorizationInstance()
 
-  const openAndClose = () => {
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [participatingList, setParticipatingList] = useState(null)
+
+  useEffect(() => {
+    const call = async () => {
+      try {
+        const res = await instance.get("/api/challenge/scheduled")
+        setStartDate(res.data.startDate)
+        setEndDate(res.data.endDate)
+        setParticipatingList(res.data.challengePresetList)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    call()
+  }, [])
+
+  const openAndClose = (idx) => {
+    setNowPage(idx)
     setOpenModal(!openModal)
   }
-
-  const tempList = [
-    {
-      presetTopic: "운동 하기",
-      challengePresetID: 1,
-      memberNumber: 4,
-      progress: 20,
-      startDate: "22.10.20",
-      endDate: "11.30",
-      isParticipated: true,
-      peopleNumber: 23,
-    },
-    {
-      presetTopic: "기상 미션 (7시)",
-      challengePresetID: 2,
-      memberNumber: 4,
-      progress: 20,
-      startDate: "22.10.20",
-      endDate: "11.30",
-      isParticipated: true,
-      peopleNumber: 21,
-    },
-    {
-      presetTopic: "매일 독서하기 (7시)",
-      challengePresetID: 3,
-      memberNumber: 4,
-      progress: 20,
-      startDate: "22.10.20",
-      endDate: "11.30",
-      isParticipated: false,
-      peopleNumber: 20,
-    },
-  ]
 
   return (
     <ScrollBackground>
       {/* 모달 */}
       {openModal && (
         <AppModal openAndClose={openAndClose}>
-          <ParticipatingDetail />
+          <ParticipatingDetail
+            nowPage={nowPage}
+            participatingList={participatingList}
+            startDate={startDate}
+            endDate={endDate}
+          />
         </AppModal>
       )}
       <View
@@ -68,8 +61,16 @@ const Participating = () => {
           height: 20,
         }}
       ></View>
-      {tempList.map((challengeInfo, idx) => (
-        <ParticipatingCard key={idx} challengeInfo={challengeInfo} openAndClose={openAndClose} />
+      {participatingList?.map((challengeInfo, idx) => (
+        <ParticipatingCard
+          key={idx}
+          challengeInfo={challengeInfo}
+          openAndClose={() => {
+            openAndClose(idx)
+          }}
+          startDate={startDate}
+          endDate={endDate}
+        />
       ))}
     </ScrollBackground>
   )

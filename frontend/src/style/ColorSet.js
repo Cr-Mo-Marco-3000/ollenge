@@ -12,4 +12,6 @@ export default {
   darkGrayColor: (opacity) => `rgba(149, 149, 149, ${opacity})`,
   pinkBageColor: (opacity) => `rgba(255, 226, 226, ${opacity})`,
   hotPinkColor: (opacity) => `rgba(255, 59, 120, ${opacity})`,
+  silverColor: (opacity) => `rgba(151, 151, 173, ${opacity})`,
+  bronzeColor: (opacity) => `rgba(158, 84, 11, ${opacity})`,
 }

@@ -6,21 +6,25 @@ import AppBoldText from "../common/AppBoldText"
 import AppCard from "../common/AppCard"
 import { ProgressBar, Badge } from "react-native-paper"
 import { ExampleIcon, RunningIcon } from "../../assets/images/MyCGScreen/MyCGScreen"
+import defaultImage from "../../assets/images/default-image.png"
 
 export default function ChallengingCard(props) {
+  const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   const windowWidth = Dimensions.get("window").width
 
   const challengeInfo = props.challengeInfo
   // 카드 높이 * 70%(상단높이) * 상단높이 위쪽 깎기 * 보다 약간 작게
   const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
   const func = props.func
+
   const nowDate = new Date()
+
   const passedDay = Math.ceil(
     (nowDate.getTime() - challengeInfo.startDate.getTime()) / 1000 / 60 / 60 / 24,
   )
 
   const wholeDay =
-    (challengeInfo.endDate.getTime() - challengeInfo.startDate.getTime()) / 1000 / 60 / 60 / 24 + 2
+    (challengeInfo.endDate.getTime() - challengeInfo.startDate.getTime()) / 1000 / 60 / 60 / 24 + 1
 
   const progress = parseInt((passedDay / wholeDay) * 100)
 
@@ -87,7 +91,11 @@ export default function ChallengingCard(props) {
                   {/* 나중에 여기에도 예시파일처럼 직접 borderRadius 먹여주어야 함 */}
                   {/* <ExampleIcon /> */}
                   <Image
-                    source={{ uri: challengeInfo.challengeImg }}
+                    source={
+                      challengeInfo.challengeImg
+                        ? { uri: challengeInfo.challengeImg }
+                        : { uri: defaultImageUri }
+                    }
                     style={{ height: "100%", width: "100%", borderRadius: 200 * 0.7 * 0.95 * 0.75 }}
                     resizeMode="cover"
                   />

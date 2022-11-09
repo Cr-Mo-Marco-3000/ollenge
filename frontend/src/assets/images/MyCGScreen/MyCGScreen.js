@@ -4,7 +4,9 @@ import Fire from "./fire-front-color.png"
 import Pencil from "./pencil-front-color.png"
 import Running from "./person_running_3d_light.png"
 import Example from "./example.jpg"
-import Crown from "./crown-front-color.png"
+import GoldCrown from "./gold-crown-icon.png"
+import SilverCrown from "./silver-crown-icon.png"
+import BronzeCrown from "./bronze-crown-icon.png"
 
 import { Image } from "react-native"
 
@@ -30,6 +32,15 @@ export function ExampleIcon() {
   )
 }
 
-export function CrownIcon() {
-  return <Image source={Crown} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
+export function CrownIcon(props) {
+  const crown = {
+    1: <Image source={GoldCrown} style={{ height: "100%", width: "100%" }} resizeMode="contain" />,
+    2: (
+      <Image source={SilverCrown} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
+    ),
+    3: (
+      <Image source={BronzeCrown} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
+    ),
+  }
+  return crown[props.rank]
 }

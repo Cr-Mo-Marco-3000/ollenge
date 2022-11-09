@@ -7,18 +7,35 @@ import styled from "styled-components"
 import { TriangleIcon } from "../../assets/images"
 import { TriangleIcon2 } from "../../assets/images"
 import ParticipatingDetailCard from "./ParticipatingDetailCard"
+import { useEffect, useRef } from "react"
 
 const screenWidth = Dimensions.get("window").width
 const screenHeight = Dimensions.get("window").height
 
 export default function ParticipatingDetail(props) {
-  const tempList = [{}, {}, {}, {}, {}]
-  const arrayLength = tempList.length
+  const scrollViewRef = useRef()
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollTo({ x: screenWidth * nowPage, animated: false })
+  }, [])
+  const nowPage = props.nowPage
+
+  const participatingList = props.participatingList
+  const arrayLength = participatingList.length
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator>
-        {tempList.map((element, idx) => {
-          return <ParticipatingDetailCard key={idx} index={idx} arrayLength={arrayLength} />
+      <ScrollView horizontal pagingEnabled ref={scrollViewRef}>
+        {participatingList.map((challengeInfo, idx) => {
+          return (
+            <ParticipatingDetailCard
+              key={idx}
+              index={idx}
+              arrayLength={arrayLength}
+              challengeInfo={challengeInfo}
+              startDate={props.startDate}
+              endDate={props.endDate}
+            />
+          )
         })}
       </ScrollView>
     </View>

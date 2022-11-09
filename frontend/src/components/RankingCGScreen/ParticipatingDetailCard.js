@@ -10,14 +10,19 @@ import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
 import AppButton from "../common/AppButton"
 import * as Images from "../../assets/images/RankingCGScreen/RankingCGScreen.js"
+import { AuthorizationInstance } from "../../api/settings"
 
 const screenWidth = Dimensions.get("window").width
 const screenHeight = Dimensions.get("window").height
 
 export default function ParticipatingDetailCard(props) {
+  const instance = AuthorizationInstance()
   const index = props.index
   const arrayLength = props.arrayLength
-
+  const challengeInfo = props.challengeInfo
+  const startDate = props.startDate.replace(/-/g, ".").slice(2)
+  const endDate = props.endDate.replace(/-/g, ".").slice(2)
+  console.log(challengeInfo)
   // const presetTopic = props.challengeInfo.presetTopic
   // const challengePresetID = props.challengeInfo.challengePresetID
   // const memberNumber = props.challengeInfo.memberNumber
@@ -32,6 +37,36 @@ export default function ParticipatingDetailCard(props) {
   //   2: () => <Images.NotebookIcon left={30} top={-10} />,
   //   3: () => <Images.GymIcon left={10} top={-50} />,
   // }
+
+  let authText = ""
+
+  if (challengeInfo.authType === "feature") {
+    authText = (
+      <AppText pxSize={17} align="left">
+        헬스 기구, 운동 용품 등을 사진을 통해 인식하여 당일 달성 여부를 판단합니다.
+      </AppText>
+    )
+  } else if (challengeInfo.authType === "classifi" || challengeInfo.authType === "class") {
+    authText = (
+      <AppText pxSize={17} align="left">
+        헬스 기구, 운동 용품 등을 사진을 통해 인식하여 당일 달성 여부를 판단합니다.
+      </AppText>
+    )
+  } else if (challengeInfo.authType === "none") {
+    authText = (
+      <AppText pxSize={17} align="left">
+        헬스 기구, 운동 용품 등을 사진을 통해 인식하여 당일 달성 여부를 판단합니다.
+      </AppText>
+    )
+  }
+
+  const makeChallenge = async () => {
+    try {
+      const res = await instance.post("/api/challenge")
+    } catch (err) {
+      console.log(err.response.data)
+    }
+  }
 
   return (
     <PageView>
@@ -65,19 +100,21 @@ export default function ParticipatingDetailCard(props) {
               }}
             >
               <View>
-                <AppBoldText color="orange" pxSize={30}>
-                  운동하기
+                <AppBoldText lineNumber={1} color="orange" pxSize={30}>
+                  {challengeInfo.presetTopic}
                 </AppBoldText>
               </View>
               <View
                 style={{
-                  left: 15,
+                  paddingHorizontal: 15,
                   marginTop: 10,
                 }}
               >
                 <View>
-                  <AppBoldText pxSize={14}>건강한 생활을 위한 한 걸음</AppBoldText>
-                  <AppBoldText pxSize={14}>매일 매일 운동한 내용을 인증해보세요!</AppBoldText>
+                  <AppBoldText lineNumber={2} pxSize={14}>
+                    {challengeInfo.presetDescription}
+                    {/* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa */}
+                  </AppBoldText>
                 </View>
               </View>
               <View
@@ -95,7 +132,8 @@ export default function ParticipatingDetailCard(props) {
                       <AppText pxSize={13}>시작일</AppText>
                     </DetailUpperRow>
                     <DetailUnderRow>
-                      <AppBoldText pxSize={15}>2022.10.31 (월)</AppBoldText>
+                      {/* <AppBoldText pxSize={15}>2022.10.31 (월)</AppBoldText> */}
+                      <AppBoldText pxSize={15}>{startDate} (월)</AppBoldText>
                     </DetailUnderRow>
                   </RowText>
                 </DetailRow>
@@ -108,7 +146,7 @@ export default function ParticipatingDetailCard(props) {
                       <AppText pxSize={13}>종료일</AppText>
                     </DetailUpperRow>
                     <DetailUnderRow>
-                      <AppBoldText pxSize={15}>2022.11.14 (일)</AppBoldText>
+                      <AppBoldText pxSize={15}>{endDate} (월)</AppBoldText>
                     </DetailUnderRow>
                   </RowText>
                 </DetailRow>
@@ -121,7 +159,9 @@ export default function ParticipatingDetailCard(props) {
                       <AppText pxSize={13}>기간</AppText>
                     </DetailUpperRow>
                     <DetailUnderRow>
-                      <AppBoldText pxSize={15}>14일</AppBoldText>
+                      <AppBoldText pxSize={15}>
+                        {parseInt(endDate.slice(-2)) - parseInt(startDate.slice(-2)) + 1}일
+                      </AppBoldText>
                     </DetailUnderRow>
                   </RowText>
                 </DetailRow>
@@ -134,7 +174,13 @@ export default function ParticipatingDetailCard(props) {
                       <AppText pxSize={13}>인증 마감 시간</AppText>
                     </DetailUpperRow>
                     <DetailUnderRow>
-                      <AppBoldText pxSize={15}>매일 오후 11시</AppBoldText>
+                      <AppBoldText pxSize={15}>
+                        매일 {parseInt(challengeInfo.endTime.slice(0, 2)) >= 12 ? "오후" : "오전"}
+                        {parseInt(challengeInfo.endTime.slice(0, 2)) > 12
+                          ? parseInt(challengeInfo.endTime.slice(0, 2)) - 12
+                          : parseInt(challengeInfo.endTime.slice(0, 2))}
+                        시
+                      </AppBoldText>
                     </DetailUnderRow>
                   </RowText>
                 </DetailRow>
@@ -181,9 +227,7 @@ export default function ParticipatingDetailCard(props) {
                       flex: 7,
                     }}
                   >
-                    <AppText pxSize={17} align="left">
-                      헬스 기구, 운동 용품 등을 사진을 통해 인식하여 당일 달성 여부를 판단합니다.
-                    </AppText>
+                    {authText}
                   </View>
                 </MethodRow>
               </View>
@@ -202,7 +246,12 @@ export default function ParticipatingDetailCard(props) {
                   elevation: 9,
                 }}
               >
-                <AppButton title="챌린지 팀 만들기" />
+                <AppButton
+                  handler={() => {
+                    makeChallenge()
+                  }}
+                  title="챌린지 팀 만들기"
+                />
               </View>
             </ButtonView>
           </View>

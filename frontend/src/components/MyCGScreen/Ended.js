@@ -1,6 +1,5 @@
 import React from "react-native"
-import { View, ScrollView, Image, Dimensions } from "react-native"
-import AppText from "../common/AppText"
+import { View, Dimensions } from "react-native"
 import AppBoldText from "../common/AppBoldText"
 import styled from "styled-components"
 import EndedCard from "./EndedCard"
@@ -9,39 +8,157 @@ import {
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 import { DataTable } from "react-native-paper"
-import ColorSet from "../../style/ColorSet"
+import { useEffect, useState } from "react"
+import { AuthorizationInstance } from "../../api/settings"
 
 const Ended = () => {
+  const instance = AuthorizationInstance()
+
+  const [rankingCGList, setRankingCGList] = useState([])
+  const [userCGList, setUserCGList] = useState([])
+  const [totalChallengeInfo, setTotalChallengeInfo] = useState({})
+
+  useEffect(() => {
+    const getList = async () => {
+      const res = await instance.get("/api/user/completed")
+
+      // const newRCGList = res.data.rankingChallengeList
+      // const newUCGList = res.data.userChallengeList
+
+      const newRCGList = [
+        {
+          startDate: "2022-01-01",
+          endDate: "2022-01-31",
+          myFeedCnt: 13,
+          challengeId: 23,
+          challengeImg: null,
+          challengeTopic: "하루 3잔 물마시기",
+          challengeScore: 1550,
+          challengeRank: 2,
+          totalCnt: 7,
+          peopleCnt: 5,
+        },
+        {
+          startDate: "2022-02-01",
+          endDate: "2022-02-28",
+          myFeedCnt: 26,
+          challengeId: 23,
+          challengeImg: null,
+          challengeTopic: "하루 3잔 물마시기",
+          challengeScore: 750,
+          challengeRank: 4,
+          totalCnt: 7,
+          peopleCnt: 4,
+        },
+        {
+          startDate: "2022-04-01",
+          endDate: "2022-04-30",
+          myFeedCnt: 15,
+          challengeId: 23,
+          challengeImg: null,
+          challengeTopic: "하루 3잔 물마시기",
+          challengeScore: 1350,
+          challengeRank: 3,
+          totalCnt: 7,
+          peopleCnt: 10,
+        },
+      ]
+
+      const newUCGList = [
+        {
+          startDate: "2022-01-01",
+          endDate: "2022-01-31",
+          myFeedCnt: 13,
+          challengeId: 23,
+          challengeImg: null,
+          challengeTopic: "하루 3잔 물마시기",
+          challengeScore: 420,
+          challengeRank: null,
+          totalCnt: null,
+          peopleCnt: 8,
+        },
+        {
+          startDate: "2022-02-01",
+          endDate: "2022-02-28",
+          myFeedCnt: 26,
+          challengeId: 23,
+          challengeImg: null,
+          challengeTopic: "하루 3잔 물마시기",
+          challengeScore: 420,
+          challengeRank: null,
+          totalCnt: null,
+          peopleCnt: 4,
+        },
+        {
+          startDate: "2022-04-01",
+          endDate: "2022-04-30",
+          myFeedCnt: 15,
+          challengeId: 23,
+          challengeImg: null,
+          challengeTopic: "하루 3잔 물마시기",
+          challengeScore: 1350,
+          challengeRank: null,
+          totalCnt: null,
+          peopleCnt: 10,
+        },
+      ]
+
+      // 총 참여 챌린지 수
+      let participateNumber = 0
+
+      participateNumber += newRCGList.length
+      participateNumber += newUCGList.length
+
+      // 평균 달성률
+      let averageSuccess = newRCGList.reduce((pre, cur) => {
+        const days =
+          (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
+            1000 /
+            60 /
+            60 /
+            24 +
+          1
+        return pre + cur.myFeedCnt / days
+      }, 0)
+
+      averageSuccess = newUCGList.reduce((pre, cur) => {
+        const days =
+          (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
+            1000 /
+            60 /
+            60 /
+            24 +
+          1
+        return pre + cur.myFeedCnt / days
+      }, averageSuccess)
+
+      averageSuccess = Math.round((averageSuccess / participateNumber) * 100 * 1000) / 1000
+
+      let totalScore = newRCGList.reduce((pre, cur) => {
+        const score = cur.myFeedCnt * 10
+        return pre + score
+      }, 0)
+
+      totalScore = newUCGList.reduce((pre, cur) => {
+        const score = cur.myFeedCnt * 10
+        return pre + score
+      }, totalScore)
+
+      // 챌린지 참여 정보
+      const newTotalChallengeInfo = {
+        participateNumber: participateNumber,
+        averageSuccess: averageSuccess,
+        totalScore: totalScore,
+      }
+
+      setRankingCGList(newRCGList)
+      setUserCGList(newUCGList)
+      setTotalChallengeInfo(newTotalChallengeInfo)
+    }
+    getList()
+  }, [])
+
   const windowWidth = Dimensions.get("window").width
-  const tempList = [
-    {
-      isChallenge: true,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
-      memberNumber: 4,
-      progress: 20,
-      startDate: "10.26",
-      endDate: "11.05",
-    },
-    {
-      isChallenge: true,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
-      memberNumber: 4,
-      progress: 50,
-      startDate: "10.26",
-      endDate: "11.05",
-    },
-    {
-      isChallenge: false,
-      title: "하루 3잔 물마시기",
-      teamName: "찬호와 아이들",
-      memberNumber: 4,
-      progress: 50,
-      startDate: "10.26",
-      endDate: "11.05",
-    },
-  ]
 
   return (
     <View
@@ -120,7 +237,7 @@ const Ended = () => {
                 }}
               >
                 <AppBoldText size={2} color="ligntBlue">
-                  18회 참여
+                  {totalChallengeInfo.participateNumber}회 참여
                 </AppBoldText>
               </DataTable.Cell>
               <DataTable.Cell
@@ -130,7 +247,7 @@ const Ended = () => {
                 }}
               >
                 <AppBoldText size={2} color="ligntBlue">
-                  79,24%
+                  {totalChallengeInfo.averageSuccess}%
                 </AppBoldText>
               </DataTable.Cell>
               <DataTable.Cell
@@ -140,7 +257,7 @@ const Ended = () => {
                 }}
               >
                 <AppBoldText size={2} color="ligntBlue">
-                  2,257점
+                  {totalChallengeInfo.totalScore}점
                 </AppBoldText>
               </DataTable.Cell>
             </DataTable.Row>
@@ -151,28 +268,25 @@ const Ended = () => {
             flex: 7,
           }}
         >
+          {/* 챌린치 표시 */}
           <DivideView>
             <IconView>
               <RankingChallengeIcon />
             </IconView>
             <AppBoldText>랭킹 챌린지</AppBoldText>
           </DivideView>
-          {tempList
-            .filter((listItem) => listItem.isChallenge)
-            .map((challengeInfo, idx) => (
-              <EndedCard key={idx} challengeInfo={challengeInfo} />
-            ))}
+          {rankingCGList.map((challengeInfo, idx) => (
+            <EndedCard key={idx} challengeInfo={challengeInfo} />
+          ))}
           <DivideView>
             <IconView>
               <NormalChallengeIcon />
             </IconView>
             <AppBoldText>일반 챌린지</AppBoldText>
           </DivideView>
-          {tempList
-            .filter((listItem) => !listItem.isChallenge)
-            .map((challengeInfo, idx) => (
-              <EndedCard key={idx} challengeInfo={challengeInfo} />
-            ))}
+          {userCGList.map((challengeInfo, idx) => (
+            <EndedCard key={idx} challengeInfo={challengeInfo} />
+          ))}
         </View>
       </ScrollBackground>
     </View>

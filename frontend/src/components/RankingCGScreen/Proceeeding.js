@@ -8,44 +8,28 @@ import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
-
+import { AuthorizationInstance } from "../../api/settings"
 import { useState, useEffect } from "react"
 
 const Proceeding = () => {
-  useEffect(() => {}, [])
+  const instance = AuthorizationInstance()
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [proceedingList, setProceedingList] = useState(null)
 
-  const tempList = [
-    {
-      presetTopic: "운동 하기",
-      challengePresetID: 1,
-      memberNumber: 4,
-      progress: 20,
-      startDate: "22.10.20",
-      endDate: "11.30",
-      isParticipated: true,
-      peopleNumber: 23,
-    },
-    {
-      presetTopic: "기상 미션 (7시)",
-      challengePresetID: 2,
-      memberNumber: 4,
-      progress: 20,
-      startDate: "22.10.20",
-      endDate: "11.30",
-      isParticipated: true,
-      peopleNumber: 21,
-    },
-    {
-      presetTopic: "매일 독서하기 (7시)",
-      challengePresetID: 3,
-      memberNumber: 4,
-      progress: 20,
-      startDate: "22.10.20",
-      endDate: "11.30",
-      isParticipated: false,
-      peopleNumber: 20,
-    },
-  ]
+  useEffect(() => {
+    const call = async () => {
+      try {
+        const res = await instance.get("/api/challenge/ongoing")
+        setStartDate(res.data.startDate)
+        setEndDate(res.data.endDate)
+        setProceedingList(res.data.challengePresetList)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    call()
+  }, [])
 
   return (
     <ScrollBackground>
@@ -54,16 +38,14 @@ const Proceeding = () => {
           height: 20,
         }}
       ></View>
-      {tempList
-        .filter((listItem) => listItem.isParticipated)
-        .map((challengeInfo, idx) => (
-          <ProceedingCard key={idx} challengeInfo={challengeInfo} />
-        ))}
-      {tempList
-        .filter((listItem) => !listItem.isParticipated)
-        .map((challengeInfo, idx) => (
-          <ProceedingCard key={idx} challengeInfo={challengeInfo} />
-        ))}
+      {proceedingList?.map((challengeInfo, idx) => (
+        <ProceedingCard
+          key={idx}
+          challengeInfo={challengeInfo}
+          startDate={startDate}
+          endDate={endDate}
+        />
+      ))}
     </ScrollBackground>
   )
 }

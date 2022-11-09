@@ -24,7 +24,7 @@ export default function AppModal(props) {
   const title = props.title
 
   return (
-    <Modal statusBarTranslucent={true}>
+    <Modal animationType="fade" statusBarTranslucent={true}>
       <View
         style={{
           backgroundColor: backgroundColor,
