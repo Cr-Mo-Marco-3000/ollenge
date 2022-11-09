@@ -1,8 +1,6 @@
 import React from "react-native"
 import styled from "styled-components"
-import AppText from "../components/common/AppText"
 import AppBoldText from "../components/common/AppBoldText"
-import { NavigationContainer } from "@react-navigation/native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import BeforeStart from "../components/MyCGScreen/BeforeStart"
 import Challenging from "../components/MyCGScreen/Challenging"
@@ -11,16 +9,63 @@ import ColorSet from "../style/ColorSet"
 import TopMargin from "../components/common/TopMargin"
 import { FAB, Portal, Provider } from "react-native-paper"
 import { useState } from "react"
+import { Modal, Pressable, TextInput } from "react-native"
+import AppCard from "../components/common/AppCard"
+import { View } from "react-native"
+import { MailIcon } from "../assets/images/MyCGScreen/MyCGScreen"
+import AppButton from "../components/common/AppButton"
 
 function MyCGListScreen({ idHandler }) {
   const Tab = createMaterialTopTabNavigator()
   const [fabButton, setfabButton] = useState(false)
+  const [showCodeInput, setShowCodeInput] = useState(false)
 
   const onStateChange = () => {
     setfabButton(!fabButton)
   }
+
+  const openAndClose = () => {
+    setShowCodeInput(!showCodeInput)
+  }
+
   return (
     <Provider>
+      {showCodeInput && (
+        <Modal animationType="fade" statusBarTranslucent={true} transparent={true}>
+          <Outside onPress={openAndClose}>
+            {/* <InnerSide> */}
+            <InputView>
+              <CardView>
+                <AppCard>
+                  <Card>
+                    <InnerArea>
+                      <InnerRow>
+                        <IconView>
+                          <MailIcon />
+                        </IconView>
+                        <AppBoldText>초대 코드 입력</AppBoldText>
+                      </InnerRow>
+                      <InnerRow>
+                        <AppTextInput
+                          textAlign="center"
+                          autoFocus={true}
+                          underlineColorAndroid={ColorSet.navyColor(1)}
+                        ></AppTextInput>
+                      </InnerRow>
+                      <InnerRow>
+                        <ButtonView>
+                          <AppButton title={"확인"} />
+                        </ButtonView>
+                      </InnerRow>
+                    </InnerArea>
+                  </Card>
+                </AppCard>
+              </CardView>
+            </InputView>
+            {/* </InnerSide> */}
+          </Outside>
+        </Modal>
+      )}
       <Portal>
         <Body>
           {/* Header부분 */}
@@ -71,7 +116,7 @@ function MyCGListScreen({ idHandler }) {
                 icon: "barcode-scan",
                 label: "초대 코드 입력",
                 color: "white",
-                onPress: () => console.log("여기 함수 넣자"),
+                onPress: openAndClose,
                 labelStyle: {
                   color: "#FCBE32",
                   fontWeight: "bold",
@@ -134,4 +179,66 @@ const HeaderTextView = styled.View`
 
 const HeaderTextColumn = styled.View`
   flex: 1;
+`
+
+const Outside = styled.Pressable`
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+`
+
+const InputView = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 250px;
+`
+
+const CardView = styled.View`
+  width: 70%;
+  height: 100%;
+`
+
+const Card = styled.View`
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`
+
+const InnerArea = styled.View`
+  height: 90%;
+  width: 90%;
+  justify-content: center;
+  align-items: center;
+`
+
+const InnerRow = styled.View`
+  flex: 3.3;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+const IconView = styled.View`
+  height: 70%;
+  width: 25%;
+`
+
+const AppTextInput = styled.TextInput`
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+  padding-left: 2.5%;
+  color: ${ColorSet.navyColor(1)};
+`
+
+const ButtonView = styled.View`
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+  width: 100%;
 `
