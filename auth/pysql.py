@@ -155,7 +155,33 @@ def execute_challenge_score_increase(participation_id):
     cursor.close()
     conn.close()
     return 0
-        
+
+
+# challengeId, userid => participation Id
+def execute_select_participation_id(challenge_id, user_id):
+    challenge_id = int(challenge_id)
+    user_id = int(user_id)
+    sql = """SELECT participation_id from participation WHERE challenge_id = %s AND user_id=%s"""
+    vals = (challenge_id, user_id)
+    result = execute_select2(sql, vals)
+    if result:
+        return result[0][0]
+    else:
+        return False
+
+
+# classification type id to keyword List
+def execute_select_keword_list(classification_type_id):
+    classification_type_id = int(classification_type_id)
+    sql = """SELECT keyword FROM classification_keyword WHERE classification_type_id=%s"""
+    vals = (classification_type_id, )
+    result = execute_select2(sql, vals)
+    if result:
+        return result
+    else:
+        return False
+
+
 config = dotenv_values(".env")
 DB_PASSWORD = config.get('DB_PASSWORD')
 DB_HOST = config.get('DB_HOST')
