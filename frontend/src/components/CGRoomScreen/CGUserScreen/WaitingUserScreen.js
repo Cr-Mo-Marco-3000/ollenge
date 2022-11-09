@@ -28,7 +28,7 @@ function WaitingUserScreen({ userList, roomInfo }) {
           친구들을 초대해 함께하세요!
         </AppText>
         <View style={{ width: 200, alignSelf: "center", marginBottom: "10%" }}>
-          <InviteCodeBtn inviteCode={roomInfo.inviteCode} />
+          <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
         </View>
       </LinearGradient>
     </Provider>

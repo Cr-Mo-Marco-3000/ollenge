@@ -10,9 +10,9 @@ import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
 import ColorSet from "../../style/ColorSet"
 
-function InviteCodeBtn({ inviteCode }) {
+function InviteCodeBtn({ inviteCode, challengeId }) {
   const copyToClipboard = async () => {
-    await Clipboard.setStringAsync(inviteCode)
+    await Clipboard.setStringAsync(`${inviteCode}${challengeId}`)
     hideModal()
   }
   const [visible, setVisible] = useState(false)
@@ -48,7 +48,10 @@ function InviteCodeBtn({ inviteCode }) {
             <AppText size={2}>초대코드를 공유하여</AppText>
             <AppText size={2}> 친구들과 챌린지를 즐겨보세요!</AppText>
             <View style={{ marginVertical: "5%" }}>
-              <AppBoldText color={"orange"}>{inviteCode}</AppBoldText>
+              <AppBoldText color={"orange"}>
+                {inviteCode}
+                {challengeId}
+              </AppBoldText>
             </View>
             <Button
               icon="cat"
