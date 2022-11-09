@@ -25,7 +25,7 @@ export default function BeforeStartCard(props) {
   const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
   const func = props.func
   const nowDate = new Date().getTime()
-  const startDate = challengeInfo.startDate.getTime()
+  const startDate = new Date(challengeInfo.startDate).getTime()
   const dDate = Math.ceil((startDate - nowDate) / 1000 / 60 / 60 / 24)
 
   const pxSize = windowWidth * 0.045
