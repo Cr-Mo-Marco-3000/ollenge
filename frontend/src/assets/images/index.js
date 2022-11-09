@@ -11,6 +11,7 @@ import Heart1 from "./heart-icon-1.png"
 import Heart2 from "./heart-icon-2.png"
 import Heart3 from "./heart-icon-3.png"
 import Heart4 from "./heart-icon-4.png"
+import ExclamMark from "./exclamation_question_mark_3d.png"
 
 import { Image } from "react-native"
 
@@ -72,4 +73,8 @@ export function TriangleIcon2() {
 
 export function CrownIcon() {
   return <Image source={Crown} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function ExclamMartIcon() {
+  return <Image source={ExclamMark} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
 }

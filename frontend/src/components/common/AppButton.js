@@ -9,7 +9,6 @@ import AppBoldText from "./AppBoldText"
 function AppButton(props) {
   const backColor = props.backColor ? props.backColor : "orange"
   const fontColor = props.fontColor ? props.fontColor : "white"
-  const size = props.size ? props.size : 3
   const pxSize = props.pxSize ? props.pxSize : 24
   const blodFlag = props.weight ? props.weight : "bold"
   const theme = {
@@ -21,6 +20,7 @@ function AppButton(props) {
     black: ColorSet.blackColor(1),
     deepOrange: ColorSet.deepOrangeColor(1),
     white: ColorSet.whiteColor(1),
+    pinkBage: ColorSet.pinkBageColor(1),
   }
 
   const styles = StyleSheet.create({
@@ -47,11 +47,11 @@ function AppButton(props) {
     <Pressable style={styles.buttonContainer} onPress={props.handler}>
       <View>
         {blodFlag === "bold" ? (
-          <AppBoldText color={fontColor} size={size} pxSize={pxSize}>
+          <AppBoldText color={fontColor} pxSize={pxSize}>
             {props.title}
           </AppBoldText>
         ) : (
-          <AppText color={fontColor} size={size} pxSize={pxSize}>
+          <AppText color={fontColor} pxSize={pxSize}>
             {props.title}
           </AppText>
         )}

@@ -59,6 +59,7 @@ const AppText = (props) => {
     lightBlue: ColorSet.lightBlueColor(1),
     gray: ColorSet.grayColor(1),
     darkGray: ColorSet.darkGrayColor(1),
+    hotPink: ColorSet.hotPinkColor(1),
   }
 
   return (

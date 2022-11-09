@@ -76,7 +76,7 @@ function InviteCodeBtn({ inviteCode }) {
           backColor={"yellow"}
           fontColor={"navy"}
           weight={1}
-          pxSize={16}
+          pxSize={20}
         />
       </View>
     </>
@@ -87,8 +87,8 @@ export default InviteCodeBtn
 const styles = StyleSheet.create({
   buttonBox: {
     width: "100%",
-    height: "15%",
-    marginTop: "5%",
+    height: 45,
+    marginTop: 10,
   },
   modalContainer: {
     alignItems: "center",
