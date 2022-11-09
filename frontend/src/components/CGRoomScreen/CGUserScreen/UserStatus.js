@@ -5,46 +5,7 @@ import ColorSet from "../../../style/ColorSet"
 import UserStatusItem from "./UserStatusItem"
 import { Provider } from "react-native-paper"
 
-const userList = [
-  {
-    userId: 1,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 2,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-]
-
-function UserStatus() {
+function UserStatus({ userList }) {
   return (
     <Provider>
       <View style={styles.rootScreen}>

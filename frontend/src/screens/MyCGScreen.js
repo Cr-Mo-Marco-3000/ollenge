@@ -19,44 +19,42 @@ const instance = AuthorizationInstance()
 
 function MyCGScreen() {
   const [selectedId, setSelectedId] = useState(-1)
-  // const [roomInfo, setRoomInfo] = useState({})
+  const [roomInfo, setRoomInfo] = useState(new Object())
+  const [userList, setUserList] = useState(new Array())
 
   function idHandler(id) {
     setSelectedId(id)
   }
 
-  // useEffect(() => {
-  //   const getRoom = async () => {
-  //     try {
-  //       const res = await instance.get(`/api/challenge/${selectedId}`)
-  //       const newInfo = res.data.challengeInfoList[0]
-  //       setRoomInfo(newInfo)
-  //     } catch (error) {
-  //       // console.log(error)
-  //     }
-  //   }
-  //   if (selectedId !== -1) {
-  //     getRoom()
-  //   }
-  // }, [selectedId])
-
-  const roomInfo = {
-    challengeId: 1,
-    isRankingChallenge: 0,
-    challengeImg: "",
-    challengeName: "찬호와 아이들",
-    challengeTopic: "프로젝트 끝까지 1일 1커밋",
-    authType: "사진 비교",
-    startDate: "2022-11-06",
-    endDate: "2022-11-30",
-    startTime: "09:40:00",
-    endTime: "20:20:00",
-    inviteCode: "R92DFG21",
-    rewardContent: "상금",
-    penaltyContent: "엉덩이로 이름쓰기",
-    challengeScore: 3400,
-    challengeDescription: "저는 더이상 살아갈 수 없어요",
+  // 방 정보 조회
+  const getRoom = async () => {
+    try {
+      const res = await instance.get(`/api/challenge/${selectedId}`)
+      const newInfo = res.data.challengeInfoList
+      setRoomInfo(newInfo)
+    } catch (error) {
+      // console.log(error)
+    }
   }
+
+  // 방 유저 정보 조회
+  async function getUser() {
+    console.log(`/api/challenge/state/${selectedId}`)
+    instance
+      .get(`/api/challenge/state/${selectedId}`)
+      .then((res) => {
+        setUserList(res.data.challengeStateList)
+        console.log(res.data)
+      })
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    if (selectedId !== -1) {
+      getRoom()
+      getUser()
+    }
+  }, [selectedId])
 
   return (
     <NavigationContainer style={{ flex: 1 }}>
@@ -73,12 +71,14 @@ function MyCGScreen() {
           {() => <MyCGListScreen idHandler={idHandler} />}
         </Stack.Screen>
         <Stack.Screen name="CGRoom" options={{ title: `${roomInfo.challengeName}` }}>
-          {() => <CGRoomScreen roomInfo={roomInfo} />}
+          {() => <CGRoomScreen roomInfo={roomInfo} userList={userList} />}
         </Stack.Screen>
 
-        <Stack.Screen name="CGUser" component={CGUserScreen} />
-        <Stack.Screen name="CGAuth" component={AuthScreen} />
-        <Stack.Screen name="CGImg" component={ImageRegisterPage} />
+        <Stack.Screen name="CGUser" options={{ title: "" }}>
+          {() => <CGUserScreen userList={userList} roomInfo={roomInfo} />}
+        </Stack.Screen>
+        <Stack.Screen name="CGAuth" component={AuthScreen} options={{ title: "" }} />
+        <Stack.Screen name="CGImg" component={ImageRegisterPage} options={{ title: "" }} />
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -1,36 +1,33 @@
 import React from "react"
 
 import styled from "styled-components"
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+import { useState, useEffect } from "react"
 
 import TopMargin from "../../common/TopMargin"
 
-import ColorSet from "../../../style/ColorSet"
+import StartUserScreen from "./StartUserScreen"
+import WaitingUserScreen from "./WaitingUserScreen"
+import { LocalTime, DateTime } from "./../../../functions/index"
 
-import UserRanking from "./UserRanking"
-import UserStatus from "./UserStatus"
+function CGUserScreen({ userList, roomInfo }) {
+  const [isStarted, setIsStarted] = useState(false)
 
-function CGUserScreen() {
-  const Tab = createMaterialTopTabNavigator()
+  useEffect(() => {
+    const now = LocalTime()
+    const start = DateTime(roomInfo.startDate, roomInfo.startTime)
+    if (now - start >= 0) {
+      setIsStarted(true)
+    }
+  }, [roomInfo])
+
   return (
     <Body>
       <TopMargin />
-      <Tab.Navigator
-        style={{
-          flex: 8,
-        }}
-        screenOptions={{
-          tabBarLabelStyle: { fontSize: 16, fontFamily: "HyeminBold" },
-          tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
-          tabBarInactiveTintColor: `${ColorSet.navyColor(0.5)}`,
-          tabBarIndicatorStyle: {
-            backgroundColor: `${ColorSet.orangeColor(1)}`,
-          },
-        }}
-      >
-        <Tab.Screen name="참여자 순위">{(props) => <UserRanking />}</Tab.Screen>
-        <Tab.Screen name="인증 현황">{(props) => <UserStatus />}</Tab.Screen>
-      </Tab.Navigator>
+      {isStarted ? (
+        <StartUserScreen userList={userList} />
+      ) : (
+        <WaitingUserScreen userList={userList} roomInfo={roomInfo} />
+      )}
     </Body>
   )
 }

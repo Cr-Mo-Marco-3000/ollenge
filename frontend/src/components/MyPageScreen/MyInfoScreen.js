@@ -47,7 +47,7 @@ function MyInfoScreen({ userInfo }) {
         <View style={styles.imageBox}>
           {userInfo.profileImg ? (
             <Image
-              source={{ url: userInfo.profileImg }}
+              source={{ uri: userInfo.profileImg }}
               style={{ width: "100%", height: "100%", borderRadius: 100 }}
             />
           ) : (

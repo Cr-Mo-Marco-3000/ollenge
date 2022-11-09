@@ -11,46 +11,7 @@ import MyRankItem from "../MyRankItem"
 
 import { AuthContext } from "../../../../store/auth-context"
 
-const userList = [
-  {
-    userId: 1,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 2,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-]
-
-function UserRanking() {
+function UserRanking({ userList }) {
   const [myInfo, setMyInfo] = useState()
   const [myRank, setMyRank] = useState()
   const authCtx = useContext(AuthContext)

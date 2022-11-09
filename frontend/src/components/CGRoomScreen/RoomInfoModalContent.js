@@ -17,12 +17,12 @@ import {
 } from "../../assets/images/RankingCGScreen/RankingCGScreen"
 import AppButton from "../common/AppButton"
 
-import ColorSet from "../../style/ColorSet"
 import { RFPercentage } from "react-native-responsive-fontsize"
 
-function RoomInfoModalContent({ roomInfo, hideModal }) {
+function RoomInfoModalContent({ roomInfo, hideModal, userList }) {
   const [wholeDay, setWholeDay] = useState(0)
   const [time, setTime] = useState(["오전 00시", "오후 12시"])
+  const [authType, setAuthType] = useState("")
 
   function timeFunc(str) {
     const hour = parseInt(str.substr(0, 2))
@@ -43,6 +43,13 @@ function RoomInfoModalContent({ roomInfo, hideModal }) {
       const startTime = timeFunc(roomInfo.startTime)
       const endTime = timeFunc(roomInfo.endTime)
       setTime([startTime, endTime])
+      if (roomInfo.authType === "class") {
+        setAuthType("이미지 특성 분석")
+      } else if (roomInfo.authType === "feature") {
+        setAuthType("이미지 비교")
+      } else {
+        setAuthType("자유 인증")
+      }
     }
   }, [roomInfo])
 
@@ -103,7 +110,7 @@ function RoomInfoModalContent({ roomInfo, hideModal }) {
             </View>
             <View style={styles.infoTextBox}>
               <AppText pxSize={16}>인증 방식</AppText>
-              <AppText pxSize={18}>{roomInfo.authType}</AppText>
+              <AppText pxSize={18}>{authType}</AppText>
             </View>
           </View>
           {/* 1등보상 */}
@@ -141,7 +148,7 @@ function RoomInfoModalContent({ roomInfo, hideModal }) {
             </View>
             <View style={styles.infoTextBox}>
               <AppText pxSize={16}>참여 인원</AppText>
-              <AppText pxSize={18}>{roomInfo.startDate}</AppText>
+              <AppText pxSize={18}>{userList.length}명</AppText>
             </View>
           </View>
         </View>
