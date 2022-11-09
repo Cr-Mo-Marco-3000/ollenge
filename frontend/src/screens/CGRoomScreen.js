@@ -16,6 +16,7 @@ import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
 
 function CGRoomScreen({ roomInfo, userList }) {
   const navigation = useNavigation()
+  console.log(1, roomInfo)
 
   return (
     <Provider>
@@ -31,7 +32,7 @@ function CGRoomScreen({ roomInfo, userList }) {
         <View style={styles.buttonContainer}>
           <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
           <CGAuthBtn navigation={navigation} />
-          <ImageResistBtn navigation={navigation} />
+          <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />
         </View>
       </LinearGradient>
     </Provider>
