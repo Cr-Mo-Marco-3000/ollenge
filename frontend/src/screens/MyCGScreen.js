@@ -39,12 +39,10 @@ function MyCGScreen() {
 
   // 방 유저 정보 조회
   async function getUser() {
-    console.log(`/api/challenge/state/${selectedId}`)
     instance
       .get(`/api/challenge/state/${selectedId}`)
       .then((res) => {
         setUserList(res.data.challengeStateList)
-        console.log(res.data)
       })
       .catch((err) => console.log(err))
   }
