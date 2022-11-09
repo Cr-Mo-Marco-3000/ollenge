@@ -17,7 +17,7 @@ export default function Page1({ info, setInfo }) {
   }, [name, setName])
 
   useEffect(() => {
-    setDisabled(!(name !== "" && img !== ""))
+    setDisabled(!(name !== ""))
   }, [name, img, disabled, setDisabled])
 
   return (
