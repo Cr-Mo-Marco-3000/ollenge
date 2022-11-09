@@ -3,6 +3,7 @@ package com.ollenge.db.repository;
 import com.ollenge.db.entity.*;
 import com.ollenge.api.response.data.ChallengeStateData;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,16 +25,31 @@ public class ChallengeRepositorySupport {
 
     QFeed qFeed = QFeed.feed;
 
-
     public List<Challenge> getRankingChallengeTopicPeriod (User user, LocalDate startDate, LocalDate endDate, ChallengePreset challengePreset) {
         return jpaQueryFactory
                 .select(qParticipation.challenge)
                 .from(qParticipation)
-                .where(qParticipation.user.eq(user)
-                        .and(qParticipation.challenge.startDate.eq(startDate))
+                .where(userEq(user),
+                        qParticipation.challenge.startDate.eq(startDate)
                         .and(qParticipation.challenge.endDate.eq(endDate))
                         .and(qParticipation.challenge.challengePreset.eq(challengePreset)))
+                .orderBy(qParticipation.challenge.challengeScore.desc())
                 .fetch();
+    }
+
+    public List<Challenge> getRankingChallengeListTopicPeriod (LocalDate startDate, LocalDate endDate, ChallengePreset challengePreset) {
+        return jpaQueryFactory
+                .select(qChallenge)
+                .from(qChallenge)
+                .where(qChallenge.startDate.eq(startDate)
+                        .and(qChallenge.endDate.eq(endDate))
+                        .and(qChallenge.challengePreset.eq(challengePreset)))
+                .orderBy(qChallenge.challengeScore.desc())
+                .fetch();
+    }
+
+    private BooleanExpression userEq(User user) {
+        return (user != null) ? qParticipation.user.eq(user) : null;
     }
 
     public List<ChallengeStateData> getChallengeState(Challenge challenge) {
@@ -57,4 +73,5 @@ public class ChallengeRepositorySupport {
         }
         return challengeStateDataList;
     }
+
 }
