@@ -92,7 +92,7 @@ export default function Page7({ info, setInfo }) {
   }, [reward, setReward, penalty, setpenalty])
   return (
     <>
-      <PageBase toNext={"Final"} disabled={disabled}>
+      <PageBase toNext={"Final"} disabled={false}>
         <View flex={2} justifyContent="flex-end">
           {/* <Text style={fontStyles.HyeminBold({ size: 9, bold: "bold" })}>보상 / 벌칙 입력</Text> */}
           <Text style={fontStyles.HyeminBold({ size: 5 })}>

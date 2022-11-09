@@ -11,7 +11,8 @@ const { dw } = DeviceInfo
 // https://www.npmjs.com/package/react-native-range-datepicker
 
 const formDate = (date) => {
-  const temp = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
+  date.setHours(9)
+  const temp = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
   return temp
 }
 
@@ -25,6 +26,7 @@ export default function Page5({ info, setInfo }) {
   useEffect(() => {
     const SD = formDate(new Date(date.startDate))
     const ED = formDate(new Date(date.endDate))
+
     setInfo((prev) => {
       return { ...prev, startDate: SD, endDate: ED }
     })
@@ -43,8 +45,6 @@ export default function Page5({ info, setInfo }) {
           flex: 1,
           marginTop: 48,
           marginBottom: 48,
-          // marginLeft: dw * 0.05,
-          // marginRight: dw * 0.05,
           borderRadius: 12,
           alignSelf: "center",
           overflow: "hidden",
@@ -54,8 +54,9 @@ export default function Page5({ info, setInfo }) {
       >
         <DatepickerRange
           showClose={false}
-          onConfirm={(sd, ud) => setDate({ startDate: sd, endDate: ud })}
-          buttonText={"sasdasd"}
+          onConfirm={(sd, ud) => {
+            setDate({ startDate: sd, endDate: ud })
+          }}
           buttonColor={`${ColorSet.navyColor(1)}`}
           placeHolderStart={"시작일"}
           placeHolderUntil={"종료일"}
