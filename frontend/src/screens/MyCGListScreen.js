@@ -42,6 +42,7 @@ function MyCGListScreen({ idHandler }) {
       const res = await instance.post("/api/challenge/participation", { challengeId, inviteCode })
       idHandler(challengeId)
       setShowCodeInput(!showCodeInput)
+      navigation.push("CGRoom")
     } catch (error) {
       console.log(error.response.data)
     }
