@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import PageBase, { fontStyles } from "./PageBase"
 
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker"
+// import { DateTimePickerAndroid } from "@react-native-community/datetimepicker"
 import ColorSet from "../../style/ColorSet"
 import AppButton from "../common/AppButton"
 
@@ -59,7 +59,7 @@ export default function Page6({ info, setInfo }) {
             </Text>
           </View>
           <View style={frameStyles.pickerBot}>
-            <View style={{ flex: 1, height: 40, margin: 10 }}>
+            {/* <View style={{ flex: 1, height: 40, margin: 10 }}>
               <AppButton
                 handler={() => showTimepicker("start")}
                 backColor="navy"
@@ -72,7 +72,7 @@ export default function Page6({ info, setInfo }) {
                 backColor="navy"
                 title={"종료 시간 설정"}
               />
-            </View>
+            </View> */}
           </View>
         </View>
       </PageBase>
