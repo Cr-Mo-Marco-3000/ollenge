@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 
 import { Pressable, View, StyleSheet, Text, Button, Image, TextInput } from "react-native"
+import { useNavigation } from "@react-navigation/native"
 import { Camera } from "expo-camera"
 import axios from "axios"
 import { decode as atob, encode as btoa } from "base-64"
@@ -8,9 +9,9 @@ import AppText from "../common/AppText"
 
 import { AuthorizationInstance } from "../../api/settings"
 
-function ImageRegisterPage({ route }) {
+function ImageRegisterPage({ route }, { roomInfo }) {
   const participationId = route.params.participationId // prop으로 participation_id 가져오고
-  const methodNum = route.params.mod // 인증 방식에 대하여, {0: std_img 등록, 1: feature 비교, 2: classification 3: common}
+  const methodNum = route.params.methodNum // 인증 방식에 대하여, {0: std_img 등록, 1: feature 비교, 2: classification 3: common}
   const [hasCameraPermission, setHasCameraPermission] = useState(null)
   const [camera, setCamera] = useState(null)
   const [image, setImage] = useState(null) // 사진 uri
@@ -18,10 +19,11 @@ function ImageRegisterPage({ route }) {
   const [base64, setBase64] = useState(null) // 사진 base64
   const [text, onChangeText] = useState("i'm feed") // 텍스트 기본 문구 설정 해야함
   const [type, setType] = useState(Camera.Constants.Type.back)
-  const BaseUrl = "https://39c3-211-192-210-232.jp.ngrok.io" // BaseUrl 설정 해야함
+  const BaseUrl = "https://k7a501.p.ssafy.io" // BaseUrl 설정 해야함
   const urlType = ["/auth/stdimg", "/auth/feature", "/auth/classification", "/auth/common"]
 
   const instance = AuthorizationInstance()
+  const navigation = useNavigation()
 
   useEffect(async () => {
     ;(async () => {
@@ -79,18 +81,21 @@ function ImageRegisterPage({ route }) {
         console.log(res.status, res.data.message)
         onChangeText("i'm feed")
         setImage(null)
+        navigation.push("CGRoom", (roomInfo = { roomInfo }))
       })
       .catch((err) => {
         console.log(err)
         setImage(null)
       })
+    // const to_URL = BaseUrl + urlType[methodNum]
+    // console.log(to_URL)
     // await axios({
     //   method: "post",
-    //   url: BaseUrl + urlType[methodNum],
+    //   url: to_URL,
     //   headers: {
     //     "content-type": "application/json",
-    //     authorization:
-    //       "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaXNzIjoib2xsZW5nZS5jb20iLCJleHAiOjE2Njg2NDYwNzEsImlhdCI6MTY2NzM1MDA3MX0.RzAQkJst9HCND7a_sdZ_8POhjIJmJZE2TsJcvq3Iuj7CcE4ouQW6WN5DJ1RApYoGaowPGl2Dimk4fyOFxju1jQ",
+    //     Authorization:
+    //       "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiaXNzIjoib2xsZW5nZS5jb20iLCJleHAiOjE2Njg2NDYwNzEsImlhdCI6MTY2NzM1MDA3MX0.7VJ6AmImnlKegU07RkiuqWuniWPJBwRYnnMYG0hyGaESFxJKX0TULruXZd5hFhXZDhrrnkx4gP3No73zo4hwsw",
     //   },
     //   data: dataForm[methodNum],
     // })
@@ -101,7 +106,7 @@ function ImageRegisterPage({ route }) {
     //     setImage(null)
     //   })
     //   .catch((error) => {
-    //     console.log(error.response.data.errcode)
+    //     console.log(error)
     //     //실패시 err 코드에 따라 출력해 주고
     //     setImage(null) // 사진 날리고 다시 사진 부터
     //   })
@@ -129,7 +134,6 @@ function ImageRegisterPage({ route }) {
         <View style={{ flex: 1 }}>
           <Image source={{ uri: image }} style={{ flex: 1 }} />
           <Button title="Create Feed" onPress={() => createAuthImg()} />
-          <TextInput style={styles.input} onChangeText={onChangeText} value={text} />
         </View>
       )}
     </View>

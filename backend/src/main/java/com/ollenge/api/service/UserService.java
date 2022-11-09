@@ -2,13 +2,17 @@ package com.ollenge.api.service;
 
 import com.ollenge.api.exception.*;
 import com.ollenge.api.request.BadgePatchReq;
+import com.ollenge.api.request.ReportUserReq;
 import com.ollenge.api.response.data.TotalUserRankData;
+import com.ollenge.api.response.data.UserCompletedChallengeData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.StringUtils;
 import com.ollenge.db.entity.Badge;
+import com.ollenge.db.entity.Report;
 import com.ollenge.db.entity.User;
 import com.ollenge.db.repository.BadgeRepository;
+import com.ollenge.db.repository.ReportRepository;
 import com.ollenge.db.repository.UserRepository;
 import com.ollenge.db.repository.UserRepositorySupport;
 import lombok.AllArgsConstructor;
@@ -25,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserRepositorySupport userRepositorySupport;
     private final BadgeRepository badgeRepository;
+    private final ReportRepository reportRepository;
 
     public User getUserByUserId(long userId) {
         Optional<User> user = userRepository.findById(userId);
@@ -97,19 +102,19 @@ public class UserService {
         return userChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserCompletedChallengeData> getUserCompletedRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> rankingChallengeList = userRepositorySupport.getUserChallenge(user, "completed", true);
+        List<UserCompletedChallengeData> rankingChallengeList = userRepositorySupport.getUserCompletedChallenge(user, true);
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserCompletedChallengeData> getUserCompletedUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> userChallengeList = userRepositorySupport.getUserChallenge(user, "completed", false);
+        List<UserCompletedChallengeData> userChallengeList = userRepositorySupport.getUserCompletedChallenge(user, false);
         return userChallengeList;
     }
     public List<TotalUserRankData> getTotalUserRank(Authentication authentication) throws InvalidUserException {
@@ -156,5 +161,14 @@ public class UserService {
         }
         badge.setBadgeFlag(true);
         badgeRepository.save(badge);
+    }
+
+    public void reportUser(Authentication authentication, ReportUserReq reportUserReq) throws InvalidUserException, InvalidReqUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User reportUser = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        User reportedUser = userRepository.findById(reportUserReq.getReportedUserId())
+                .orElseThrow(() -> { return new InvalidReqUserException("Invalid ID " + userId); });
+        reportRepository.save(Report.builder().reportUserId(reportUser).reportedUserId(reportedUser).reportContent(reportUserReq.getReportContent()).build());
     }
 }

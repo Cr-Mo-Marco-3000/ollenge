@@ -2,11 +2,14 @@ package com.ollenge.api.controller;
 
 import com.ollenge.api.exception.*;
 import com.ollenge.api.request.BadgePatchReq;
+import com.ollenge.api.request.ReportUserReq;
 import com.ollenge.api.request.UserPostReq;
 import com.ollenge.api.response.TotalUserRankGetRes;
 import com.ollenge.api.response.UserChallengeGetRes;
+import com.ollenge.api.response.UserCompletedGetRes;
 import com.ollenge.api.response.UserGetRes;
 import com.ollenge.api.response.data.TotalUserRankData;
+import com.ollenge.api.response.data.UserCompletedChallengeData;
 import com.ollenge.api.response.data.UserParticipatedChallengeData;
 import com.ollenge.api.service.BadgeService;
 import com.ollenge.api.service.UserService;
@@ -134,9 +137,9 @@ public class UserController {
     })
     public ResponseEntity<? extends BaseResponseBody> getUserCompletedChallenge(@ApiIgnore Authentication authentication) {
         try {
-            List<UserParticipatedChallengeData> userChallengeList = userService.getUserCompletedUserChallenge(authentication);
-            List<UserParticipatedChallengeData> rankingChallengeList = userService.getUserCompletedRankingChallenge(authentication);
-            return ResponseEntity.status(200).body(UserChallengeGetRes.of(200, "유저별 참여 완료 챌린지 조회 성공", rankingChallengeList, userChallengeList));
+            List<UserCompletedChallengeData> userChallengeList = userService.getUserCompletedUserChallenge(authentication);
+            List<UserCompletedChallengeData> rankingChallengeList = userService.getUserCompletedRankingChallenge(authentication);
+            return ResponseEntity.status(200).body(UserCompletedGetRes.of(200, "유저별 참여 완료 챌린지 조회 성공", rankingChallengeList, userChallengeList));
         } catch (InvalidUserException invalidUserException) {
             invalidUserException.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
@@ -191,6 +194,37 @@ public class UserController {
         } catch (InvalidBadgeException invalidBadgeException) {
             invalidBadgeException.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(400, "요청한 뱃지가 존재하지 않습니다."));
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));
+        }
+    }
+
+
+    @PostMapping("/report")
+    @ApiOperation(value = "유저 신고", notes = "유저를 신고합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "유저 신고 성공"),
+            @ApiResponse(code = 400, message = "존재하지 않는 유저입니다."),
+            @ApiResponse(code = 400, message = "입력형식에 맞지 않습니다."),
+            @ApiResponse(code = 400, message = "권한이 없습니다."),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    public ResponseEntity<? extends BaseResponseBody> reportUser(@ApiIgnore Authentication authentication, @Validated @RequestBody ReportUserReq reportUserReq,
+                                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of(400, "입력 형식에 맞지 않습니다."));
+        }
+
+        try {
+            userService.reportUser(authentication, reportUserReq);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "유저 신고 성공"));
+        } catch (InvalidReqUserException invalidReqUserException) {
+            invalidReqUserException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "존재하지 않는 유저입니다."));
+        } catch (InvalidUserException invalidUserException) {
+            invalidUserException.printStackTrace();
+            return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "서버 에러 발생"));

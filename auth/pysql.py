@@ -128,6 +128,33 @@ def execute_update_profile_img(user_id, img):
     conn.close()
     return 0
 
+
+# participation cnt 증가
+def execute_feed_cnt_increase(participation_id):
+    participation_id = int(participation_id)
+    sql = """UPDATE participation SET feed_cnt=feed_cnt+1 WHERE participation_id=%s"""
+    vals = (participation_id,)
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(sql,vals)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return 0
+
+
+# challenge_score 증가
+def execute_challenge_score_increase(participation_id):
+    participation_id = int(participation_id)
+    sql = """UPDATE challenge SET challenge_score=challenge_score+10 WHERE challenge_id=(SELECT challenge_id FROM participation WHERE participation_id=%s)"""
+    vals = (participation_id,)
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(sql,vals)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return 0
         
 config = dotenv_values(".env")
 DB_PASSWORD = config.get('DB_PASSWORD')

@@ -92,7 +92,6 @@ function Root() {
   const authCtx = useContext(AuthContext)
   async function fetchToken() {
     const storedToken = await AsyncStorage.getItem("token")
-    console.log(storedToken)
     if (storedToken) {
       authCtx.authenticate(storedToken)
     }
@@ -100,7 +99,6 @@ function Root() {
 
   async function fetchSigned() {
     const storedUserFlag = await AsyncStorage.getItem("userFlag")
-    console.log(storedUserFlag)
     if (storedUserFlag) {
       authCtx.signed(storedUserFlag)
     }

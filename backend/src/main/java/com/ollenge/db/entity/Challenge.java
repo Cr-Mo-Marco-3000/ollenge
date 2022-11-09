@@ -27,6 +27,10 @@ public class Challenge {
     @JoinColumn(name = "challenge_preset_id")
     ChallengePreset challengePreset;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_result_id")
+    ChallengeResult challengeResult;
+
     @Column
     String challengeImg;
 

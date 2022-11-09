@@ -13,13 +13,18 @@ const words = {
 export default function Page2({ info, setInfo }) {
   const [auth, setAuth] = useState(info.authType)
   const [selIndex, setSelIndex] = useState(-1)
+  const [disabled, setDisabled] = useState(true)
+
   useEffect(() => {
     setInfo((prev) => {
       return { ...prev, authType: Object.keys(words)[selIndex] }
     })
+    setDisabled(auth === "")
+    console.log(auth)
   }, [auth, setAuth])
+
   return (
-    <PageBase toNext={"Page4"}>
+    <PageBase toNext={"Page4"} disabled={disabled}>
       {/* 랭킹 챌린지 종류별 카드 렌더링 */}
       {Object.keys(words).map((key, ind) => {
         return (
@@ -27,18 +32,13 @@ export default function Page2({ info, setInfo }) {
             key={ind}
             onPress={() => {
               setSelIndex(ind)
+              setAuth(Object.keys(words)[ind])
             }}
             style={{ width: "100%" }}
           >
-            <View
-              style={{
-                ...styles.Card,
-                borderWidth: selIndex === ind ? 4 : 0,
-                borderColor: `${ColorSet.greenColor(1)}`,
-              }}
-            >
-              <Text style={styles.Title}>{key}</Text>
-              <Text style={styles.Content} numberOfLines={2}>
+            <View style={styles.Card(selIndex === ind)}>
+              <Text style={styles.Title(selIndex === ind)}>{key}</Text>
+              <Text style={styles.Content(selIndex === ind)} numberOfLines={2}>
                 {words[key]}
               </Text>
             </View>
@@ -50,20 +50,28 @@ export default function Page2({ info, setInfo }) {
 }
 
 const styles = {
-  Title: {
-    ...fontStyles.HyeminBold({ size: 6, bold: "bold", align: "left" }),
-    marginBottom: 15,
+  Title: (selected) => {
+    const color = selected ? "white" : `${ColorSet.navyColor(1)}`
+    return {
+      ...fontStyles.HyeminBold({ size: 6.5, align: "left", color }),
+      marginBottom: 15,
+    }
   },
 
-  Content: {
-    ...fontStyles.Hyemin({ size: 4, align: "left" }),
+  Content: (selected) => {
+    const color = selected ? "white" : `${ColorSet.navyColor(1)}`
+    return {
+      ...fontStyles.Hyemin({ size: 4.5, align: "left", color }),
+    }
   },
-  Card: {
-    width: "100%",
-    backgroundColor: "white",
-    marginBottom: 12,
-    borderRadius: 12,
-    elevation: 12,
-    padding: 6,
+  Card: (selected) => {
+    return {
+      width: "100%",
+      backgroundColor: selected === true ? `${ColorSet.navyColor(1)}` : "white",
+      marginBottom: 12,
+      borderRadius: 12,
+      elevation: 12,
+      padding: 12,
+    }
   },
 }

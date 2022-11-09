@@ -11,6 +11,9 @@ import GreenSquare from "./green_square_icon.png"
 import Hand from "./hand_icon.png"
 import OrangeSquare from "./orange_square_icon.png"
 import Stopwatch from "./stopwatch_icon.png"
+import Medal from "./military_medal_3d.png"
+import Bomb from "./bomb_3d.png"
+import RunGirl from "./woman_running_3d_light.png"
 
 export function GymIcon(props) {
   const left = props.left ? props.left : "-7%"
@@ -101,4 +104,16 @@ export function OrangeSquareIcon() {
 }
 export function StopwatchIcon() {
   return <Image source={Stopwatch} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
+}
+
+export function MedalIcon() {
+  return <Image source={Medal} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
+}
+
+export function BombIcon() {
+  return <Image source={Bomb} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
+}
+
+export function RunGirlIcon() {
+  return <Image source={RunGirl} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
 }

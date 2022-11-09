@@ -1,40 +1,51 @@
 import React from "react"
 
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { LinearGradient } from "expo-linear-gradient"
+import { Provider } from "react-native-paper"
 
 import ColorSet from "../style/ColorSet"
 
 import TopMargin from "./../components/common/TopMargin"
-import AppButton from "./../components/common/AppButton"
 import UserListTap from "../components/CGRoomScreen/UserListTap"
+import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
+import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
+import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
+import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
 
-function CGRoomScreen() {
+function CGRoomScreen({ roomInfo }) {
   const navigation = useNavigation()
+
   return (
-    <LinearGradient
-      style={{ flex: 1 }}
-      colors={[`${ColorSet.whiteColor(1)}`, `${ColorSet.paleBlueColor(1)}`]}
-    >
-      <TopMargin />
-      <TopMargin />
-      <UserListTap navigation={navigation} />
-      <View style={{ height: 50 }}>
-        <AppButton
-          title={"인증이미지등록"}
-          handler={() => navigation.push("CGImg", { methodNum: 0, participationId: 3 })}
-        ></AppButton>
-      </View>
-      <View style={{ height: 50 }}>
-        <AppButton
-          title={"인증"}
-          handler={() => navigation.push("CGAuth", { methodNum: 1, participationId: 3 })}
-        ></AppButton>
-      </View>
-    </LinearGradient>
+    <Provider>
+      <LinearGradient
+        style={{ flex: 1 }}
+        colors={[`${ColorSet.whiteColor(1)}`, `${ColorSet.paleBlueColor(1)}`]}
+      >
+        <TopMargin />
+        <TopMargin />
+        <UserListTap navigation={navigation} />
+        <CGRoomInfoTag roomInfo={roomInfo} />
+
+        <View style={styles.buttonContainer}>
+          <InviteCodeBtn inviteCode={roomInfo.inviteCode} />
+          <CGAuthBtn navigation={navigation} />
+          <ImageResistBtn navigation={navigation} />
+        </View>
+      </LinearGradient>
+    </Provider>
   )
 }
 export default CGRoomScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  buttonContainer: {
+    paddingHorizontal: "5%",
+  },
+  buttonBox: {
+    width: "100%",
+    height: "15%",
+    marginTop: "5%",
+  },
+})

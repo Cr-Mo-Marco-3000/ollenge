@@ -27,6 +27,9 @@ public class Participation {
     @JoinColumn(name = "challenge_id", nullable = false)
     Challenge challenge;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    int feedCnt;
+
     @OneToMany(mappedBy = "participation")
     List<Feed> feed;
 

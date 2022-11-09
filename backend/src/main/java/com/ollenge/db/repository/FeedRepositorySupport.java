@@ -27,7 +27,7 @@ public class FeedRepositorySupport {
                 .fetch();
         List<FeedGetData> feedGetDataList = new ArrayList<>();
         for (Feed feed : result) {
-            feedGetDataList.add(FeedGetData.of(feed.getParticipation().getUser(), feed, null));
+            feedGetDataList.add(FeedGetData.of(feed.getParticipation().getUser(), feed, feed.getComment().size()));
         }
         return feedGetDataList;
     }

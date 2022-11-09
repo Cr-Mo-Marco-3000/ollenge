@@ -57,7 +57,7 @@ function UserListTap({ navigation }) {
         showsHorizontalScrollIndicator={false}
       >
         {userList.map((user, index) => {
-          return <ProfileBedge key={index} url={user.profileImg} isActive={false} />
+          return <ProfileBedge key={index} uri={user.profileImg} isActive={false} />
         })}
       </ScrollView>
       <LinearGradient
@@ -98,7 +98,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginBottom: 100,
     alignItems: "center",
   },
   myProfileBox: {

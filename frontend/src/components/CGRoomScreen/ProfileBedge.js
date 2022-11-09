@@ -11,7 +11,7 @@ function ProfileBedge({ url, isActive }) {
   return (
     <View style={isActive ? [styles.imgBox, styles.activeBorder] : styles.imgBox}>
       <Image
-        source={url ? { url: url } : { url: defaultImageUri }}
+        source={url ? { uri: url } : { uri: defaultImageUri }}
         style={{ width: "100%", height: "100%", borderRadius: 100 }}
         resizeMode="cover"
       />

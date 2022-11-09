@@ -1,7 +1,6 @@
 package com.ollenge.api.response;
 
 import com.ollenge.api.response.data.TotalUserRankData;
-import com.ollenge.api.response.data.UserRankData;
 import com.ollenge.common.model.response.BaseResponseBody;
 import lombok.Getter;
 import lombok.Setter;

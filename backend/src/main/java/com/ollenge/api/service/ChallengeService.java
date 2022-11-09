@@ -3,9 +3,7 @@ package com.ollenge.api.service;
 import com.ollenge.api.exception.*;
 import com.ollenge.api.request.ChallengeParticipationPostReq;
 import com.ollenge.api.request.ChallengePostReq;
-import com.ollenge.api.response.data.ChallengeCreatedData;
-import com.ollenge.api.response.data.ChallengeInfoData;
-import com.ollenge.api.response.data.ChallengeStateData;
+import com.ollenge.api.response.data.*;
 import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.LocalDateTimeUtils;
 import com.ollenge.db.entity.*;
@@ -17,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -174,6 +174,62 @@ public class ChallengeService {
         return challengeRepositorySupport.getChallengeState(challenge);
     }
 
+    public List<ChallengePreset> getChallengePreset() {
+        return challengePresetRepository.findAll();
+    }
+
+    public List<ChallengeRankingData> getRankingDataList(Authentication authentication, long challengePresetId) throws InvalidUserException, InvalidChallengeIdException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        ChallengePreset challengePreset = challengePresetRepository.findById(challengePresetId)
+                .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge preset ID " + challengePresetId); });
+
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        List<Challenge> challengeList = challengeRepositorySupport.getRankingChallengeListTopicPeriod(LocalDateTimeUtils.getFirstDayOfTargetMonth(today), LocalDateTimeUtils.getLastDayOfTargetMonth(today), challengePreset);
+
+        List<ChallengeRankingData> challengeRankingDataList = new ArrayList<>();
+        int rank = 1;
+        int offset = 1;
+        for(int i = 0; i < challengeList.size(); i++) {
+            if(i == 0) {
+                challengeRankingDataList.add(ChallengeRankingData.of(challengeList.get(i), rank));
+                continue;
+            }
+            if((double)challengeList.get(i).getChallengeScore()/challengeList.get(i).getPeopleCnt() == (double)challengeList.get(i-1).getChallengeScore()/challengeList.get(i).getPeopleCnt()) {
+                offset++;
+                challengeRankingDataList.add(ChallengeRankingData.of(challengeList.get(i), rank));
+            } else {
+                rank += offset;
+                offset = 1;
+                challengeRankingDataList.add(ChallengeRankingData.of(challengeList.get(i), rank));
+            }
+        }
+        return challengeRankingDataList;
+    }
+
+    public ChallengeRankingData getUserRankingData(Authentication authentication, long challengePresetId, List<ChallengeRankingData> challengeRankList) throws InvalidUserException, InvalidChallengeIdException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        ChallengePreset challengePreset = challengePresetRepository.findById(challengePresetId)
+                .orElseThrow(() -> { return new InvalidChallengeIdException("Invalid challenge preset ID " + challengePresetId); });
+
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        List<Challenge> challengeList = challengeRepositorySupport.getRankingChallengeTopicPeriod(user, LocalDateTimeUtils.getFirstDayOfTargetMonth(today), LocalDateTimeUtils.getLastDayOfTargetMonth(today), challengePreset);
+        if(challengeList.size() == 0) return null;
+        Challenge challenge = challengeList.get(0);
+
+        int rank = 0;
+        for(ChallengeRankingData challengeRanking : challengeRankList) {
+            if(challenge.getChallengeId() == challengeRanking.getChallengeId()) {
+                rank = challengeRanking.getRank();
+                break;
+            }
+        }
+        return ChallengeRankingData.of(challenge, rank);
+    }
+
     private boolean isValidAuthType(String authType) {
         return authType.equals("none") || authType.equals("feature") || authType.equals("classifi") || authType.equals("step");
     }
@@ -182,9 +238,4 @@ public class ChallengeService {
         List<Challenge> challengeList = challengeRepositorySupport.getRankingChallengeTopicPeriod(user, startDate, endDate, challengePreset);
         return !challengeList.isEmpty();
     }
-
-    public List<ChallengePreset> getChallengePreset() {
-        return challengePresetRepository.findAll();
-    }
-
 }
