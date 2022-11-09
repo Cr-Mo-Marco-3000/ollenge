@@ -7,6 +7,7 @@ import Example from "./example.jpg"
 import GoldCrown from "./gold-crown-icon.png"
 import SilverCrown from "./silver-crown-icon.png"
 import BronzeCrown from "./bronze-crown-icon.png"
+import Mail from "./mail-icon.png"
 
 import { Image } from "react-native"
 
@@ -43,4 +44,8 @@ export function CrownIcon(props) {
     ),
   }
   return crown[props.rank]
+}
+
+export function MailIcon() {
+  return <Image source={Mail} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
 }

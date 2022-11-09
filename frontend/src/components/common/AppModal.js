@@ -18,13 +18,13 @@ export default function AppModal(props) {
   const goBack = () => {
     props.openAndClose()
   }
-
+  const isTransparent = props.isTransparent ? props.isTransparent : false
   const backgroundColor = props.backgroundColor ? props.backgroundColor : ColorSet.paleBlueColor(1)
 
   const title = props.title
 
   return (
-    <Modal animationType="fade" statusBarTranslucent={true}>
+    <Modal animationType="fade" statusBarTranslucent={true} transparent={isTransparent}>
       <View
         style={{
           backgroundColor: backgroundColor,

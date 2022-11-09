@@ -8,7 +8,6 @@ import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
-import { FAB, Portal, Provider } from "react-native-paper"
 import { useState, useEffect } from "react"
 import { AuthorizationInstance } from "../../api/settings"
 
@@ -17,35 +16,30 @@ const BeforeStart = (props) => {
   const [rankingCGList, setRankingCGList] = useState([])
   const [userCGList, setUserCGList] = useState([])
   const instance = AuthorizationInstance()
-  const [fabButton, setfabButton] = useState(false)
 
-  const onStateChange = () => {
-    setfabButton(!fabButton)
-  }
+  // const tempRankingCGList = [
+  //   {
+  //     challengeId: 34,
+  //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  //     challengeName: "찬호와 아이들",
+  //     challengeTopic: "하루 3잔 물마시기",
+  //     startDate: new Date(2022, 10, 10),
+  //     endDate: new Date(2022, 10, 15),
+  //     peopleCnt: 4,
+  //   },
+  // ]
 
-  const tempRankingCGList = [
-    {
-      challengeId: 34,
-      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      challengeName: "찬호와 아이들",
-      challengeTopic: "하루 3잔 물마시기",
-      startDate: new Date(2022, 10, 10),
-      endDate: new Date(2022, 10, 15),
-      peopleCnt: 4,
-    },
-  ]
-
-  const tempUserCGList = [
-    {
-      challengeId: 35,
-      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      challengeName: "찬호와 아이들",
-      challengeTopic: "하루 3잔 물마시기",
-      startDate: new Date(2022, 10, 10),
-      endDate: new Date(2022, 10, 15),
-      peopleCnt: 4,
-    },
-  ]
+  // const tempUserCGList = [
+  //   {
+  //     challengeId: 35,
+  //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  //     challengeName: "찬호와 아이들",
+  //     challengeTopic: "하루 3잔 물마시기",
+  //     startDate: new Date(2022, 10, 10),
+  //     endDate: new Date(2022, 10, 15),
+  //     peopleCnt: 4,
+  //   },
+  // ]
 
   useEffect(() => {
     const getChallenge = async () => {
