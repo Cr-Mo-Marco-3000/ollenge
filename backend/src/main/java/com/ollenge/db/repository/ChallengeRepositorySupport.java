@@ -78,4 +78,13 @@ public class ChallengeRepositorySupport {
         return challengeStateDataList;
     }
 
+    public List<Long> getParticipatedChallengePresetId(User user, LocalDate startDate, LocalDate endDate) {
+        return jpaQueryFactory.select(qParticipation.challenge.challengePreset.challengePresetId)
+                .from(qParticipation)
+                .where(qParticipation.user.eq(user)
+                        .and(qParticipation.challenge.startDate.eq(startDate))
+                        .and(qParticipation.challenge.endDate.eq(endDate))
+                        .and(qParticipation.challenge.challengePreset.isNotNull()))
+                .fetch();
+    }
 }
