@@ -8,18 +8,16 @@ import ColorSet from "../style/ColorSet"
 
 const Stack = createStackNavigator()
 const initialData = {
-  userId: 1514,
-  challengePresetId: 1514,
-  challengeImg: "https://5.imimg.com/data5/YK/MJ/MY-44646927/oranges-500x500.jpg",
+  challengeImg: "",
   challengeName: "그룹명 초기값",
   challengeTopic: "주제 초기값",
-  authType: "인증 방식 초기값",
-  startDate: "1995-03-14",
-  endDate: "1996-03-14",
-  startTime: "03:14",
-  endTime: "15:14",
-  rewardContent: "보상 초기값",
-  penaltyContent: "패널티 초기값",
+  authType: "none",
+  startDate: "2022-11-29",
+  endDate: "2022-11-30",
+  startTime: "03:14:00",
+  endTime: "19:14:00",
+  rewardContent: "",
+  penaltyContent: "",
   challengeDescription: "챌린지 설명 초기값",
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { KeyboardAvoidingView, Pressable, ScrollView, Text, View } from "react-native"
 import ColorSet from "../../style/ColorSet"
-import DeviceInfo from "../../style/DeviceInfo"
+import { dw, dh } from "../../style/DeviceInfo"
 import PageBase, { fontStyles } from "./PageBase"
 import CustomTopicInput from "./CustomTopicInput"
 
@@ -16,8 +16,6 @@ const words = {
 
   customContent: "클릭하여 작성하기",
 }
-
-const { dw } = DeviceInfo
 
 export default function Page2({ info, setInfo }) {
   const [topic, setTopic] = useState(info.challengeTopic)
@@ -46,14 +44,12 @@ export default function Page2({ info, setInfo }) {
         style={{
           ...frameStyles.rankingCard,
           backgroundColor: title === topic ? `${ColorSet.navyColor(1)}` : "white",
-          // backgroundColor: title === topic ? `${ColorSet.navyColor(1)}` : "rgb(255, 191, 153)",
         }}
       >
         <Text
           style={{
             ...textStyles.rankingCard,
             color: title === topic ? "white" : `${ColorSet.navyColor(1)}`,
-            // color: title === topic ? "white" : `${ColorSet.navyColor(1)}`,
           }}
         >
           {title}
@@ -67,15 +63,11 @@ export default function Page2({ info, setInfo }) {
       <KeyboardAvoidingView style={{ width: "100%", flex: 1 }} behavior="padding">
         {clicked === false && (
           <>
-            {/* Choiced Topic */}
             <View flex={1} style={{ width: "100%", justifyContent: "center" }}>
-              {/* <Text style={textStyles.Title}>선택한 목표{"\n"}</Text> */}
               <Text style={textStyles.Title}>{topic}</Text>
             </View>
 
-            {/* Ranking CG Area */}
             <View style={{ width: "100%" }}>
-              {/* <Text style={textStyles.TopTitle}>{words.TopTitle}</Text> */}
               <Text style={textStyles.TopContent}>{words.TopContent}</Text>
               <ScrollView style={frameStyles.rankingCGList} horizontal={true}>
                 {RankingCGs.map((rcg, index) => {
@@ -142,7 +134,6 @@ const textStyles = {
     ...fontStyles.HyeminBold({ size: 10 }),
     marginBottom: 15,
   },
-  // Ranking CG 선택 영역
   TopTitle: {
     ...fontStyles.HyeminBold({ size: 6 }),
     marginBottom: 15,
@@ -152,7 +143,7 @@ const textStyles = {
     width: "100%",
   },
   rankingCard: {
-    ...fontStyles.HyeminBold({ size: 5, bold: "bold" }),
+    ...fontStyles.HyeminBold({ size: 5 }),
   },
 
   // User CG 선택 영역

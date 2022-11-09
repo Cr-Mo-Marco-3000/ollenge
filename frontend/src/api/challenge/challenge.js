@@ -1,3 +1,4 @@
+import { Alert } from "react-native"
 import { AuthorizationInstance } from "../settings.js"
 
 /**
@@ -30,10 +31,62 @@ export const ongoingRank = (challengeId) => {
   instance.get(`/challenge/ongoing/${challengeId}`)
 }
 
-const ChallAPI = {
+/**
+ * API 호출 필수 요소들이 모두 있는지 테스팅 하는 코드
+ * @param {Object[string]} rList
+ * @param {Objct[any]} data
+ */
+const checkRequired = (rList, data) => {
+  rList.forEach((required) => {
+    if (data[`${required}`] === "") {
+      return false
+    }
+  })
+  return true
+}
+
+const requiredList = [
+  "challengeName",
+  "challengeTopic",
+  "startDate",
+  "endDate",
+  "startTime",
+  "endTime",
+]
+
+export const createCG = async (info) => {
+  console.log("[ChallAPI.js] 챌린지 생성 API 시작")
+  const instance = await AuthorizationInstance()
+
+  if (checkRequired(requiredList, info) !== true) {
+    Alert.alert({ title: "Input Error", message: "입력하지 않은 정보가 있습니다." })
+  }
+
+  const data = {}
+  Object.keys(info).map((key) => {
+    if (info[key] !== "") {
+      data[key] = info[key]
+    }
+  })
+
+  instance
+    .post("/api/challenge", data)
+    .then((res) => {
+      console.log("[ChallAPI.js] 챌린지 생성 API => 성공")
+      console.log(res.data)
+    })
+    .catch((err) => {
+      console.log("[ChallAPI.js] 챌린지 생성 API => 실패")
+      console.log(data)
+      console.log(err.response.data)
+    })
+}
+
+const challAPI = {
   scheduled,
   ongoing,
   ongoingRank,
+  createCG,
 }
 
-export default ChallAPI
+export default challAPI

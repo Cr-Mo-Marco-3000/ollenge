@@ -78,7 +78,7 @@ export default function PageBase(props) {
             <View style={styles.BottomArea}>
               <NextBtn
                 toNext={props.toNext}
-                disabled={false}
+                disabled={props.disabled}
                 toSubmit={props.toSubmit ? props.toSubmit : false}
               />
               {/* props.disabled */}

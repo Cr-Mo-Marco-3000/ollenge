@@ -7,4 +7,7 @@ const DeviceInfo = {
   dh: height,
 }
 
+export const dw = width
+export const dh = height
+
 export default DeviceInfo

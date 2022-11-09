@@ -10,14 +10,16 @@ const words = {
   "자유 인증": "아무 사진을 등록해도 인증이 되는 방법입니다. 팀원들간의 기준에 따라 진행됩니다.",
 }
 
+const reqForm = ["feature", "classifi", "none"]
+
 export default function Page2({ info, setInfo }) {
   const [auth, setAuth] = useState(info.authType)
-  const [selIndex, setSelIndex] = useState(-1)
+  const [selIndex, setSelIndex] = useState("none")
   const [disabled, setDisabled] = useState(true)
 
   useEffect(() => {
     setInfo((prev) => {
-      return { ...prev, authType: Object.keys(words)[selIndex] }
+      return { ...prev, authType: reqForm[selIndex] }
     })
     setDisabled(auth === "")
     console.log(auth)
