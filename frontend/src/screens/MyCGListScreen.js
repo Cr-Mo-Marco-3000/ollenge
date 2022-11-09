@@ -14,11 +14,18 @@ import AppCard from "../components/common/AppCard"
 import { View } from "react-native"
 import { MailIcon } from "../assets/images/MyCGScreen/MyCGScreen"
 import AppButton from "../components/common/AppButton"
+import { AuthorizationInstance } from "../api/settings"
+import { createStackNavigator } from "@react-navigation/stack"
+import { useNavigation } from "@react-navigation/native"
 
 function MyCGListScreen({ idHandler }) {
   const Tab = createMaterialTopTabNavigator()
+  const Stack = createStackNavigator()
+  const navigation = useNavigation()
   const [fabButton, setfabButton] = useState(false)
   const [showCodeInput, setShowCodeInput] = useState(false)
+  const [inputValue, setInputValue] = useState("")
+  const instance = AuthorizationInstance()
 
   const onStateChange = () => {
     setfabButton(!fabButton)
@@ -26,6 +33,19 @@ function MyCGListScreen({ idHandler }) {
 
   const openAndClose = () => {
     setShowCodeInput(!showCodeInput)
+  }
+
+  const joinChallenge = async () => {
+    try {
+      const challengeId = inputValue.slice(8)
+      const inviteCode = inputValue.slice(0, 8)
+      const res = await instance.post("/api/challenge/participation", { challengeId, inviteCode })
+      idHandler(challengeId)
+      setShowCodeInput(!showCodeInput)
+      navigation.push("CGRoom")
+    } catch (error) {
+      console.log(error.response.data)
+    }
   }
 
   return (
@@ -50,11 +70,14 @@ function MyCGListScreen({ idHandler }) {
                           textAlign="center"
                           autoFocus={true}
                           underlineColorAndroid={ColorSet.navyColor(1)}
+                          onChangeText={(e) => {
+                            setInputValue(e)
+                          }}
                         ></AppTextInput>
                       </InnerRow>
                       <InnerRow>
                         <ButtonView>
-                          <AppButton title={"확인"} />
+                          <AppButton handler={joinChallenge} title={"확인"} />
                         </ButtonView>
                       </InnerRow>
                     </InnerArea>
