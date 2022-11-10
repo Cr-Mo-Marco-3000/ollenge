@@ -17,30 +17,28 @@ const Stack = createNativeStackNavigator()
 function MyCGScreen() {
   const roomCtx = useContext(RoomContext)
   return (
-    <NavigationContainer style={{ flex: 1 }}>
-      <Stack.Navigator
-        screenOptions={{
-          headerBackTitle: "",
-          headerTransparent: true,
-          headerTintColor: `${ColorSet.navyColor(100)}`,
-          headerTitleAlign: "center",
-          headerTitleStyle: { fontFamily: "HyeminBold" },
-        }}
-      >
-        <Stack.Screen name="CGList" options={{ headerShown: false }}>
-          {() => <MyCGListScreen />}
-        </Stack.Screen>
-        <Stack.Screen name="CGRoom" options={{ title: `${roomCtx.roomInfo.challengeName}` }}>
-          {() => <CGRoomScreen />}
-        </Stack.Screen>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitle: "",
+        headerTransparent: true,
+        headerTintColor: `${ColorSet.navyColor(100)}`,
+        headerTitleAlign: "center",
+        headerTitleStyle: { fontFamily: "HyeminBold" },
+      }}
+    >
+      <Stack.Screen name="CGList" options={{ headerShown: false }}>
+        {() => <MyCGListScreen />}
+      </Stack.Screen>
+      <Stack.Screen name="CGRoom" options={{ title: `${roomCtx.roomInfo.challengeName}` }}>
+        {() => <CGRoomScreen />}
+      </Stack.Screen>
 
-        <Stack.Screen name="CGUser" options={{ title: "" }}>
-          {() => <CGUserScreen />}
-        </Stack.Screen>
-        <Stack.Screen name="CGAuth" component={AuthScreen} options={{ title: "" }} />
-        <Stack.Screen name="CGImg" component={ImageRegisterPage} options={{ title: "" }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <Stack.Screen name="CGUser" options={{ title: "" }}>
+        {() => <CGUserScreen />}
+      </Stack.Screen>
+      <Stack.Screen name="CGAuth" component={AuthScreen} options={{ title: "" }} />
+      <Stack.Screen name="CGImg" component={ImageRegisterPage} options={{ title: "" }} />
+    </Stack.Navigator>
   )
 }
 export default MyCGScreen

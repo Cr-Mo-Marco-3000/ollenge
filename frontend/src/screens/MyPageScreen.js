@@ -15,23 +15,21 @@ function MyPageScreen() {
   const authCtx = useContext(AuthContext)
 
   return (
-    <NavigationContainer style={{ flex: 1 }}>
-      <Stack.Navigator
-        screenOptions={{
-          headerTitle: "",
-          headerBackTitle: "",
-          headerTransparent: true,
-          headerTintColor: `${ColorSet.navyColor(100)}`,
-        }}
-      >
-        <Stack.Screen name="MyInfo" options={{ headerShown: false }}>
-          {(props) => <MyInfoScreen userInfo={authCtx.userInfo} />}
-        </Stack.Screen>
-        <Stack.Screen name="EditInfo">
-          {(props) => <MyInfoEditScreen userInfo={authCtx.userInfo} />}
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      screenOptions={{
+        headerTitle: "",
+        headerBackTitle: "",
+        headerTransparent: true,
+        headerTintColor: `${ColorSet.navyColor(100)}`,
+      }}
+    >
+      <Stack.Screen name="MyInfo" options={{ headerShown: false }}>
+        {(props) => <MyInfoScreen userInfo={authCtx.userInfo} />}
+      </Stack.Screen>
+      <Stack.Screen name="EditInfo">
+        {(props) => <MyInfoEditScreen userInfo={authCtx.userInfo} />}
+      </Stack.Screen>
+    </Stack.Navigator>
   )
 }
 export default MyPageScreen

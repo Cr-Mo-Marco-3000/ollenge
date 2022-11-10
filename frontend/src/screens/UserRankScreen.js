@@ -10,20 +10,18 @@ const Stack = createNativeStackNavigator()
 
 function UserRankScreen() {
   return (
-    <NavigationContainer style={{ flex: 1 }}>
-      <Stack.Navigator
-        screenOptions={{
-          headerTitle: "",
-          headerBackTitle: "",
-          headerTransparent: true,
-          headerTintColor: `${ColorSet.navyColor(100)}`,
-        }}
-        initialRouteName="RankList"
-      >
-        <Stack.Screen name="RankList" options={{ headerShown: false }} component={RankList} />
-        <Stack.Screen name="UserBadge" component={ShowUserBadge} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      screenOptions={{
+        headerTitle: "",
+        headerBackTitle: "",
+        headerTransparent: true,
+        headerTintColor: `${ColorSet.navyColor(100)}`,
+      }}
+      initialRouteName="RankList"
+    >
+      <Stack.Screen name="RankList" options={{ headerShown: false }} component={RankList} />
+      <Stack.Screen name="UserBadge" component={ShowUserBadge} />
+    </Stack.Navigator>
   )
 }
 export default UserRankScreen
