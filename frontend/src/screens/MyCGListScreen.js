@@ -17,7 +17,7 @@ import AppButton from "../components/common/AppButton"
 import { AuthorizationInstance } from "../api/settings"
 import { createStackNavigator } from "@react-navigation/stack"
 import { useNavigation } from "@react-navigation/native"
-import { RoomContext } from "../../../store/room-context"
+import { RoomContext } from "../../store/room-context"
 
 function MyCGListScreen() {
   const Tab = createMaterialTopTabNavigator()
@@ -46,7 +46,6 @@ function MyCGListScreen() {
       const res = await instance.post("/api/challenge/participation", { challengeId, inviteCode })
       roomCtx.getRoomInfo(challengeId)
       roomCtx.getUserList(challengeId)
-      navigation.push("CGRoom")
       setShowCodeInput(!showCodeInput)
       navigation.push("CGRoom")
     } catch (error) {
