@@ -15,6 +15,7 @@ import CreateCGScreen from "./src/screens/CreateCGScreen"
 
 import ColorSet from "./src/style/ColorSet"
 import AuthContextProvider, { AuthContext } from "./store/auth-context"
+import RoomContextProvider from "./store/room-context"
 
 const MyCGRoute = () => <MyCGScreen />
 
@@ -128,7 +129,9 @@ function App() {
   return (
     <>
       <AuthContextProvider>
-        <Root />
+        <RoomContextProvider>
+          <Root />
+        </RoomContextProvider>
       </AuthContextProvider>
     </>
   )

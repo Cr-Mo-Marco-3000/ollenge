@@ -10,7 +10,7 @@ import AppText from "./../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import { AuthorizationInstance } from "../../api/settings"
 
-function CGLeaveBtn({ challengeID, userNum }) {
+function CGLeaveBtn({ challengeId, userNum }) {
   const navigation = useNavigation()
   const instance = AuthorizationInstance()
   const [visible, setVisible] = useState(false)
@@ -30,7 +30,7 @@ function CGLeaveBtn({ challengeID, userNum }) {
 
   function leaveHandler() {
     instance
-      .delete(`/api/challenge/${challengeID}`)
+      .delete(`/api/challenge/${challengeId}`)
       .then((res) => {
         navigation.goBack("CGList")
       })

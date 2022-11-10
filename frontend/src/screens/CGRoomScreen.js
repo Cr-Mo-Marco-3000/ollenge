@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import { View, StyleSheet, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
@@ -7,6 +7,7 @@ import { Provider } from "react-native-paper"
 
 import ColorSet from "../style/ColorSet"
 import { LocalTime, DateTime } from "../functions/index"
+import { RoomContext } from "../../store/room-context"
 
 import TopMargin from "./../components/common/TopMargin"
 import UserListTap from "../components/CGRoomScreen/UserListTap"
@@ -16,7 +17,11 @@ import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
 import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 
-function CGRoomScreen({ roomInfo, userList }) {
+function CGRoomScreen() {
+  const roomCtx = useContext(RoomContext)
+  const roomInfo = roomCtx.roomInfo
+  const userList = roomCtx.userList
+  console.log(",,", roomInfo, userList)
   const navigation = useNavigation()
   const [isStarted, setIsStarted] = useState(false)
 
