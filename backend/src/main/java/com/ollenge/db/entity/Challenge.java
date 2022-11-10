@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -75,4 +76,7 @@ public class Challenge {
 
     @OneToOne(mappedBy = "challenge")
     AuthClassification authClassification;
+
+    @OneToMany(mappedBy = "challenge")
+    List<Participation> participation;
 }
