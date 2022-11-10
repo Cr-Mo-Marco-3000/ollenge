@@ -8,8 +8,9 @@ import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { AuthorizationInstance } from "../../api/settings"
+import { RoomContext } from "../../../store/room-context"
 
 const BeforeStart = (props) => {
   const navigation = useNavigation()
@@ -17,7 +18,7 @@ const BeforeStart = (props) => {
   const [userCGList, setUserCGList] = useState([])
   const instance = AuthorizationInstance()
 
-  // const tempRankingCGList = [
+  // const rankingCGList = [
   //   {
   //     challengeId: 34,
   //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
@@ -29,7 +30,7 @@ const BeforeStart = (props) => {
   //   },
   // ]
 
-  // const tempUserCGList = [
+  // const userCGList = [
   //   {
   //     challengeId: 35,
   //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
@@ -42,6 +43,7 @@ const BeforeStart = (props) => {
   // ]
 
   useEffect(() => {
+    // 리스트 렌더링
     const getChallenge = async () => {
       try {
         const res = await instance.get("/api/user/scheduled")
@@ -50,14 +52,18 @@ const BeforeStart = (props) => {
         setRankingCGList(NewRankingCGList)
         setUserCGList(NewUserCGList)
       } catch (err) {
-        // console.log(err)
+        console.log(err)
       }
     }
     getChallenge()
   }, [])
 
+  const roomCtx = useContext(RoomContext)
+  // 이미 나열되어 있는 리스트를 눌러 CGRoom에 진입하는 경우
+
   const pressHandler = (id) => {
-    props.idHandler(id)
+    roomCtx.getRoomInfo(id)
+    roomCtx.getUserList(id)
     navigation.push("CGRoom")
   }
 
@@ -78,15 +84,6 @@ const BeforeStart = (props) => {
           }}
         />
       ))}
-      {/* {rankingCGList.map((challengeInfo) => (
-            <BeforeStartCard
-              key={challengeInfo.challengeId}
-              challengeInfo={challengeInfo}
-              func={() => {
-                pressHandler(challengeInfo.challengeId)
-              }}
-            />
-          ))} */}
       <DivideView>
         <IconView>
           <NormalChallengeIcon />
@@ -102,15 +99,6 @@ const BeforeStart = (props) => {
           }}
         />
       ))}
-      {/* {userCGList.map((challengeInfo) => (
-            <BeforeStartCard
-              key={challengeInfo.challengeId}
-              challengeInfo={challengeInfo}
-              func={() => {
-                pressHandler(challengeInfo.challengeId)
-              }}
-            />
-          ))} */}
     </ScrollBackground>
   )
 }

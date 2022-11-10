@@ -9,10 +9,11 @@ import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import AppModal from "../common/AppModal"
 import Feed from "./Feed"
 import { AuthorizationInstance } from "../../api/settings"
+import { RoomContext } from "../../../store/room-context"
 
 const Challenging = (props) => {
   const navigation = useNavigation()
@@ -21,36 +22,41 @@ const Challenging = (props) => {
 
   const instance = AuthorizationInstance()
 
-  const tempRankingCGList = [
-    {
-      challengeId: 34,
-      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      challengeName: "찬호와 아이들",
-      challengeTopic: "하루 3잔 물마시기",
-      startDate: new Date(2022, 10, 5),
-      endDate: new Date(2022, 10, 10),
-      peopleCnt: 4,
-    },
-  ]
+  // const tempRankingCGList = [
+  //   {
+  //     challengeId: 34,
+  //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  //     challengeName: "찬호와 아이들",
+  //     challengeTopic: "하루 3잔 물마시기",
+  //     startDate: new Date(2022, 10, 5),
+  //     endDate: new Date(2022, 10, 10),
+  //     peopleCnt: 4,
+  //   },
+  // ]
 
-  const tempUserCGList = [
-    {
-      challengeId: 35,
-      // challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      challengeName: "찬호와 아이들",
-      challengeTopic: "하루 3잔 물마시기",
-      startDate: new Date(2022, 10, 5),
-      endDate: new Date(2022, 10, 10),
-      peopleCnt: 4,
-    },
-  ]
-  // 여기 함수를 넣자
+  // const tempUserCGList = [
+  //   {
+  //     challengeId: 35,
+  //     // challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  //     challengeName: "찬호와 아이들",
+  //     challengeTopic: "하루 3잔 물마시기",
+  //     startDate: new Date(2022, 10, 5),
+  //     endDate: new Date(2022, 10, 10),
+  //     peopleCnt: 4,
+  //   },
+  // ]
+
+  // 이미 나열되어 있는 리스트를 눌러 CGRoom에 진입하는 경우
+  const roomCtx = useContext(RoomContext)
+
   const pressHandler = (id) => {
-    props.idHandler(id)
+    roomCtx.getRoomInfo(id)
+    roomCtx.getUserList(id)
     navigation.push("CGRoom")
   }
 
   useEffect(() => {
+    // 리스트 렌더링
     const getChallenge = async () => {
       try {
         const res = await instance.get("/api/user/ongoing")
@@ -59,7 +65,7 @@ const Challenging = (props) => {
         setRankingCGList(NewRankingCGList)
         setUserCGList(NewUserCGList)
       } catch (err) {
-        // console.log(err)
+        console.log(err)
       }
     }
     getChallenge()
@@ -73,7 +79,7 @@ const Challenging = (props) => {
         </IconView>
         <AppBoldText>랭킹 챌린지</AppBoldText>
       </DivideView>
-      {tempRankingCGList.map((challengeInfo) => (
+      {rankingCGList.map((challengeInfo) => (
         <ChallengingCard
           key={challengeInfo.challengeId}
           challengeInfo={challengeInfo}
@@ -82,23 +88,13 @@ const Challenging = (props) => {
           }}
         />
       ))}
-      {/* 나중에 얘로 갈아끼우죠 */}
-      {/* {rankingCGList.map((challengeInfo, idx) => (
-        <ChallengingCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))} */}
       <DivideView>
         <IconView>
           <NormalChallengeIcon />
         </IconView>
         <AppBoldText>일반 챌린지</AppBoldText>
       </DivideView>
-      {tempUserCGList.map((challengeInfo) => (
+      {userCGList.map((challengeInfo) => (
         <ChallengingCard
           key={challengeInfo.challengeId}
           challengeInfo={challengeInfo}
@@ -107,16 +103,6 @@ const Challenging = (props) => {
           }}
         />
       ))}
-      {/* 나중에 얘로 갈아끼우죠 */}
-      {/* {userCGList.map((challengeInfo, idx) => (
-        <ChallengingCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))} */}
     </ScrollBackground>
   )
 }
