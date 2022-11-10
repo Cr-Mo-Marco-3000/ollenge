@@ -19,7 +19,7 @@ import { StyleSheet } from "react-native"
 import DeviceInfo from "../../style/DeviceInfo"
 import { useNavigation } from "@react-navigation/native"
 
-const { dw, dh } = DeviceInfo
+const { dw } = DeviceInfo
 
 const CancelBtn = () => {
   return (
@@ -73,7 +73,9 @@ export default function PageBase(props) {
         locations={[0.2, 1]}
       >
         <View style={styles.TopArea}>
+          {/* <KeyboardAvoidingView style={{ width: "100%", flex: 1 }} behavior="position"> */}
           <View style={styles.ContentArea}>{props.children}</View>
+          {/* </KeyboardAvoidingView> */}
           {showKey !== true && props.hideBtn !== true && (
             <View style={styles.BottomArea}>
               <NextBtn
@@ -116,7 +118,7 @@ export const fontStyles = StyleSheet.create({
 const baseStyle = { width: "100%", justifyContent: "center", alignItems: "center" }
 
 const styles = {
-  TopArea: { ...baseStyle, flex: 1, padding: "4%" },
+  TopArea: { ...baseStyle, flex: 1, padding: "4%", marginTop: 120 },
 
   ContentArea: { ...baseStyle, flex: 1 },
 
@@ -131,12 +133,12 @@ const styles = {
 
   NextBtn: {
     ...baseStyle,
-    borderRadius: 15,
+    borderRadius: 18,
     padding: 12,
     marginBottom: 10,
     elevation: 12,
   },
   NextBtnText: {
-    ...fontStyles.HyeminBold({ size: 5, color: "white" }),
+    ...fontStyles.HyeminBold({ size: 6, color: "white" }),
   },
 }

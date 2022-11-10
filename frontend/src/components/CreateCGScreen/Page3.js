@@ -12,21 +12,20 @@ const words = {
 
 const reqForm = ["feature", "classifi", "none"]
 
-export default function Page2({ info, setInfo }) {
+export default function Page2({ info, setInfo, toNext }) {
+  const [selIndex, setSelIndex] = useState(-1)
   const [auth, setAuth] = useState(info.authType)
-  const [selIndex, setSelIndex] = useState("none")
   const [disabled, setDisabled] = useState(true)
 
   useEffect(() => {
     setInfo((prev) => {
-      return { ...prev, authType: reqForm[selIndex] }
+      return { ...prev, authType: auth }
     })
     setDisabled(auth === "")
-    console.log(auth)
   }, [auth, setAuth])
 
   return (
-    <PageBase toNext={"Page4"} disabled={disabled}>
+    <PageBase toNext={toNext} disabled={disabled}>
       {/* 랭킹 챌린지 종류별 카드 렌더링 */}
       {Object.keys(words).map((key, ind) => {
         return (
@@ -34,13 +33,13 @@ export default function Page2({ info, setInfo }) {
             key={ind}
             onPress={() => {
               setSelIndex(ind)
-              setAuth(Object.keys(words)[ind])
+              setAuth(reqForm[ind])
             }}
             style={{ width: "100%" }}
           >
-            <View style={styles.Card(selIndex === ind)}>
-              <Text style={styles.Title(selIndex === ind)}>{key}</Text>
-              <Text style={styles.Content(selIndex === ind)} numberOfLines={2}>
+            <View style={styles.Card(auth === reqForm[ind])}>
+              <Text style={styles.Title(auth === reqForm[ind])}>{key}</Text>
+              <Text style={styles.Content(auth === reqForm[ind])} numberOfLines={2}>
                 {words[key]}
               </Text>
             </View>

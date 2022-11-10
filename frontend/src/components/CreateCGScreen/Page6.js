@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Button, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Alert, StyleSheet, Text, View } from "react-native"
 import PageBase, { fontStyles } from "./PageBase"
 
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker"
@@ -12,9 +12,10 @@ const formChanger = (dateData) => {
   return hour.slice(-2) + ":" + min.slice(-2)
 }
 
-export default function Page6({ info, setInfo }) {
+export default function Page6({ info, setInfo, toNext }) {
   const [startTime, setStartTime] = useState(new Date(0))
   const [endTime, setEndTime] = useState(new Date(0))
+  const [disabled, setDisabled] = useState(false)
 
   const onChange = (event, selectedDate, type) => {
     if (type === "start") {
@@ -40,10 +41,15 @@ export default function Page6({ info, setInfo }) {
         endTime: formChanger(endTime) + ":00",
       }
     })
+    if (endTime !== "00:00:00" && startTime > endTime) {
+      Alert.alert("종료시간은 시작시간 보다 커야합니다!")
+    } else {
+      setDisabled((startTime === "00:00:00" && endTime === "00:00:00") || startTime >= endTime)
+    }
   }, [startTime, setStartTime, endTime, setEndTime])
   return (
     <>
-      <PageBase toNext={"Page7"}>
+      <PageBase toNext={toNext} disabled={disabled}>
         {/* <Text style={fontStyles.HyeminBold({ size: 9 })}>챌린지 인증 시간 설정</Text> */}
         <Text style={fontStyles.HyeminBold({ size: 4 })}>
           챌린지 인증 시간을 입력해주세요.{"\n"}해당 시간이 지나가면 그날 인증은 불가능합니다.
