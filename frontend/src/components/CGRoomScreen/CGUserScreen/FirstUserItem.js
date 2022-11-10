@@ -9,7 +9,7 @@ import defaultImage from "../../../assets/images/default-image.png"
 import ColorSet from "../../../style/ColorSet"
 import AppBoldText from "../../common/AppBoldText"
 
-function FirtstUserItem({ user }) {
+function FirtstUserItem({ user, wholeDay }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   return (
     <View style={styles.itemContainer}>
@@ -37,7 +37,7 @@ function FirtstUserItem({ user }) {
             {user.nickname}
           </AppBoldText>
           <AppBoldText color={"white"} pxSize={20}>
-            98%
+            {Math.round((user.datetimeList.length / wholeDay) * 100)}%
           </AppBoldText>
         </LinearGradient>
       </View>

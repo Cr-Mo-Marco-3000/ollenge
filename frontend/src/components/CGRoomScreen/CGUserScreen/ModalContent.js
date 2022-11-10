@@ -14,8 +14,10 @@ import AppText from "../../common/AppText"
 
 function ModalContent({ user }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
-  const markedDates = {
-    "2022-11-08": {
+
+  const markedDates = new Object()
+  for (const date of user.datetimeList) {
+    markedDates[`${date}`] = {
       customStyles: {
         container: {
           backgroundColor: `${ColorSet.orangeColor(0.8)}`,
@@ -24,28 +26,17 @@ function ModalContent({ user }) {
           color: "white",
         },
       },
-    },
-    "2022-11-09": {
-      customStyles: {
-        container: {
-          backgroundColor: `${ColorSet.orangeColor(0.8)}`,
-        },
-        text: {
-          color: "white",
-        },
-      },
-    },
-    "2022-11-01": {
-      customStyles: {
-        container: {
-          backgroundColor: `${ColorSet.orangeColor(0.8)}`,
-        },
-        text: {
-          color: "white",
-        },
-      },
-    },
+    }
   }
+
+  const startDate = new Date("2022-11-10")
+  const year = new Date().getFullYear()
+  const month = new Date().getMonth() + 1
+  const date = new Date().getDate()
+  const today = new Date(`${year}-${month}-${date}`)
+
+  const wholeDay = Math.round((today.getTime() - startDate.getTime()) / 1000 / 60 / 60 / 24 + 1)
+
   return (
     <View style={styles.modalContainer}>
       <View style={styles.topContainer}>
@@ -64,10 +55,10 @@ function ModalContent({ user }) {
         <View style={styles.infoBox}>
           <AppBoldText>{user.nickname}</AppBoldText>
           <View style={{ width: "100%", alignItems: "flex-end" }}>
-            <AppText size={2}>86%</AppText>
+            <AppText size={2}>{Math.round((user.datetimeList.length / wholeDay) * 100)}%</AppText>
           </View>
           <ProgressBar
-            progress={0.86}
+            progress={user.datetimeList.length / wholeDay}
             color={`${ColorSet.navyColor(1)}`}
             style={{ height: "40%" }}
           />

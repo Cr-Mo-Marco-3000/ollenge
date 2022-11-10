@@ -6,11 +6,11 @@ import { DefaultImage } from "../../../assets/images"
 import AppBoldText from "../../common/AppBoldText"
 import { RFPercentage } from "react-native-responsive-fontsize"
 
-function DateCheckBox({ day, checked }) {
+function DateCheckBox({ weekday, checked }) {
   return (
     <View style={styles.boxContainer}>
       <AppText size={2} color={"darkGray"}>
-        {day}
+        {weekday}
       </AppText>
       <View style={styles.checkBox}>
         {checked ? (

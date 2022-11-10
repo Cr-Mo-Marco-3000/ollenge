@@ -28,7 +28,7 @@ function CGRoomScreen() {
   const MyUserId = authCtx.userInfo.MyUserId
 
   const navigation = useNavigation()
-  const [isStarted, setIsStarted] = useState(false)
+  const [isStarted, setIsStarted] = useState(true)
   const [todayAuth, setTodayAuth] = useState(false)
 
   useEffect(() => {

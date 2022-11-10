@@ -1,24 +1,20 @@
 import React from "react"
 
-import { Image, StyleSheet, View } from "react-native"
+import { View, Image, StyleSheet } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 
 import AppBoldText from "../../common/AppBoldText"
-import defaultImage from "../../../assets/images/default-image.png"
 import { HeartIcon1 } from "../../../assets/images"
+import defaultImage from "../../../assets/images/default-image.png"
 
-function RankUserItem({ user, rank, noRank, wholeDay }) {
+function MyRankItem({ user, rank, wholeDay }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   return (
     <View style={styles.rootScreen}>
-      {noRank ? (
-        <></>
-      ) : (
-        <View style={{ marginRight: "5%" }}>
-          <AppBoldText size={2}>{rank}등</AppBoldText>
-        </View>
-      )}
       <View style={styles.infoBox}>
+        <AppBoldText pxSize={20} color={"orange"}>
+          {rank}등
+        </AppBoldText>
         <View style={styles.profileImgBox}>
           <Image
             source={user.profileImg ? { uri: user.profileImg } : { uri: defaultImageUri }}
@@ -29,28 +25,26 @@ function RankUserItem({ user, rank, noRank, wholeDay }) {
         <View style={styles.bedgeImgBox}>
           <HeartIcon1 />
         </View>
-        <View style={{ width: "40%", marginRight: RFPercentage(1) }}>
+        <View style={{ flex: 1, marginRight: RFPercentage(1) }}>
           <AppBoldText pxSize={24} lineNumber={1}>
             {user.nickname}
           </AppBoldText>
         </View>
-        {noRank ? (
-          <></>
-        ) : (
-          <AppBoldText color={"orange"} pxSize={18}>
-            {Math.round((user.datetimeList.length / wholeDay) * 100)}%
-          </AppBoldText>
-        )}
+
+        <AppBoldText color={"orange"} pxSize={18}>
+          {Math.round((user.datetimeList.length / wholeDay) * 100)}%
+        </AppBoldText>
       </View>
     </View>
   )
 }
-export default RankUserItem
+export default MyRankItem
 
 const styles = StyleSheet.create({
   rootScreen: {
     width: "100%",
-    paddingVertical: "3%",
+    paddingVertical: "2%",
+    paddingHorizontal: "5%",
     flexDirection: "row",
     alignItems: "center",
   },
@@ -70,10 +64,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 3,
     alignItems: "center",
+    paddingHorizontal: "5%",
   },
   profileImgBox: {
     width: RFPercentage(7),
     height: RFPercentage(7),
+    marginHorizontal: "3%",
   },
   bedgeImgBox: {
     width: RFPercentage(5),
