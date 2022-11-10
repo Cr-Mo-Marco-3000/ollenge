@@ -64,7 +64,9 @@ public class ChallengeRepositorySupport {
                     User user = tuple.get(qParticipation.user);
                     LocalDateTime datetime = tuple.get(qFeed.createdDatetime);
                     List<LocalDateTime> list = challengeStateMap.getOrDefault(user, new ArrayList<>());
-                    list.add(datetime);
+                    if (datetime != null) {
+                        list.add(datetime);
+                    }
                     challengeStateMap.put(user, list);
                 });
         for (User user : challengeStateMap.keySet()) {
