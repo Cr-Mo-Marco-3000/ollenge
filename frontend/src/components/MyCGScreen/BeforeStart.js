@@ -1,6 +1,6 @@
 import React from "react-native"
 import { Dimensions } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+// import { useNavigation } from "@react-navigation/native"
 import AppBoldText from "../common/AppBoldText"
 import styled from "styled-components"
 import BeforeStartCard from "./BeforeStartCard"
@@ -12,11 +12,25 @@ import { useState, useEffect, useContext } from "react"
 import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
 
-const BeforeStart = (props) => {
-  const navigation = useNavigation()
+const BeforeStart = ({ navigation }) => {
+  // const navigation = useNavigation()
   const [rankingCGList, setRankingCGList] = useState([])
   const [userCGList, setUserCGList] = useState([])
   const instance = AuthorizationInstance()
+
+  useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      const reload = async () => {
+        const res = await instance.get("/api/user/scheduled")
+        const NewRankingCGList = res.data.rankingChallengeList
+        const NewUserCGList = res.data.userChallengeList
+        setRankingCGList(NewRankingCGList)
+        setUserCGList(NewUserCGList)
+      }
+      reload()
+    })
+    return focusHandler
+  }, [navigation])
 
   // const rankingCGList = [
   //   {

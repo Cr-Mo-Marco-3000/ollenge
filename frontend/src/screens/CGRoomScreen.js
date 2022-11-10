@@ -16,6 +16,7 @@ import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
 import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
 import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
+import FeedsArea from "../components/CGRoomScreen/FeedsArea"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
@@ -50,6 +51,7 @@ function CGRoomScreen() {
           <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />
         </View>
         <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
+        <FeedsArea></FeedsArea>
       </LinearGradient>
     </Provider>
   )

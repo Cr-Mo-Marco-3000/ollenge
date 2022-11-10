@@ -22,86 +22,86 @@ const Ended = () => {
     const getList = async () => {
       const res = await instance.get("/api/user/completed")
 
-      // const newRCGList = res.data.rankingChallengeList
-      // const newUCGList = res.data.userChallengeList
+      const newRCGList = res.data.rankingChallengeList
+      const newUCGList = res.data.userChallengeList
 
-      const newRCGList = [
-        {
-          startDate: "2022-01-01",
-          endDate: "2022-01-31",
-          myFeedCnt: 13,
-          challengeId: 23,
-          challengeImg: null,
-          challengeTopic: "하루 3잔 물마시기",
-          challengeScore: 1550,
-          challengeRank: 2,
-          totalCnt: 7,
-          peopleCnt: 5,
-        },
-        {
-          startDate: "2022-02-01",
-          endDate: "2022-02-28",
-          myFeedCnt: 26,
-          challengeId: 23,
-          challengeImg: null,
-          challengeTopic: "하루 3잔 물마시기",
-          challengeScore: 750,
-          challengeRank: 4,
-          totalCnt: 7,
-          peopleCnt: 4,
-        },
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-30",
-          myFeedCnt: 15,
-          challengeId: 23,
-          challengeImg: null,
-          challengeTopic: "하루 3잔 물마시기",
-          challengeScore: 1350,
-          challengeRank: 3,
-          totalCnt: 7,
-          peopleCnt: 10,
-        },
-      ]
+      // const newRCGList = [
+      //   {
+      //     startDate: "2022-01-01",
+      //     endDate: "2022-01-31",
+      //     myFeedCnt: 13,
+      //     challengeId: 23,
+      //     challengeImg: null,
+      //     challengeTopic: "하루 3잔 물마시기",
+      //     challengeScore: 1550,
+      //     challengeRank: 2,
+      //     totalCnt: 7,
+      //     peopleCnt: 5,
+      //   },
+      //   {
+      //     startDate: "2022-02-01",
+      //     endDate: "2022-02-28",
+      //     myFeedCnt: 26,
+      //     challengeId: 23,
+      //     challengeImg: null,
+      //     challengeTopic: "하루 3잔 물마시기",
+      //     challengeScore: 750,
+      //     challengeRank: 4,
+      //     totalCnt: 7,
+      //     peopleCnt: 4,
+      //   },
+      //   {
+      //     startDate: "2022-04-01",
+      //     endDate: "2022-04-30",
+      //     myFeedCnt: 15,
+      //     challengeId: 23,
+      //     challengeImg: null,
+      //     challengeTopic: "하루 3잔 물마시기",
+      //     challengeScore: 1350,
+      //     challengeRank: 3,
+      //     totalCnt: 7,
+      //     peopleCnt: 10,
+      //   },
+      // ]
 
-      const newUCGList = [
-        {
-          startDate: "2022-01-01",
-          endDate: "2022-01-31",
-          myFeedCnt: 13,
-          challengeId: 23,
-          challengeImg: null,
-          challengeTopic: "하루 3잔 물마시기",
-          challengeScore: 420,
-          challengeRank: null,
-          totalCnt: null,
-          peopleCnt: 8,
-        },
-        {
-          startDate: "2022-02-01",
-          endDate: "2022-02-28",
-          myFeedCnt: 26,
-          challengeId: 23,
-          challengeImg: null,
-          challengeTopic: "하루 3잔 물마시기",
-          challengeScore: 420,
-          challengeRank: null,
-          totalCnt: null,
-          peopleCnt: 4,
-        },
-        {
-          startDate: "2022-04-01",
-          endDate: "2022-04-30",
-          myFeedCnt: 15,
-          challengeId: 23,
-          challengeImg: null,
-          challengeTopic: "하루 3잔 물마시기",
-          challengeScore: 1350,
-          challengeRank: null,
-          totalCnt: null,
-          peopleCnt: 10,
-        },
-      ]
+      // const newUCGList = [
+      //   {
+      //     startDate: "2022-01-01",
+      //     endDate: "2022-01-31",
+      //     myFeedCnt: 13,
+      //     challengeId: 23,
+      //     challengeImg: null,
+      //     challengeTopic: "하루 3잔 물마시기",
+      //     challengeScore: 420,
+      //     challengeRank: null,
+      //     totalCnt: null,
+      //     peopleCnt: 8,
+      //   },
+      //   {
+      //     startDate: "2022-02-01",
+      //     endDate: "2022-02-28",
+      //     myFeedCnt: 26,
+      //     challengeId: 23,
+      //     challengeImg: null,
+      //     challengeTopic: "하루 3잔 물마시기",
+      //     challengeScore: 420,
+      //     challengeRank: null,
+      //     totalCnt: null,
+      //     peopleCnt: 4,
+      //   },
+      //   {
+      //     startDate: "2022-04-01",
+      //     endDate: "2022-04-30",
+      //     myFeedCnt: 15,
+      //     challengeId: 23,
+      //     challengeImg: null,
+      //     challengeTopic: "하루 3잔 물마시기",
+      //     challengeScore: 1350,
+      //     challengeRank: null,
+      //     totalCnt: null,
+      //     peopleCnt: 10,
+      //   },
+      // ]
 
       // 총 참여 챌린지 수
       let participateNumber = 0
@@ -133,7 +133,6 @@ const Ended = () => {
       }, averageSuccess)
 
       averageSuccess = Math.round((averageSuccess / participateNumber) * 100 * 1000) / 1000
-
       let totalScore = newRCGList.reduce((pre, cur) => {
         const score = cur.myFeedCnt * 10
         return pre + score
@@ -247,7 +246,7 @@ const Ended = () => {
                 }}
               >
                 <AppBoldText size={2} color="ligntBlue">
-                  {totalChallengeInfo.averageSuccess}%
+                  {totalChallengeInfo.averageSuccess >= 0 ? totalChallengeInfo.averageSuccess : 0}%
                 </AppBoldText>
               </DataTable.Cell>
               <DataTable.Cell
