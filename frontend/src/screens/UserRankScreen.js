@@ -2,7 +2,6 @@ import React from "react"
 import RankList from "../components/UserRankScreen/RankList"
 import ShowUserBadge from "../components/UserRankScreen/ShowUserBadge"
 
-import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import ColorSet from "../style/ColorSet"
 

@@ -31,7 +31,10 @@ function RoomContextProvider({ children }) {
   function getUser(challengeId) {
     instance
       .get(`/api/challenge/state/${challengeId}`)
-      .then((res) => setUser(res.data.challengeStateList))
+      .then((res) => {
+        const userState = res.data.challengeStateList
+        setUser(userState)
+      })
       .catch((err) => {
         console.log(err)
         setUser(new Array())

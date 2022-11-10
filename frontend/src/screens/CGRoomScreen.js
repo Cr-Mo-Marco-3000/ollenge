@@ -6,8 +6,9 @@ import { LinearGradient } from "expo-linear-gradient"
 import { Provider } from "react-native-paper"
 
 import ColorSet from "../style/ColorSet"
-import { LocalTime, DateTime } from "../functions/index"
+import { LocalTime, DateTime, TodayCheck } from "../functions/index"
 import { RoomContext } from "../../store/room-context"
+import { AuthContext } from "../../store/auth-context"
 
 import TopMargin from "./../components/common/TopMargin"
 import UserListTap from "../components/CGRoomScreen/UserListTap"
@@ -20,11 +21,15 @@ import FeedsArea from "../components/CGRoomScreen/FeedsArea"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
+  const authCtx = useContext(AuthContext)
+
   const roomInfo = roomCtx.roomInfo
   const userList = roomCtx.userList
-  console.log(",,", roomInfo, userList)
+  const MyUserId = authCtx.userInfo.MyUserId
+
   const navigation = useNavigation()
   const [isStarted, setIsStarted] = useState(false)
+  const [todayAuth, setTodayAuth] = useState(false)
 
   useEffect(() => {
     const now = LocalTime()
@@ -32,7 +37,17 @@ function CGRoomScreen() {
     if (now - start >= 0) {
       setIsStarted(true)
     }
-  }, [roomInfo])
+
+    userList.map((user) => {
+      if (user === MyUserId) {
+        const flag = TodayCheck(user.datetimeList)
+        if (flag) {
+          setTodayAuth(true)
+        }
+      }
+      return
+    })
+  }, [roomInfo, userList])
 
   return (
     <Provider>
