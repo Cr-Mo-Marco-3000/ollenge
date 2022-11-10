@@ -9,24 +9,21 @@ import ColorSet from "../style/ColorSet"
 import TopMargin from "../components/common/TopMargin"
 import { FAB, Portal, Provider } from "react-native-paper"
 import { useState, useContext } from "react"
-import { Modal, Pressable, TextInput } from "react-native"
+import { Modal } from "react-native"
 import AppCard from "../components/common/AppCard"
-import { View } from "react-native"
 import { MailIcon } from "../assets/images/MyCGScreen/MyCGScreen"
 import AppButton from "../components/common/AppButton"
 import { AuthorizationInstance } from "../api/settings"
-import { createStackNavigator } from "@react-navigation/stack"
 import { useNavigation } from "@react-navigation/native"
 import { RoomContext } from "../../store/room-context"
 
 function MyCGListScreen() {
   const Tab = createMaterialTopTabNavigator()
-  const Stack = createStackNavigator()
   const navigation = useNavigation()
   const [fabButton, setfabButton] = useState(false)
   const [showCodeInput, setShowCodeInput] = useState(false)
   const [inputValue, setInputValue] = useState("")
-
+  const [errorFlag, setErrorFlag] = useState(true)
   const instance = AuthorizationInstance()
 
   const onStateChange = () => {
@@ -49,7 +46,10 @@ function MyCGListScreen() {
       setShowCodeInput(!showCodeInput)
       navigation.push("CGRoom")
     } catch (error) {
-      console.log(error.response.data)
+      setErrorFlag(false)
+      setTimeout(() => {
+        setErrorFlag(true)
+      }, 3000)
     }
   }
 
@@ -68,16 +68,28 @@ function MyCGListScreen() {
                         <IconView>
                           <MailIcon />
                         </IconView>
-                        <AppBoldText>초대 코드 입력</AppBoldText>
+                        {errorFlag ? (
+                          <ErrorFlagView>
+                            <AppBoldText pxSize={20}>초대 코드 입력</AppBoldText>
+                          </ErrorFlagView>
+                        ) : (
+                          <ErrorFlagView>
+                            <AppBoldText size={2} color={"hotPink"}>
+                              초대 코드를 확인해주세요!
+                            </AppBoldText>
+                          </ErrorFlagView>
+                        )}
                       </InnerRow>
                       <InnerRow>
                         <AppTextInput
                           textAlign="center"
                           autoFocus={true}
-                          underlineColorAndroid={ColorSet.navyColor(1)}
+                          underlineColorAndroid={ColorSet.navyColor(0.3)}
                           onChangeText={(e) => {
                             setInputValue(e)
                           }}
+                          onSubmitEditing={joinChallenge}
+                          blurOnSubmit={false}
                         ></AppTextInput>
                       </InnerRow>
                       <InnerRow>
@@ -245,7 +257,7 @@ const InnerArea = styled.View`
 
 const InnerRow = styled.View`
   flex: 3.3;
-  width: 100%;
+  width: 80%;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -269,4 +281,9 @@ const ButtonView = styled.View`
   align-items: center;
   height: 70%;
   width: 100%;
+`
+
+const ErrorFlagView = styled.View`
+  height: 100%;
+  justify-content: center;
 `
