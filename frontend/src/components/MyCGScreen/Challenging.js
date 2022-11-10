@@ -1,17 +1,15 @@
 import React from "react-native"
-import { View, ScrollView, Image, Dimensions } from "react-native"
+import { Dimensions } from "react-native"
 // import { useNavigation } from "@react-navigation/native"
-import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import styled from "styled-components"
 import ChallengingCard from "./ChallengingCard"
+import NoContent from "./NoContent"
 import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 import { useState, useEffect, useContext } from "react"
-import AppModal from "../common/AppModal"
-import Feed from "./Feed"
 import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
 
@@ -86,42 +84,56 @@ const Challenging = ({ navigation }) => {
   }, [])
 
   return (
-    <ScrollBackground>
-      <DivideView>
-        <IconView>
-          <RankingChallengeIcon />
-        </IconView>
-        <AppBoldText>랭킹 챌린지</AppBoldText>
-      </DivideView>
-      {rankingCGList.map((challengeInfo) => (
-        <ChallengingCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))}
-      <DivideView>
-        <IconView>
-          <NormalChallengeIcon />
-        </IconView>
-        <AppBoldText>일반 챌린지</AppBoldText>
-      </DivideView>
-      {userCGList.map((challengeInfo) => (
-        <ChallengingCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))}
-    </ScrollBackground>
+    <ChallengingBody>
+      {rankingCGList.length || userCGList.length ? (
+        <ScrollBackground>
+          {rankingCGList.length ? (
+            <DivideView>
+              <IconView>
+                <RankingChallengeIcon />
+              </IconView>
+              <AppBoldText>랭킹 챌린지</AppBoldText>
+            </DivideView>
+          ) : null}
+          {rankingCGList.map((challengeInfo) => (
+            <ChallengingCard
+              key={challengeInfo.challengeId}
+              challengeInfo={challengeInfo}
+              func={() => {
+                pressHandler(challengeInfo.challengeId)
+              }}
+            />
+          ))}
+          {userCGList.length ? (
+            <DivideView>
+              <IconView>
+                <NormalChallengeIcon />
+              </IconView>
+              <AppBoldText>일반 챌린지</AppBoldText>
+            </DivideView>
+          ) : null}
+          {userCGList.map((challengeInfo) => (
+            <ChallengingCard
+              key={challengeInfo.challengeId}
+              challengeInfo={challengeInfo}
+              func={() => {
+                pressHandler(challengeInfo.challengeId)
+              }}
+            />
+          ))}
+        </ScrollBackground>
+      ) : (
+        <NoContent message={"도전 중인"} />
+      )}
+    </ChallengingBody>
   )
 }
 
 const fivePercent = (Dimensions.get("window").width * 0.05) / 2
+
+const ChallengingBody = styled.View`
+  height: 100%;
+`
 
 const ScrollBackground = styled.ScrollView`
   background: #edf8ff;

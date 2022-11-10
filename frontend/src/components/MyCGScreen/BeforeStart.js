@@ -11,6 +11,7 @@ import {
 import { useState, useEffect, useContext } from "react"
 import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
+import NoContent from "./NoContent"
 
 const BeforeStart = ({ navigation }) => {
   // const navigation = useNavigation()
@@ -82,38 +83,48 @@ const BeforeStart = ({ navigation }) => {
   }
 
   return (
-    <ScrollBackground>
-      <DivideView>
-        <IconView>
-          <RankingChallengeIcon />
-        </IconView>
-        <AppBoldText>랭킹 챌린지</AppBoldText>
-      </DivideView>
-      {rankingCGList.map((challengeInfo) => (
-        <BeforeStartCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))}
-      <DivideView>
-        <IconView>
-          <NormalChallengeIcon />
-        </IconView>
-        <AppBoldText>일반 챌린지</AppBoldText>
-      </DivideView>
-      {userCGList.map((challengeInfo) => (
-        <BeforeStartCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))}
-    </ScrollBackground>
+    <ChallengingBody>
+      {rankingCGList.length || userCGList.length ? (
+        <ScrollBackground>
+          {rankingCGList ? (
+            <DivideView>
+              <IconView>
+                <RankingChallengeIcon />
+              </IconView>
+              <AppBoldText>랭킹 챌린지</AppBoldText>
+            </DivideView>
+          ) : null}
+          {rankingCGList.map((challengeInfo) => (
+            <BeforeStartCard
+              key={challengeInfo.challengeId}
+              challengeInfo={challengeInfo}
+              func={() => {
+                pressHandler(challengeInfo.challengeId)
+              }}
+            />
+          ))}
+          {userCGList.length ? (
+            <DivideView>
+              <IconView>
+                <NormalChallengeIcon />
+              </IconView>
+              <AppBoldText>일반 챌린지</AppBoldText>
+            </DivideView>
+          ) : null}
+          {userCGList.map((challengeInfo) => (
+            <BeforeStartCard
+              key={challengeInfo.challengeId}
+              challengeInfo={challengeInfo}
+              func={() => {
+                pressHandler(challengeInfo.challengeId)
+              }}
+            />
+          ))}
+        </ScrollBackground>
+      ) : (
+        <NoContent message={"시작 전인"} />
+      )}
+    </ChallengingBody>
   )
 }
 
@@ -134,4 +145,8 @@ export default BeforeStart
 const IconView = styled.View`
   width: 15%;
   height: 50px;
+`
+
+const ChallengingBody = styled.View`
+  height: 100%;
 `
