@@ -18,7 +18,7 @@ function UserStatus({ userList }) {
       <View style={styles.rootScreen}>
         <ScrollView style={styles.scrollScreen}>
           <View style={styles.scrollInnerScreen}>
-            <UserStatusItem user={myInfo} />
+            {myInfo ? <UserStatusItem user={myInfo} /> : <></>}
             {userList.map((user, key) => {
               if (!myInfo && user.userId === myUserId) {
                 setMyInfo(user)
