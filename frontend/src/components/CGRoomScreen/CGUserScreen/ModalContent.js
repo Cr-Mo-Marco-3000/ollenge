@@ -17,7 +17,7 @@ function ModalContent({ user }) {
 
   const markedDates = new Object()
   for (const date of user.datetimeList) {
-    markedDates[`${date}`] = {
+    markedDates[`${date.split(" ")[0]}`] = {
       customStyles: {
         container: {
           backgroundColor: `${ColorSet.orangeColor(0.8)}`,

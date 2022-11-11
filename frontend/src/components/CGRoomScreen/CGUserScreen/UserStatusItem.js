@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 
 import { Pressable, StyleSheet, View } from "react-native"
-import { Modal, Portal, Text } from "react-native-paper"
+import { Modal, Portal } from "react-native-paper"
 
 import AppBoldText from "../../common/AppBoldText"
 import DateCheckBox from "./DateCheckBox"
@@ -9,18 +9,27 @@ import ModalContent from "./ModalContent"
 import { ConvertDate } from "../../../functions/index"
 
 function UserStatusItem({ user }) {
-  const dayLst = ["월", "화", "수", "목", "금", "토", "일"]
+  const dayLst = ["", "월", "화", "수", "목", "금", "토", "일"]
   const [visible, setVisible] = useState(false)
 
   const flag = new Array(7).fill(false)
   const today = new Date()
-  const day = new Date().getDay()
+  let day = today.getDay()
+  if (day == 0) {
+    day = 7
+  }
 
-  for (var i = 0; i < day; i++) {
+  const datelst = new Array()
+  for (const datetime of user.datetimeList) {
+    const date = datetime.split(" ")[0]
+    datelst.push(date)
+  }
+
+  for (var i = 0; i < day + 1; i++) {
     const tempDay = new Date(today)
     tempDay.setDate(today.getDate() - i)
     const checkDate = ConvertDate(tempDay)
-    if (user.datetimeList.includes(checkDate)) {
+    if (datelst.includes(checkDate)) {
       flag[i] = 1
     }
   }
@@ -56,7 +65,9 @@ function UserStatusItem({ user }) {
           <AppBoldText>{user.nickname}</AppBoldText>
           <View style={styles.dayContainer}>
             {dayLst.map((weekday, key) => {
-              return <DateCheckBox weekday={weekday} checked={flag[key]} key={key} />
+              if (key !== 0) {
+                return <DateCheckBox weekday={weekday} checked={flag[key]} key={key} />
+              }
             })}
           </View>
         </View>

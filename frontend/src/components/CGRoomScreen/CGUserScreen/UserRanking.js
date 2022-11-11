@@ -16,7 +16,8 @@ function UserRanking({ userList }) {
   const [myInfo, setMyInfo] = useState()
   const [myRank, setMyRank] = useState()
   const authCtx = useContext(AuthContext)
-  const roomInfo = useContext(RoomContext)
+  const roomCtx = useContext(RoomContext)
+  const roomInfo = roomCtx.roomInfo
 
   const startDate = new Date(roomInfo.startDate)
   const year = new Date().getFullYear()
