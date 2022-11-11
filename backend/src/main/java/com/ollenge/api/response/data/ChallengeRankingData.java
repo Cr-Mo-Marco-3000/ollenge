@@ -17,6 +17,7 @@ public class ChallengeRankingData {
     String challengeName;
     String challengeImg;
     int challengeScore;
+    int peopleCnt;
     int rank;
 
     public static ChallengeRankingData of(Challenge challenge, int rank) {
@@ -25,6 +26,7 @@ public class ChallengeRankingData {
         challengeRankingData.challengeName = challenge.getChallengeName();
         challengeRankingData.challengeImg = challenge.getChallengeImg();
         challengeRankingData.challengeScore = challenge.getChallengeScore();
+        challengeRankingData.peopleCnt = challenge.getPeopleCnt();
         challengeRankingData.rank = rank;
 
         return challengeRankingData;

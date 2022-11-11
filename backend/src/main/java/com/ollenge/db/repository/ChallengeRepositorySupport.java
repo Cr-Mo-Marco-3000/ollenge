@@ -4,13 +4,18 @@ import com.ollenge.api.response.data.ChallengeStateData;
 import com.ollenge.db.entity.*;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -36,14 +41,19 @@ public class ChallengeRepositorySupport {
     }
 
     public List<Challenge> getRankingChallengeListTopicPeriod (LocalDate startDate, LocalDate endDate, ChallengePreset challengePreset) {
-        return jpaQueryFactory
-                .select(qChallenge)
+        StringPath aliasAchievement = Expressions.stringPath("achievement");
+        List<Tuple> challengeTuple = jpaQueryFactory
+                .select(qChallenge, qChallenge.challengeScore.castToNum(Double.class).divide(qChallenge.peopleCnt.castToNum(Double.class)).as("achievement"))
                 .from(qChallenge)
                 .where(qChallenge.startDate.eq(startDate)
                         .and(qChallenge.endDate.eq(endDate))
                         .and(qChallenge.challengePreset.eq(challengePreset)))
-                .orderBy(qChallenge.challengeScore.desc())
+                .orderBy(aliasAchievement.desc())
                 .fetch();
+        List<Challenge> challengeList = new ArrayList<>();
+        challengeTuple.stream()
+                .forEach(tuple -> challengeList.add(tuple.get(qChallenge)));
+        return challengeList;
     }
 
     private BooleanExpression userEq(User user) {
