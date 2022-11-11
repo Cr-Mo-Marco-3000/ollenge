@@ -53,6 +53,10 @@ function MyCGListScreen() {
     }
   }
 
+  const createChallenge = () => {
+    navigation.push("CGCreate")
+  }
+
   return (
     <Provider>
       {showCodeInput && (
@@ -174,7 +178,7 @@ function MyCGListScreen() {
                   color: "#FCBE32",
                 },
                 color: "white",
-                onPress: () => console.log("여기 함수 넣자"),
+                onPress: createChallenge,
                 style: {
                   color: "white",
                   borderRadius: 100,

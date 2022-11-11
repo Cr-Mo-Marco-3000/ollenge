@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Text, TextInput, View } from "react-native"
 import PageBase, { fontStyles } from "./PageBase"
 
-export default function Page4({ info, setInfo, toNext }) {
+export default function Page4({ info, setInfo, toNext, cancelAll }) {
   const [description, setDescription] = useState(info.challengeDescription)
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function Page4({ info, setInfo, toNext }) {
   }, [description, setDescription])
 
   return (
-    <PageBase toNext={toNext} disabled={false}>
+    <PageBase toNext={toNext} disabled={false} cancelAll={cancelAll}>
       <View style={styles.wholeFrame}>
         <View>
           <Text style={styles.Content}>

@@ -12,7 +12,7 @@ const formChanger = (dateData) => {
   return hour.slice(-2) + ":" + min.slice(-2)
 }
 
-export default function Page6({ info, setInfo, toNext }) {
+export default function Page6({ info, setInfo, toNext, cancelAll }) {
   const [startTime, setStartTime] = useState(new Date(0))
   const [endTime, setEndTime] = useState(new Date(0))
   const [disabled, setDisabled] = useState(false)
@@ -49,7 +49,7 @@ export default function Page6({ info, setInfo, toNext }) {
   }, [startTime, setStartTime, endTime, setEndTime])
   return (
     <>
-      <PageBase toNext={toNext} disabled={disabled}>
+      <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
         {/* <Text style={fontStyles.HyeminBold({ size: 9 })}>챌린지 인증 시간 설정</Text> */}
         <Text style={fontStyles.HyeminBold({ size: 4 })}>
           챌린지 인증 시간을 입력해주세요.{"\n"}해당 시간이 지나가면 그날 인증은 불가능합니다.

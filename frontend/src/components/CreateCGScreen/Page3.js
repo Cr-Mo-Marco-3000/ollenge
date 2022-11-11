@@ -12,7 +12,7 @@ const words = {
 
 const reqForm = ["feature", "classifi", "none"]
 
-export default function Page2({ info, setInfo, toNext }) {
+export default function Page2({ info, setInfo, toNext, cancelAll }) {
   const [selIndex, setSelIndex] = useState(-1)
   const [auth, setAuth] = useState(info.authType)
   const [disabled, setDisabled] = useState(true)
@@ -25,7 +25,7 @@ export default function Page2({ info, setInfo, toNext }) {
   }, [auth, setAuth])
 
   return (
-    <PageBase toNext={toNext} disabled={disabled}>
+    <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
       {/* 랭킹 챌린지 종류별 카드 렌더링 */}
       {Object.keys(words).map((key, ind) => {
         return (

@@ -21,9 +21,11 @@ import { useNavigation } from "@react-navigation/native"
 
 const { dw } = DeviceInfo
 
-const CancelBtn = () => {
+const CancelBtn = (props) => {
+  const navigation = useNavigation()
   return (
-    <Pressable onPress={() => console.log("챌린지 생성 취소는 아직")}>
+    // <Pressable onPress={() => console.log("챌린지 생성 취소는 아직")}>
+    <Pressable onPress={props.cancelAll}>
       <Text style={styles.CancelBtn}>챌린지 생성 취소</Text>
     </Pressable>
   )
@@ -84,7 +86,7 @@ export default function PageBase(props) {
                 toSubmit={props.toSubmit ? props.toSubmit : false}
               />
               {/* props.disabled */}
-              <CancelBtn />
+              <CancelBtn cancelAll={props.cancelAll} />
             </View>
           )}
         </View>

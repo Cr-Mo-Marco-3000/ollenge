@@ -5,7 +5,7 @@ import ImagePicker from "../common/ImagePicker"
 import TextInputContainer from "../common/TextInputContainer"
 import { dw, dh } from "../../style/DeviceInfo"
 
-export default function Page1({ info, setInfo, toNext }) {
+export default function Page1({ info, setInfo, toNext, cancelAll }) {
   const [name, setName] = useState(info.challengeName)
   const [img, setImg] = useState(info.challengeImg)
   const [AwsUrl, setAwsUrl] = useState("")
@@ -22,7 +22,7 @@ export default function Page1({ info, setInfo, toNext }) {
   }, [name, img, disabled, setDisabled])
 
   return (
-    <PageBase toNext={toNext} disabled={disabled}>
+    <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
       <KeyboardAvoidingView
         style={{ width: "100%", flex: 1, justifyContent: "center" }}
         behavior="height"
