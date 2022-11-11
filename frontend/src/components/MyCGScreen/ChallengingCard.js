@@ -20,11 +20,16 @@ export default function ChallengingCard(props) {
   const nowDate = new Date()
 
   const passedDay = Math.ceil(
-    (nowDate.getTime() - challengeInfo.startDate.getTime()) / 1000 / 60 / 60 / 24,
+    (nowDate.getTime() - new Date(challengeInfo.startDate).getTime()) / 1000 / 60 / 60 / 24,
   )
 
   const wholeDay =
-    (challengeInfo.endDate.getTime() - challengeInfo.startDate.getTime()) / 1000 / 60 / 60 / 24 + 1
+    (new Date(challengeInfo.endDate).getTime() - new Date(challengeInfo.startDate).getTime()) /
+      1000 /
+      60 /
+      60 /
+      24 +
+    1
 
   const progress = parseInt((passedDay / wholeDay) * 100)
 
