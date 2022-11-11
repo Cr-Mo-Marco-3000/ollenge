@@ -28,7 +28,7 @@ public class Challenge {
     @JoinColumn(name = "challenge_preset_id")
     ChallengePreset challengePreset;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "challenge_result_id")
     ChallengeResult challengeResult;
 

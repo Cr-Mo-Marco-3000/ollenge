@@ -11,10 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Slf4j
 @Component
@@ -26,8 +29,10 @@ public class CalculateScoreScheduler {
     private final UserRepository userRepository;
     private final BadgeRepositorySupport badgeRepositorySupport;
 
+    @Transactional
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     public void calculateScore() {
+        double achievement_criteria = 0.8;
         LocalDate target = LocalDate.now(ZoneId.of("Asia/Seoul")).minusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formatedTarget = target.format(formatter);
@@ -59,7 +64,11 @@ public class CalculateScoreScheduler {
                     challengeListByPreset.get((int) challenge.getChallengePreset().getChallengePresetId()).add(challenge);
                 }
             }
-            for (int presetIdx = 0; presetIdx < 7; presetIdx++) {
+
+//            for ()challengeRankMap
+//            for (int presetIdx; challengeListByPreset
+
+            for (int presetIdx = 1; presetIdx < 7; presetIdx++) {
                 challengeListSize.add(challengeListByPreset.get(presetIdx).size());
                 Collections.sort(challengeListByPreset.get(presetIdx), (challenge1, challenge2) -> {
                     double achievement1 = (double) challenge1.getChallengeScore() / challenge1.getPeopleCnt();
@@ -70,12 +79,14 @@ public class CalculateScoreScheduler {
                 });
                 int rank = 1;
                 int offset = 1;
-                for(int challengeIdx = 0; challengeIdx < challengeList.size(); challengeIdx++) {
-                    if(challengeIdx == 0) {
+                for(int challengeIdx = 0; challengeIdx < challengeListByPreset.get(presetIdx).size(); challengeIdx++) {
+                    if(challengeRankMap.get(presetIdx).isEmpty()) {
                         challengeRankMap.get(presetIdx).put(challengeListByPreset.get(presetIdx).get(challengeIdx).getChallengeId(), rank);
                         continue;
                     }
-                    if((double)challengeListByPreset.get(presetIdx).get(challengeIdx).getChallengeScore()/challengeListByPreset.get(presetIdx).get(challengeIdx).getPeopleCnt() == (double)challengeListByPreset.get(presetIdx).get(challengeIdx-1).getChallengeScore()/challengeListByPreset.get(presetIdx).get(challengeIdx-1).getPeopleCnt()) {
+                    Challenge curChallenge = challengeListByPreset.get(presetIdx).get(challengeIdx);
+                    Challenge prevChallenge = challengeListByPreset.get(presetIdx).get(challengeIdx - 1);
+                    if((double)curChallenge.getChallengeScore()/curChallenge.getPeopleCnt() == (double)prevChallenge.getChallengeScore()/prevChallenge.getPeopleCnt()) {
                         offset++;
                         challengeRankMap.get(presetIdx).put(challengeListByPreset.get(presetIdx).get(challengeIdx).getChallengeId(), rank);
                     } else {
@@ -99,27 +110,28 @@ public class CalculateScoreScheduler {
         }
         List<User> userList = new ArrayList<>(userSet);
         List<Badge> userBadgeList = badgeRepositorySupport.getUserBadgeList(userList);
+        for(User user : userList) {
+            highestBadgeMap.put(user.getUserId(), new HashMap<>());
+        }
         for(Badge badge : userBadgeList) {
-            if(!highestBadgeMap.containsKey(badge.getUser().getUserId())) {
-                highestBadgeMap.put(badge.getUser().getUserId(), new HashMap<>());
-            }
             int grade = highestBadgeMap.get(badge.getUser().getUserId()).getOrDefault(badge.getType(),0);
             highestBadgeMap.get(badge.getUser().getUserId()).put(badge.getType(), (badge.getGrade() > grade ? badge.getGrade() : grade));
         }
 
-        // User score update를 위한 List
-        List<User> userUpdateList = new ArrayList<>();
+        // User score update를 위한 Set
+        HashMap<Long, Integer> userScoreMap = new HashMap<>();
         // Badge Update를 위한 List
         List<Badge> badgeUpdateList = new ArrayList<>();
         // 랭킹 챌린지 챌린지 결과 Insert용 List
         List<Challenge> challengeUpdateList = new ArrayList<>();
+
         for(Challenge challenge : challengeList) {
             // 랭킹 챌린지의 경우 ChallengeResult 추가 및 foreign key 업데이트를 위해 list에 담음
             if(challenge.getChallengePreset() != null) {
                 challenge.setChallengeResult(
                         ChallengeResult.builder()
                                 .challengeRank(challengeRankMap.get((int) challenge.getChallengePreset().getChallengePresetId()).get(challenge.getChallengeId()))
-                                .totalCnt(challengeListSize.get((int) challenge.getChallengePreset().getChallengePresetId()))
+                                .totalCnt(challengeListSize.get((int) challenge.getChallengePreset().getChallengePresetId() - 1))
                                 .build()
                 );
                 challengeUpdateList.add(challenge);
@@ -130,22 +142,37 @@ public class CalculateScoreScheduler {
             for(Participation participation : participationList) {
                 // 점수 update
                 User user = participation.getUser();
-                user.setUserScore(user.getUserScore() + (participation.getFeedCnt() * 10));
-                userUpdateList.add(user);
+                int score = userScoreMap.getOrDefault(user.getUserId(), user.getUserScore()) + (participation.getFeedCnt() * 10);
+                userScoreMap.put(user.getUserId(), score);
                 // 뱃지 update
                 Integer challengePresetId = (challenge.getChallengePreset() != null ? (int)challenge.getChallengePreset().getChallengePresetId() : null);
                 String type = presetIdToType.get(challengePresetId);
-                int curGrade = highestBadgeMap.get(user.getUserId()).getOrDefault(type, 0);
-                if (curGrade < 4) {
-                    badgeUpdateList.add(Badge.builder().user(user).type(type).grade(curGrade + 1).challengePreset(challenge.getChallengePreset()).badgeFlag(false).build());
-                    highestBadgeMap.get(user.getUserId()).put(type, curGrade + 1);
+                int period = (int) DAYS.between(participation.getChallenge().getStartDate(), participation.getChallenge().getEndDate()) + 1;
+                log.info("participation : " + participation.getParticipationId() + "user_id : "+ user.getUserId()+" feedcnt : "+ participation.getFeedCnt() + " period : " + period);
+                if ((double) participation.getFeedCnt() / period >= achievement_criteria) {
+                    int curGrade = highestBadgeMap.get(user.getUserId()).getOrDefault(type, 0);
+                    log.info("   curGrade : " + curGrade);
+                    if (curGrade < 4) {
+                        badgeUpdateList.add(Badge.builder().user(user).type(type).grade(curGrade + 1).challengePreset(challenge.getChallengePreset()).badgeFlag(false).build());
+                        highestBadgeMap.get(user.getUserId()).put(type, curGrade + 1);
+                    }
                 }
             }
-
-            // DB save
-            userRepository.saveAll(userUpdateList);
-            badgeRepository.saveAll(badgeUpdateList);
-            challengeRepository.saveAll(challengeUpdateList);
         }
+        // User score update를 위한 List 생성
+        List<User> userUpdateList = new ArrayList<>();
+        for (User user : userList) {
+            if (userScoreMap.containsKey(user.getUserId())) {
+                user.setUserScore(userScoreMap.get(user.getUserId()));
+                userUpdateList.add(user);
+            }
+        }
+
+        // DB save
+        userRepository.saveAll(userUpdateList);
+        badgeRepository.saveAll(badgeUpdateList);
+        challengeRepository.saveAll(challengeUpdateList);
+
+        log.info("end scheduler - {} + 1", formatedTarget);
     }
 }
