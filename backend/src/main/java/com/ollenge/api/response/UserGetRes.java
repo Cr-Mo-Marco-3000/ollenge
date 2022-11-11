@@ -23,6 +23,7 @@ public class UserGetRes extends BaseResponseBody {
         UserGetRes response = new UserGetRes();
         response.setMessage(message);
         response.setStatusCode(statusCode);
+        response.setUserId(user.getUserId());
         response.setAuthCode(user.getAuthCode());
         response.setNickname(user.getNickname());
         response.setProfileImg(user.getProfileImg());
