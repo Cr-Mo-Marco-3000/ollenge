@@ -34,10 +34,10 @@ export default function ChallengingCard(props) {
   const progress = parseInt((passedDay / wholeDay) * 100)
 
   const dates = {
-    startMonth: (challengeInfo.startDate.getMonth() + 1).toString(),
-    startDay: challengeInfo.startDate.getDate().toString(),
-    endMonth: (challengeInfo.endDate.getMonth() + 1).toString(),
-    endDay: challengeInfo.endDate.getDate().toString(),
+    startMonth: (new Date(challengeInfo.startDate).getMonth() + 1).toString(),
+    startDay: new Date(challengeInfo.startDate).getDate().toString(),
+    endMonth: (new Date(challengeInfo.endDate).getMonth() + 1).toString(),
+    endDay: new Date(challengeInfo.endDate).getDate().toString(),
   }
 
   const pxSize = windowWidth * 0.045
