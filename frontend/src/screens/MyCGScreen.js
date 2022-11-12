@@ -6,7 +6,7 @@ import MyCGListScreen from "./MyCGListScreen"
 import CGRoomScreen from "./CGRoomScreen"
 import CGUserScreen from "../components/CGRoomScreen/CGUserScreen/CGUserScreen"
 import AuthScreen from "../components/CGRoomScreen/AuthScreen"
-import ImageRegisterPage from "../components/CGRoomScreen/ImageRegisterScreen"
+import ResistScreen from "../components/RistisScreen/ResistScreen"
 import { RoomContext } from "../../store/room-context"
 import CreateCGScreen from "../screens/CreateCGScreen"
 import ColorSet from "../style/ColorSet"
@@ -37,7 +37,7 @@ function MyCGScreen() {
         {() => <CGUserScreen />}
       </Stack.Screen>
       <Stack.Screen name="CGAuth" component={AuthScreen} options={{ title: "" }} />
-      <Stack.Screen name="CGImg" component={ImageRegisterPage} options={{ title: "" }} />
+      <Stack.Screen name="CGImg" component={ResistScreen} options={{ title: "인증 이미지 입력" }} />
       <Stack.Screen name="CGCreate" options={{ title: "" }}>
         {() => <CreateCGScreen isRank={false} />}
       </Stack.Screen>
