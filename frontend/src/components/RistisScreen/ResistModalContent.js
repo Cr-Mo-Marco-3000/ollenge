@@ -19,7 +19,7 @@ function ResistModalContent({ uri, base64, resetCamera }) {
         <AppText>다시 찍기</AppText>
       </Pressable>
       <View style={styles.resistBtn}>
-        <AppButton title={"인증 이미지 제출"} backColor={"navy"}></AppButton>
+        <AppButton title={"인증 이미지 제출"} backColor={"navy"} handler={() => {}}></AppButton>
       </View>
     </View>
   )

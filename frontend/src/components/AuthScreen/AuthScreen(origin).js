@@ -9,7 +9,7 @@ import AppText from "../common/AppText"
 
 import { AuthorizationInstance } from "../../api/settings"
 
-function AuthScreen({ route }, { roomInfo }) {
+function AuthScreennnn({ route }, { roomInfo }) {
   const participationId = route.params.participationId // prop으로 participation_id 가져오고
   const methodNum = route.params.methodNum // 인증 방식에 대하여, {0: std_img 등록, 1: feature 비교, 2: classification 3: common}
   const [hasCameraPermission, setHasCameraPermission] = useState(null)
@@ -156,4 +156,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 })
-export default AuthScreen
+export default AuthScreennnn

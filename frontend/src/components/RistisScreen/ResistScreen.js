@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 
 import AppText from "../common/AppText"
-import TopMargin from "../common/TopMargin"
 import AppBoldText from "./../common/AppBoldText"
 import AppButton from "../common/AppButton"
 import ColorSet from "../../style/ColorSet"
