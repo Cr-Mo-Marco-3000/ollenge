@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react"
 import { ScrollView, StyleSheet, View, Image } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { useNavigation } from "@react-navigation/native"
-import { Button } from "react-native-paper"
+import { Button, Provider, DefaultTheme } from "react-native-paper"
 import styled from "styled-components"
 import { useContext } from "react"
 
-import { DefaultImage, PencilIcon, HeartIcon1 } from "../../assets/images/index"
+import { DefaultImage, PencilIcon } from "../../assets/images/index"
 import ColorSet from "../../style/ColorSet"
 
 import AppText from "../common/AppText"
@@ -16,10 +16,19 @@ import BedgeCard from "./BedgeCard"
 import TopMargin from "../common/TopMargin"
 import { AuthContext } from "../../../store/auth-context"
 
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    backdrop: "rgba(0, 0, 0, 0)",
+  },
+}
+
 function MyInfoScreen({ userInfo }) {
   const navigation = useNavigation()
   const authCtx = useContext(AuthContext)
   const [badges, setBadges] = useState()
+  const [badgesId, setBadgesId] = useState()
   const [selectedBadge, setSelectedBadge] = useState()
 
   const badgesImg = {
@@ -87,13 +96,22 @@ function MyInfoScreen({ userInfo }) {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ]
+    const idTemp = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+    ]
     const userBadge = authCtx.userInfo.selectedBadge
-
     setSelectedBadge(badgesImg[userBadge.type][userBadge.grade])
 
     const badgeData = authCtx.badgeData
     for (const badge of badgeData) {
       const type = typeSet[badge.type]
+      idTemp[type][badge.grade - 1] = badge.badgeId
       if (badge.badgeFlag) {
         temp[type][badge.grade - 1] = 1
       } else {
@@ -101,6 +119,7 @@ function MyInfoScreen({ userInfo }) {
       }
     }
     setBadges(temp)
+    setBadgesId(idTemp)
   }, [authCtx])
 
   function editPressHandler() {
@@ -108,88 +127,90 @@ function MyInfoScreen({ userInfo }) {
   }
 
   return (
-    <ScrollView style={styles.rootScreen}>
-      <TopMargin />
-      <View style={styles.logoutBox}>
-        <Button
-          icon="logout"
-          textColor={`${ColorSet.navyColor(1)}`}
-          onPress={authCtx.logout}
-          theme={{
-            fonts: {
-              labelLarge: {
-                fontFamily: "HyeminBold",
+    <Provider theme={theme}>
+      <ScrollView style={styles.rootScreen}>
+        <TopMargin />
+        <View style={styles.logoutBox}>
+          <Button
+            icon="logout"
+            textColor={`${ColorSet.navyColor(1)}`}
+            onPress={authCtx.logout}
+            theme={{
+              fonts: {
+                labelLarge: {
+                  fontFamily: "HyeminBold",
+                },
               },
-            },
-          }}
-        >
-          로그아웃
-        </Button>
-      </View>
-      <View style={styles.scrollContainer}>
-        <View style={styles.imageBox}>
-          {userInfo.profileImg ? (
-            <Image
-              source={{ uri: userInfo.profileImg }}
-              style={{ width: "100%", height: "100%", borderRadius: 100 }}
-            />
-          ) : (
-            <DefaultImage />
-          )}
+            }}
+          >
+            로그아웃
+          </Button>
         </View>
-        <View style={styles.infoContainer}>
-          <UserInfoBox>
-            <UserNicknameBox onPress={editPressHandler}>
-              <AppBoldText>{userInfo.nickname}</AppBoldText>
-              <View
-                style={{
-                  width: RFPercentage(3),
-                  height: RFPercentage(3),
-                  marginLeft: 5,
-                }}
-              >
-                <PencilIcon />
-              </View>
-            </UserNicknameBox>
-            <AppText>{userInfo.userScore}점</AppText>
-            <View style={{ width: RFPercentage(8), height: RFPercentage(8) }}>
+        <View style={styles.scrollContainer}>
+          <View style={styles.imageBox}>
+            {userInfo.profileImg ? (
               <Image
-                source={selectedBadge}
-                style={{ width: "100%", height: "100%" }}
-                resizeMode="cover"
+                source={{ uri: userInfo.profileImg }}
+                style={{ width: "100%", height: "100%", borderRadius: 100 }}
               />
-            </View>
-          </UserInfoBox>
-          {badges ? (
-            <BedgeCardContainer>
-              <View style={styles.bedgeCardItem}>
-                <BedgeCard type={"User"} flag={badges[0]} />
+            ) : (
+              <DefaultImage />
+            )}
+          </View>
+          <View style={styles.infoContainer}>
+            <UserInfoBox>
+              <UserNicknameBox onPress={editPressHandler}>
+                <AppBoldText>{userInfo.nickname}</AppBoldText>
+                <View
+                  style={{
+                    width: RFPercentage(3),
+                    height: RFPercentage(3),
+                    marginLeft: 5,
+                  }}
+                >
+                  <PencilIcon />
+                </View>
+              </UserNicknameBox>
+              <AppText>{userInfo.userScore}점</AppText>
+              <View style={{ width: RFPercentage(8), height: RFPercentage(8) }}>
+                <Image
+                  source={selectedBadge}
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode="cover"
+                />
               </View>
-              <View style={styles.bedgeCardItem}>
-                <BedgeCard type={"WakeUp"} flag={badges[1]} />
-              </View>
-              <View style={styles.bedgeCardItem}>
-                <BedgeCard type={"Study"} flag={badges[2]} />
-              </View>
-              <View style={styles.bedgeCardItem}>
-                <BedgeCard type={"Exercise"} flag={badges[3]} />
-              </View>
-              <View style={styles.bedgeCardItem}>
-                <BedgeCard type={"Pills"} flag={badges[4]} />
-              </View>
-              <View style={styles.bedgeCardItem}>
-                <BedgeCard type={"Salad"} flag={badges[5]} />
-              </View>
-              <View style={styles.bedgeCardItem}>
-                <BedgeCard type={"Cleaning"} flag={badges[6]} />
-              </View>
-            </BedgeCardContainer>
-          ) : (
-            <></>
-          )}
+            </UserInfoBox>
+            {badges ? (
+              <BedgeCardContainer>
+                <View style={styles.bedgeCardItem}>
+                  <BedgeCard type={"User"} flag={badges[0]} idLst={badgesId[0]} />
+                </View>
+                <View style={styles.bedgeCardItem}>
+                  <BedgeCard type={"WakeUp"} flag={badges[1]} idLst={badgesId[1]} />
+                </View>
+                <View style={styles.bedgeCardItem}>
+                  <BedgeCard type={"Study"} flag={badges[2]} idLst={badgesId[2]} />
+                </View>
+                <View style={styles.bedgeCardItem}>
+                  <BedgeCard type={"Exercise"} flag={badges[3]} idLst={badgesId[3]} />
+                </View>
+                <View style={styles.bedgeCardItem}>
+                  <BedgeCard type={"Pills"} flag={badges[4]} idLst={badgesId[4]} />
+                </View>
+                <View style={styles.bedgeCardItem}>
+                  <BedgeCard type={"Salad"} flag={badges[5]} idLst={badgesId[5]} />
+                </View>
+                <View style={styles.bedgeCardItem}>
+                  <BedgeCard type={"Cleaning"} flag={badges[6]} idLst={badgesId[6]} />
+                </View>
+              </BedgeCardContainer>
+            ) : (
+              <></>
+            )}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </Provider>
   )
 }
 export default MyInfoScreen

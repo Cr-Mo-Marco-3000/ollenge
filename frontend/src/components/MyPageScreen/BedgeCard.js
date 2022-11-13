@@ -2,7 +2,6 @@ import React from "react"
 
 import { StyleSheet, View } from "react-native"
 import styled from "styled-components"
-
 import ColorSet from "../../style/ColorSet"
 
 import AppBoldText from "../common/AppBoldText"
@@ -15,7 +14,7 @@ GainedBedgeItem : 이미 얻은 뱃지 (착용중인 경우 applied={true} 추�
 WaitingeBedgeItem: 취득 조건은 달성했으나 아직 획득하지 않은 것
 NotGainedBedgeItem: 취득조건 미달성
 */
-function BedgeCard({ type, flag }) {
+function BedgeCard({ type, flag, idLst }) {
   const badgesTitle = {
     User: {
       name: "꾸준한 노력가",
@@ -103,11 +102,32 @@ function BedgeCard({ type, flag }) {
         <BedgeBox>
           {flag.map((sta, key) => {
             if (sta == 0) {
-              return <NotGainedBedgeItem type={type} typeData={badgesTitle[type]} grade={key} />
+              return (
+                <NotGainedBedgeItem
+                  type={type}
+                  typeData={badgesTitle[type]}
+                  grade={key}
+                  badgeId={idLst[key]}
+                />
+              )
             } else if (sta == 1) {
-              return <GainedBedgeItem type={type} typeData={badgesTitle[type]} grade={key} />
+              return (
+                <GainedBedgeItem
+                  type={type}
+                  typeData={badgesTitle[type]}
+                  grade={key}
+                  badgeId={idLst[key]}
+                />
+              )
             } else {
-              return <WaitingBedgeItem type={type} typeData={badgesTitle[type]} grade={key} />
+              return (
+                <WaitingBedgeItem
+                  type={type}
+                  typeData={badgesTitle[type]}
+                  grade={key}
+                  badgeId={idLst[key]}
+                />
+              )
             }
           })}
         </BedgeBox>
