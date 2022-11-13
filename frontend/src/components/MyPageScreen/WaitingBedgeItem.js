@@ -6,12 +6,13 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
 
-function WaitingBedgeItem() {
-  const iconName = "heart-icon-1"
+function WaitingBedgeItem({ typeData, grade }) {
   return (
     <Pressable style={styles.bedgeItem} android_ripple={{ color: `${ColorSet.whiteColor(1)}` }}>
-      <Image source={require(`../../assets/images/${iconName}.png`)} style={styles.bedgeImage} />
-      <AppText size={2}>설명설명쑤얼라</AppText>
+      <Image source={typeData.src[grade]} style={styles.bedgeImage} />
+      <AppText size={2}>
+        {typeData.title} {typeData.checkpoint[grade]}회 완주
+      </AppText>
       <View style={styles.bedgeButton}>
         <AppText size={2} color={"white"}>
           획득하기

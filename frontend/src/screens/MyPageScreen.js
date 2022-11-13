@@ -1,6 +1,5 @@
 import React, { useContext } from "react"
 
-import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 
 import MyInfoScreen from "../components/MyPageScreen/MyInfoScreen"
@@ -13,6 +12,8 @@ const Stack = createNativeStackNavigator()
 
 function MyPageScreen() {
   const authCtx = useContext(AuthContext)
+  // const userId = authCtx.userInfo.userId
+  const userId = 1
 
   return (
     <Stack.Navigator

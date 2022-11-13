@@ -8,7 +8,6 @@ import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 
 function ImageResistBtn({ navigation, roomInfo }) {
-  console.log(11, roomInfo)
   return (
     <View style={styles.buttonBox}>
       <Pressable

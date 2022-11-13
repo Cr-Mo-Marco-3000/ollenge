@@ -5,12 +5,13 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 
 import AppText from "../common/AppText"
 
-function NotGainedBedgeItem() {
-  const iconName = "heart-icon-1"
+function NotGainedBedgeItem({ typeData, grade }) {
   return (
     <View style={styles.bedgeItem}>
-      <Image source={require(`../../assets/images/${iconName}.png`)} style={styles.bedgeImage} />
-      <AppText size={2}>설명설명쑤얼라</AppText>
+      <Image source={typeData.src[grade]} style={styles.bedgeImage} />
+      <AppText size={2}>
+        {typeData.title} {typeData.checkpoint[grade]}회 완주
+      </AppText>
     </View>
   )
 }

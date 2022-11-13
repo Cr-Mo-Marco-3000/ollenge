@@ -10,11 +10,11 @@ import ResistScreen from "../components/RistisScreen/ResistScreen"
 import { RoomContext } from "../../store/room-context"
 import CreateCGScreen from "../screens/CreateCGScreen"
 import ColorSet from "../style/ColorSet"
+
 const Stack = createNativeStackNavigator()
 
 function MyCGScreen() {
   const roomCtx = useContext(RoomContext)
-
   return (
     <Stack.Navigator
       screenOptions={{
