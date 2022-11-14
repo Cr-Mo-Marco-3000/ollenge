@@ -3,53 +3,29 @@ import React from "react"
 import { View, StyleSheet, ScrollView, Pressable } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { Avatar } from "react-native-paper"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
-
 import ColorSet from "../../style/ColorSet"
 import ProfileBedge from "./ProfileBedge"
 import { AuthContext } from "../../../store/auth-context"
-
-const userList = [
-  {
-    userId: 1,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 2,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-]
+import { RoomContext } from "../../../store/room-context"
+import { TodayCheck } from "../../functions"
 
 function UserListTap({ navigation }) {
   const authCtx = useContext(AuthContext)
+  const roomCtx = useContext(RoomContext)
+
   const userInfo = authCtx.userInfo
+  const userList = roomCtx.userList
+
+  const [myInfo, setMyInfo] = useState(new Object())
+
   return (
     <View style={styles.imgListContainer}>
       <View style={styles.myProfileBox}>
-        <ProfileBedge url={userInfo.profileImg} isActive={false} />
+        {Object.keys(myInfo).length !== 0 ? (
+          <ProfileBedge url={myInfo.profileImg} isActive={TodayCheck(myInfo.datetimeList)} />
+        ) : null}
       </View>
       <ScrollView
         style={styles.userListBox}
@@ -57,7 +33,20 @@ function UserListTap({ navigation }) {
         showsHorizontalScrollIndicator={false}
       >
         {userList.map((user, index) => {
-          return <ProfileBedge key={index} uri={user.profileImg} isActive={false} />
+          if (user.userId === userInfo.userId) {
+            if (Object.keys(myInfo).length === 0) {
+              setMyInfo(user)
+            }
+            return
+          } else {
+            return (
+              <ProfileBedge
+                key={index}
+                uri={user.profileImg}
+                isActive={TodayCheck(user.datetimeList)}
+              />
+            )
+          }
         })}
       </ScrollView>
       <LinearGradient

@@ -1,57 +1,32 @@
-import React from "react"
+import React, { useContext } from "react"
+
+import { useState } from "react"
 import { StyleSheet, View, ScrollView } from "react-native"
 
 import ColorSet from "../../../style/ColorSet"
 import UserStatusItem from "./UserStatusItem"
 import { Provider } from "react-native-paper"
+import { AuthContext } from "./../../../../store/auth-context"
 
-const userList = [
-  {
-    userId: 1,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 2,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-  {
-    userId: 4,
-    nickname: "메롱",
-    profileImg: "",
-    dateTimeList: ["2022-11-07 10:11:10"],
-  },
-]
+function UserStatus({ userList }) {
+  const authCtx = useContext(AuthContext)
+  const myUserId = authCtx.userInfo.userId
+  const [myInfo, setMyInfo] = useState()
 
-function UserStatus() {
   return (
     <Provider>
       <View style={styles.rootScreen}>
         <ScrollView style={styles.scrollScreen}>
           <View style={styles.scrollInnerScreen}>
+            {myInfo ? <UserStatusItem user={myInfo} /> : <></>}
             {userList.map((user, key) => {
-              return <UserStatusItem user={user} key={key} />
+              if (!myInfo && user.userId === myUserId) {
+                setMyInfo(user)
+                console.log(myUserId)
+                return
+              } else if (user.userId !== myUserId) {
+                return <UserStatusItem user={user} key={key} />
+              }
             })}
           </View>
         </ScrollView>

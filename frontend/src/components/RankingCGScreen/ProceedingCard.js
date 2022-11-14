@@ -1,34 +1,31 @@
 import React from "react-native"
-import { View, Text, Dimensions } from "react-native"
-import ColorSet from "../../style/ColorSet"
-import AppText from "../common/AppText"
+import { View, Dimensions, Image } from "react-native"
+// import ColorSet from "../../style/ColorSet"
+// import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 import AppCard from "../common/AppCard"
-import {
-  GymIcon,
-  NotebookIcon,
-  SunIcon,
-  BoyIcon,
-} from "../../assets/images/RankingCGScreen/RankingCGScreen"
+// import {
+//   GymIcon,
+//   NotebookIcon,
+//   SunIcon,
+//   BoyIcon,
+// } from "../../assets/images/RankingCGScreen/RankingCGScreen"
 import styled from "styled-components"
 
 export default function ProceedingCard(props) {
   const windowWidth = Dimensions.get("window").width
-
   // 카드 정보
-  const presetTopic = props.challengeInfo.presetTopic
-  const challengePresetID = props.challengeInfo.challengePresetID
-  const memberNumber = props.challengeInfo.memberNumber
-  const progress = props.challengeInfo.progress
-  const startDate = props.challengeInfo.startDate
-  const endDate = props.challengeInfo.endDate
-  const isParticipated = props.challengeInfo.isParticipated
-  const peopleNumber = props.challengeInfo.peopleNumber
-  const presetObject = {
-    1: () => <SunIcon />,
-    2: () => <NotebookIcon />,
-    3: () => <GymIcon />,
-  }
+  const startDate = props.startDate.replace(/-/g, ".").slice(2)
+  const endDate = props.endDate.replace(/-/g, ".").slice(2)
+  const challengeInfo = props.challengeInfo
+
+  const presetTopic = challengeInfo.presetTopic
+  const presetImg = challengeInfo.presetImg
+  // const presetObject = {
+  //   1: () => <SunIcon />,
+  //   2: () => <NotebookIcon />,
+  //   3: () => <GymIcon />,
+  // }
   // 레이아웃 정보
   const spaceHeight = 180
   const cardHeight = spaceHeight * 0.9
@@ -87,7 +84,7 @@ export default function ProceedingCard(props) {
                     top: 5,
                   }}
                 >
-                  <AppBoldText pxSize={pxSize * 0.7} color="navy">
+                  <AppBoldText pxSize={pxSize * 0.65} color="navy">
                     {startDate} - {endDate} (2주)
                   </AppBoldText>
                 </TextRow>
@@ -102,15 +99,15 @@ export default function ProceedingCard(props) {
                   }}
                 >
                   {/* 버튼 자체 => styled component */}
-                  <Button
+                  {/* <Button
                     style={{
                       backgroundColor: ColorSet.navyColor(1),
                     }}
-                  >
-                    {/* 버튼 내부 공간, 양 50%공간으로 쪼갬 */}
-                    <ButtonInner>
-                      {/* 아이콘 들어가는 공간 */}
-                      <View
+                  > */}
+                  {/* 버튼 내부 공간, 양 50%공간으로 쪼갬 */}
+                  {/* <ButtonInner> */}
+                  {/* 아이콘 들어가는 공간 */}
+                  {/* <View
                         style={{
                           justifyContent: "center",
                           alignItems: "center",
@@ -118,9 +115,9 @@ export default function ProceedingCard(props) {
                         }}
                       >
                         <BoyIcon />
-                      </View>
-                      {/* ~명 들어가는 공간 */}
-                      <View
+                      </View> */}
+                  {/* ~명 들어가는 공간 */}
+                  {/* <View
                         style={{
                           justifyContent: "center",
                           alignItems: "center",
@@ -133,8 +130,8 @@ export default function ProceedingCard(props) {
                         </AppBoldText>
                       </View>
                     </ButtonInner>
-                  </Button>
-                  {isParticipated && (
+                  </Button> */}
+                  {/* {isParticipated && (
                     <Button
                       style={{
                         backgroundColor: ColorSet.orangeColor(0.7),
@@ -150,7 +147,7 @@ export default function ProceedingCard(props) {
                         </AppBoldText>
                       </ButtonInner>
                     </Button>
-                  )}
+                  )} */}
                 </TextRow>
               </View>
             </View>
@@ -168,7 +165,8 @@ export default function ProceedingCard(props) {
                   overflow: "hidden",
                 }}
               >
-                {presetObject[challengePresetID]()}
+                {/* {presetObject[challengePresetID]()} */}
+                <Image source={{ uri: presetImg }}></Image>
               </View>
             </View>
           </View>

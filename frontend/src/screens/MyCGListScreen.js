@@ -1,8 +1,6 @@
 import React from "react-native"
 import styled from "styled-components"
-import AppText from "../components/common/AppText"
 import AppBoldText from "../components/common/AppBoldText"
-import { NavigationContainer } from "@react-navigation/native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
 import BeforeStart from "../components/MyCGScreen/BeforeStart"
 import Challenging from "../components/MyCGScreen/Challenging"
@@ -10,17 +8,108 @@ import Ended from "../components/MyCGScreen/Ended"
 import ColorSet from "../style/ColorSet"
 import TopMargin from "../components/common/TopMargin"
 import { FAB, Portal, Provider } from "react-native-paper"
-import { useState } from "react"
+import { useState, useContext } from "react"
+import { Modal } from "react-native"
+import AppCard from "../components/common/AppCard"
+import { MailIcon } from "../assets/images/MyCGScreen/MyCGScreen"
+import AppButton from "../components/common/AppButton"
+import { AuthorizationInstance } from "../api/settings"
+import { useNavigation } from "@react-navigation/native"
+import { RoomContext } from "../../store/room-context"
 
-function MyCGListScreen({ idHandler }) {
+function MyCGListScreen() {
   const Tab = createMaterialTopTabNavigator()
+  const navigation = useNavigation()
   const [fabButton, setfabButton] = useState(false)
+  const [showCodeInput, setShowCodeInput] = useState(false)
+  const [inputValue, setInputValue] = useState("")
+  const [errorFlag, setErrorFlag] = useState(true)
+  const instance = AuthorizationInstance()
 
   const onStateChange = () => {
     setfabButton(!fabButton)
   }
+
+  const openAndClose = () => {
+    setShowCodeInput(!showCodeInput)
+  }
+  const roomCtx = useContext(RoomContext)
+
+  // 참여하기 토글에서 버튼을 눌러 날아가는 경우
+  const joinChallenge = async () => {
+    try {
+      const challengeId = parseInt(inputValue.slice(8))
+      const inviteCode = inputValue.slice(0, 8)
+      const res = await instance.post("/api/challenge/participation", { challengeId, inviteCode })
+      roomCtx.getRoomInfo(challengeId)
+      roomCtx.getUserList(challengeId)
+      setShowCodeInput(!showCodeInput)
+      navigation.push("CGRoom")
+    } catch (error) {
+      setErrorFlag(false)
+      setTimeout(() => {
+        setErrorFlag(true)
+      }, 3000)
+    }
+  }
+
+  const createChallenge = () => {
+    navigation.push("CGCreate")
+  }
+
   return (
     <Provider>
+      {showCodeInput && (
+        <Modal animationType="fade" statusBarTranslucent={true} transparent={true}>
+          <Outside onPress={openAndClose}>
+            {/* <InnerSide> */}
+            <InputView>
+              <CardView>
+                <AppCard>
+                  <Card>
+                    <InnerArea>
+                      <InnerRow>
+                        <IconView>
+                          <MailIcon />
+                        </IconView>
+                        {errorFlag ? (
+                          <ErrorFlagView>
+                            <AppBoldText pxSize={20}>초대 코드 입력</AppBoldText>
+                          </ErrorFlagView>
+                        ) : (
+                          <ErrorFlagView>
+                            <AppBoldText size={2} color={"hotPink"}>
+                              초대 코드를 확인해주세요!
+                            </AppBoldText>
+                          </ErrorFlagView>
+                        )}
+                      </InnerRow>
+                      <InnerRow>
+                        <AppTextInput
+                          textAlign="center"
+                          autoFocus={true}
+                          underlineColorAndroid={ColorSet.navyColor(0.3)}
+                          onChangeText={(e) => {
+                            setInputValue(e)
+                          }}
+                          onSubmitEditing={joinChallenge}
+                          blurOnSubmit={false}
+                        ></AppTextInput>
+                      </InnerRow>
+                      <InnerRow>
+                        <ButtonView>
+                          <AppButton handler={joinChallenge} title={"확인"} />
+                        </ButtonView>
+                      </InnerRow>
+                    </InnerArea>
+                  </Card>
+                </AppCard>
+              </CardView>
+            </InputView>
+            {/* </InnerSide> */}
+          </Outside>
+        </Modal>
+      )}
       <Portal>
         <Body>
           {/* Header부분 */}
@@ -49,12 +138,11 @@ function MyCGListScreen({ idHandler }) {
               },
             }}
           >
-            <Tab.Screen name="도전 중">
-              {(props) => <Challenging idHandler={idHandler} />}
-            </Tab.Screen>
-            <Tab.Screen name="시작 전">
-              {(props) => <BeforeStart idHandler={idHandler} />}
-            </Tab.Screen>
+            {/* <Tab.Screen name="도전 중">{(props) => <Challenging />}</Tab.Screen>
+            <Tab.Screen name="시작 전">{(props) => <BeforeStart />}</Tab.Screen> */}
+            <Tab.Screen name="도전 중" component={Challenging} />
+            <Tab.Screen name="시작 전" component={BeforeStart} />
+
             <Tab.Screen name="종료" component={Ended} />
           </Tab.Navigator>
           <FAB.Group
@@ -71,7 +159,7 @@ function MyCGListScreen({ idHandler }) {
                 icon: "barcode-scan",
                 label: "초대 코드 입력",
                 color: "white",
-                onPress: () => console.log("여기 함수 넣자"),
+                onPress: openAndClose,
                 labelStyle: {
                   color: "#FCBE32",
                   fontWeight: "bold",
@@ -90,7 +178,7 @@ function MyCGListScreen({ idHandler }) {
                   color: "#FCBE32",
                 },
                 color: "white",
-                onPress: () => console.log("여기 함수 넣자"),
+                onPress: createChallenge,
                 style: {
                   color: "white",
                   borderRadius: 100,
@@ -120,7 +208,8 @@ const Body = styled.View`
 
 // Header
 const Header = styled.View`
-  flex: 1;
+  /* 상단 마진 1 => 0.7로 줄임 */
+  flex: 0.7;
   background-color: white;
 `
 
@@ -134,4 +223,71 @@ const HeaderTextView = styled.View`
 
 const HeaderTextColumn = styled.View`
   flex: 1;
+`
+
+const Outside = styled.Pressable`
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+`
+
+const InputView = styled.View`
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 250px;
+`
+
+const CardView = styled.View`
+  width: 70%;
+  height: 100%;
+`
+
+const Card = styled.View`
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`
+
+const InnerArea = styled.View`
+  height: 90%;
+  width: 90%;
+  justify-content: center;
+  align-items: center;
+`
+
+const InnerRow = styled.View`
+  flex: 3.3;
+  width: 80%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+const IconView = styled.View`
+  height: 70%;
+  width: 25%;
+`
+
+const AppTextInput = styled.TextInput`
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+  padding-left: 2.5%;
+  color: ${ColorSet.navyColor(1)};
+`
+
+const ButtonView = styled.View`
+  justify-content: center;
+  align-items: center;
+  height: 70%;
+  width: 100%;
+`
+
+const ErrorFlagView = styled.View`
+  height: 100%;
+  justify-content: center;
 `

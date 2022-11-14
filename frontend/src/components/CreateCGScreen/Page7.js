@@ -78,21 +78,19 @@ const Modal = ({ title, value, valueHandler, setPick }) => {
   )
 }
 
-export default function Page7({ info, setInfo }) {
+export default function Page7({ info, setInfo, toNext, cancelAll }) {
   const [reward, setReward] = useState(info.rewardContent)
   const [penalty, setpenalty] = useState(info.penaltyContent)
-  const [disabled, setDisabled] = useState(true)
   const [pick, setPick] = useState(0)
 
   useEffect(() => {
-    setDisabled(reward === "" || penalty === "")
     setInfo((prev) => {
       return { ...prev, rewardContent: reward, penaltyContent: penalty }
     })
   }, [reward, setReward, penalty, setpenalty])
   return (
     <>
-      <PageBase toNext={"Final"} disabled={disabled}>
+      <PageBase toNext={toNext} disabled={false} cancelAll={cancelAll}>
         <View flex={2} justifyContent="flex-end">
           {/* <Text style={fontStyles.HyeminBold({ size: 9, bold: "bold" })}>보상 / 벌칙 입력</Text> */}
           <Text style={fontStyles.HyeminBold({ size: 5 })}>

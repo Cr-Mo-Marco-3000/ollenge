@@ -30,7 +30,7 @@ from datetime import datetime
 # S3연결
 from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name, make_profile_url_name
 # DB 연결
-from pysql import execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
+from pysql import execute_select_keword_list, execute_select_participation_id, execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
 # model 연결
 from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput, uploadImg
 # Header token
@@ -246,7 +246,18 @@ async def authimgcommon(data: CommonInput, Authorization: Optional[str] = Header
                 },
         ) 
     try:
-        participation_id = str(data.participation_id)
+        challenge_id = str(data.challenge_id)
+        participation_id = execute_select_participation_id(challenge_id, user_id)
+        if participation_id:
+            participation_id = str(participation_id)
+        else:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 4,
+                    },
+            ) 
         feed_img = data.feed_img
         feed_content = data.feed_content
     except Exception as e:
@@ -360,10 +371,34 @@ async def authimgclassification(data: classificationpicture, Authorization: Opti
 
     try:
         # data = str(data)
-        participation_id = str(data.participation_id)
+        challenge_id = str(data.challenge_id)
+        participation_id = execute_select_participation_id(challenge_id, user_id)
+        if participation_id:
+            participation_id = str(participation_id)
+        else:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 4,
+                    },
+            ) 
         feed_img = data.feed_img
         feed_content = data.feed_content
-        classification_keyword = data.classification_keyword
+        classification_type_id = str(data.classification_type_id)
+        keywords_tuple = execute_select_keword_list(classification_type_id)
+        if keywords_tuple:
+            keywordsList = []
+            for p in range(len(keywords_tuple)):
+                keywordsList.append(keywords_tuple[p][0])
+        else:
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "message": f"classification id 입력이 바르지 않습니다.",
+                    "errcode": 11,
+                    },
+            )
     except Exception as e:
         print(e)
         return JSONResponse(
@@ -457,7 +492,14 @@ async def authimgclassification(data: classificationpicture, Authorization: Opti
         # print("%12s: %.2f" % (concept.name, concept.value))
         result.update({concept.name:concept.value})
     # print(result)
-    if classification_keyword in result:
+    iskeywordmatching = False
+
+    for p in range(len(keywordsList)):
+        if keywordsList[p] in result:
+            iskeywordmatching = True
+            break
+            
+    if iskeywordmatching:
         try:
             to = make_classification_url_name(participation_id)
             file_url = s3_upload(filename, 'homybk', to)
@@ -523,7 +565,18 @@ async def test(data: StdImgInput, Authorization: Optional[str] = Header(None)):
         ) 
 
     try:
-        participation_id = str(data.participation_id)
+        challenge_id = str(data.challenge_id)
+        participation_id = execute_select_participation_id(challenge_id, user_id)
+        if participation_id:
+            participation_id = str(participation_id)
+        else:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 4,
+                    },
+            ) 
         std_img=data.std_img
         time_flag = is_auth_intime(int(participation_id))
     except Exception as e:
@@ -655,7 +708,18 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
         ) 
 
     try:
-        participation_id = str(data.participation_id)
+        challenge_id = str(data.challenge_id)
+        participation_id = execute_select_participation_id(challenge_id, user_id)
+        if participation_id:
+            participation_id = str(participation_id)
+        else:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 4,
+                    },
+            ) 
         feed_img = data.feed_img
         feed_content = data.feed_content
     except Exception as e:
@@ -828,11 +892,46 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
         )
 
 
-@app.get("/auth/isauthtoday/{participation_id}")
-async def isauthedtoday(participation_id: int):
+@app.get("/auth/isauthtoday/{challenge_id}")
+async def isauthedtoday(challenge_id: int, Authorization: Optional[str] = Header(None)):
+    if Authorization:
+        btoken = Authorization.split()[1]
+        try:
+            # dictionary{sub: userid(int), iss:"ollenge.com", exp, iat}
+            decoded = jwt.decode(btoken, JWT_SECRET_KEY, algorithms="HS512")
+            user_id = int(decoded["sub"])
+        except Exception as e:
+            print(e)
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"토큰이 제대로 입력되지 않았습니다.",
+                    "errcode": 3,
+                    },
+            ) 
+    else:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": f"토큰이 입력되지 않았습니다.",
+                "errcode": 3,
+                },
+        ) 
     try:
         now = datetime.now()
         today = current_time_date = now.strftime("%Y-%m-%d")
+        challenge_id = str(challenge_id)
+        participation_id = execute_select_participation_id(challenge_id, user_id)
+        if participation_id:
+            participation_id = str(participation_id)
+        else:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 4,
+                    },
+            ) 
         isauthed = execute_select_isauth(participation_id, today)
         if isauthed:
             return JSONResponse(
@@ -862,8 +961,43 @@ async def isauthedtoday(participation_id: int):
 
 
 @app.get("/auth/isstdimg/{participation_id}")
-async def isstdimg(participation_id: str):
+async def isstdimg(challenge_id: str, Authorization: Optional[str] = Header(None)):
+    if Authorization:
+        btoken = Authorization.split()[1]
+        try:
+            # dictionary{sub: userid(int), iss:"ollenge.com", exp, iat}
+            decoded = jwt.decode(btoken, JWT_SECRET_KEY, algorithms="HS512")
+            user_id = int(decoded["sub"])
+        except Exception as e:
+            print(e)
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"토큰이 제대로 입력되지 않았습니다.",
+                    "errcode": 3,
+                    },
+            ) 
+    else:
+        return JSONResponse(
+            status_code=403,
+            content={
+                "message": f"토큰이 입력되지 않았습니다.",
+                "errcode": 3,
+                },
+        ) 
     try:
+        challenge_id = str(challenge_id)
+        participation_id = execute_select_participation_id(challenge_id, user_id)
+        if participation_id:
+            participation_id = str(participation_id)
+        else:
+            return JSONResponse(
+                status_code=403,
+                content={
+                    "message": f"알맞지 않은 참가자 아이디 입니다.",
+                    "errcode": 4,
+                    },
+            ) 
         isstdimg = execute_select_std_img(participation_id)
         if isstdimg:
             return JSONResponse(

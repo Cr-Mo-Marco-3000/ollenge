@@ -24,24 +24,24 @@ function RankingCGScreen() {
           <HeaderTextColumn></HeaderTextColumn>
         </HeaderTextView>
       </Header>
-      <NavigationContainer>
-        <Tab.Navigator
-          style={{
-            flex: 8,
-          }}
-          screenOptions={{
-            tabBarLabelStyle: { fontSize: 16, fontFamily: "HyeminBold" },
-            tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
-            tabBarInactiveTintColor: `${ColorSet.navyColor(0.5)}`,
-            tabBarIndicatorStyle: {
-              backgroundColor: `${ColorSet.orangeColor(1)}`,
-            },
-          }}
-        >
-          <Tab.Screen name="진행 중" component={Proceeding} />
-          <Tab.Screen name="참여 신청" component={Participating} />
-        </Tab.Navigator>
-      </NavigationContainer>
+
+      <Tab.Navigator
+        style={{
+          flex: 8,
+        }}
+        screenOptions={{
+          tabBarLabelStyle: { fontSize: 16, fontFamily: "HyeminBold" },
+          tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
+          tabBarInactiveTintColor: `${ColorSet.navyColor(0.5)}`,
+          tabBarIndicatorStyle: {
+            backgroundColor: `${ColorSet.orangeColor(1)}`,
+          },
+        }}
+      >
+        <Tab.Screen name="진행 중" component={Proceeding} />
+        <Tab.Screen name="참여 신청" component={Participating} />
+      </Tab.Navigator>
+
       {/* 아래부분 */}
     </Body>
   )
@@ -59,7 +59,8 @@ const Body = styled.View`
 
 // Header
 const Header = styled.View`
-  flex: 1;
+  /* 여기 부분 수정 */
+  flex: 0.7;
   background-color: white;
 `
 

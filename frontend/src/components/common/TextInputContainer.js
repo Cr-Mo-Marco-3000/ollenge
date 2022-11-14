@@ -5,6 +5,7 @@ import styled from "styled-components/native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { useState } from "react"
 
+import ColorSet from "../../style/ColorSet"
 import AppText from "./AppText"
 
 function TextInputContainer({ inputText, inputHandler, subminHandler }) {
@@ -29,9 +30,10 @@ export default TextInputContainer
 
 const styles = StyleSheet.create({
   textInputBox: {
+    color: `${ColorSet.navyColor(1)}`,
     backgroundColor: "rgb(255, 255, 255)",
     width: "100%",
-    height: RFPercentage(6),
+    height: RFPercentage(8),
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {

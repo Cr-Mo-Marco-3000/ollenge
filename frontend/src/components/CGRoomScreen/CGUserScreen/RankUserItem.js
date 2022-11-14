@@ -7,11 +7,17 @@ import AppBoldText from "../../common/AppBoldText"
 import defaultImage from "../../../assets/images/default-image.png"
 import { HeartIcon1 } from "../../../assets/images"
 
-function RankUserItem({ user, rank }) {
+function RankUserItem({ user, rank, noRank, wholeDay }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   return (
     <View style={styles.rootScreen}>
-      <AppBoldText size={2}>{rank}</AppBoldText>
+      {noRank ? (
+        <></>
+      ) : (
+        <View style={{ marginRight: "5%" }}>
+          <AppBoldText size={2}>{rank}등</AppBoldText>
+        </View>
+      )}
       <View style={styles.infoBox}>
         <View style={styles.profileImgBox}>
           <Image
@@ -25,13 +31,16 @@ function RankUserItem({ user, rank }) {
         </View>
         <View style={{ width: "40%", marginRight: RFPercentage(1) }}>
           <AppBoldText pxSize={24} lineNumber={1}>
-            adsasdasdasd{user.nickname}
+            {user.nickname}
           </AppBoldText>
         </View>
-
-        <AppBoldText color={"orange"} pxSize={18}>
-          79%
-        </AppBoldText>
+        {noRank ? (
+          <></>
+        ) : (
+          <AppBoldText color={"orange"} pxSize={18}>
+            {Math.round((user.datetimeList.length / wholeDay) * 100)}%
+          </AppBoldText>
+        )}
       </View>
     </View>
   )
@@ -41,7 +50,7 @@ export default RankUserItem
 const styles = StyleSheet.create({
   rootScreen: {
     width: "100%",
-    paddingVertical: "5%",
+    paddingVertical: "3%",
     flexDirection: "row",
     alignItems: "center",
   },
@@ -51,7 +60,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: RFPercentage(8),
     backgroundColor: "white",
-    marginLeft: "5%",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {

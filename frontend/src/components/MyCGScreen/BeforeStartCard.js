@@ -6,8 +6,11 @@ import AppBoldText from "../common/AppBoldText"
 import AppCard from "../common/AppCard"
 import { ProgressBar, Badge } from "react-native-paper"
 import { ExampleIcon, RunningIcon } from "../../assets/images/MyCGScreen/MyCGScreen"
+import defaultImage from "../../assets/images/default-image.png"
 
 export default function BeforeStartCard(props) {
+  const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
+
   const windowWidth = Dimensions.get("window").width
   const challengeInfo = props.challengeInfo
 
@@ -22,7 +25,7 @@ export default function BeforeStartCard(props) {
   const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
   const func = props.func
   const nowDate = new Date().getTime()
-  const startDate = challengeInfo.startDate.getTime()
+  const startDate = new Date(challengeInfo.startDate).getTime()
   const dDate = Math.ceil((startDate - nowDate) / 1000 / 60 / 60 / 24)
 
   const pxSize = windowWidth * 0.045
@@ -79,7 +82,11 @@ export default function BeforeStartCard(props) {
                 >
                   {/* 나중에 여기에도 예시파일처럼 직접 borderRadius 먹여주어야 함 */}
                   <Image
-                    source={{ uri: challengeInfo.challengeImg }}
+                    source={
+                      challengeInfo.challengeImg
+                        ? { uri: challengeInfo.challengeImg }
+                        : { uri: defaultImageUri }
+                    }
                     style={{ height: "100%", width: "100%", borderRadius: 200 * 0.7 * 0.95 * 0.75 }}
                     resizeMode="cover"
                   />

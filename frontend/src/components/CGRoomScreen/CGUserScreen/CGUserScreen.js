@@ -1,36 +1,37 @@
-import React from "react"
+import React, { useContext } from "react"
 
 import styled from "styled-components"
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
+import { useState, useEffect } from "react"
 
 import TopMargin from "../../common/TopMargin"
 
-import ColorSet from "../../../style/ColorSet"
-
-import UserRanking from "./UserRanking"
-import UserStatus from "./UserStatus"
+import StartUserScreen from "./StartUserScreen"
+import WaitingUserScreen from "./WaitingUserScreen"
+import { LocalTime, DateTime } from "./../../../functions/index"
+import { RoomContext } from "../../../../store/room-context"
 
 function CGUserScreen() {
-  const Tab = createMaterialTopTabNavigator()
+  const roomCtx = useContext(RoomContext)
+  const roomInfo = roomCtx.roomInfo
+  const userList = roomCtx.userList
+  const [isStarted, setIsStarted] = useState(true)
+
+  useEffect(() => {
+    const now = LocalTime()
+    const start = DateTime(roomInfo.startDate, roomInfo.startTime)
+    if (now - start >= 0) {
+      setIsStarted(true)
+    }
+  }, [roomInfo])
+
   return (
     <Body>
       <TopMargin />
-      <Tab.Navigator
-        style={{
-          flex: 8,
-        }}
-        screenOptions={{
-          tabBarLabelStyle: { fontSize: 16, fontFamily: "HyeminBold" },
-          tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
-          tabBarInactiveTintColor: `${ColorSet.navyColor(0.5)}`,
-          tabBarIndicatorStyle: {
-            backgroundColor: `${ColorSet.orangeColor(1)}`,
-          },
-        }}
-      >
-        <Tab.Screen name="참여자 순위">{(props) => <UserRanking />}</Tab.Screen>
-        <Tab.Screen name="인증 현황">{(props) => <UserStatus />}</Tab.Screen>
-      </Tab.Navigator>
+      {isStarted ? (
+        <StartUserScreen userList={userList} />
+      ) : (
+        <WaitingUserScreen userList={userList} roomInfo={roomInfo} />
+      )}
     </Body>
   )
 }

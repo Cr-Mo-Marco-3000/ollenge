@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 
-import { Pressable, View, StyleSheet, Text, Button, Image, TextInput } from "react-native"
+import { View, StyleSheet, Text, Button, Image } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { Camera } from "expo-camera"
 import axios from "axios"
 import { decode as atob, encode as btoa } from "base-64"
-import AppText from "../common/AppText"
+import { RoomContext } from "../../../store/room-context"
+
+import { LinearGradient } from "expo-linear-gradient"
+import ColorSet from "../../style/ColorSet"
 
 import { AuthorizationInstance } from "../../api/settings"
+import TopMargin from "../common/TopMargin"
 
-function ImageRegisterPage({ route }, { roomInfo }) {
-  const participationId = route.params.participationId // prop으로 participation_id 가져오고
-  const methodNum = route.params.methodNum // 인증 방식에 대하여, {0: std_img 등록, 1: feature 비교, 2: classification 3: common}
+function ImageRegisterScreen() {
+  const roomCtx = useContext(RoomContext)
+  const roomInfo = roomCtx.roomInfo
+  const challengeId = roomInfo.challengeId // prop으로 challengeId 가져오고
+  const methodNum = 0 // 인증 방식에 대하여, {0: std_img 등록, 1: feature 비교, 2: classification 3: common}
   const [hasCameraPermission, setHasCameraPermission] = useState(null)
   const [camera, setCamera] = useState(null)
   const [image, setImage] = useState(null) // 사진 uri
@@ -19,7 +25,6 @@ function ImageRegisterPage({ route }, { roomInfo }) {
   const [base64, setBase64] = useState(null) // 사진 base64
   const [text, onChangeText] = useState("i'm feed") // 텍스트 기본 문구 설정 해야함
   const [type, setType] = useState(Camera.Constants.Type.back)
-  const BaseUrl = "https://k7a501.p.ssafy.io" // BaseUrl 설정 해야함
   const urlType = ["/auth/stdimg", "/auth/feature", "/auth/classification", "/auth/common"]
 
   const instance = AuthorizationInstance()
@@ -30,23 +35,6 @@ function ImageRegisterPage({ route }, { roomInfo }) {
       const cameraStatus = await Camera.requestCameraPermissionsAsync()
       setHasCameraPermission(cameraStatus.status === "granted")
     })()
-    if (methodNum == 1) {
-      //기준 이미지 불러오기
-      await axios({
-        method: "get",
-        url: BaseUrl + "/auth/isstdimg/" + participationId.toString(),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) => {
-          console.log(res.status, res.data.message)
-          setStdimg(res.data.stdimg)
-        })
-        .catch((error) => {
-          console.log(error.response.data.errcode)
-        })
-    }
   }, [])
 
   const takePicture = async () => {
@@ -63,29 +51,18 @@ function ImageRegisterPage({ route }, { roomInfo }) {
     }
   }
   const createAuthImg = async () => {
-    const dataForm = [
-      { participation_id: participationId, std_img: base64 },
-      { participation_id: participationId, feed_img: base64, feed_content: text },
-      {
-        participation_id: participationId,
-        feed_img: base64,
-        feed_content: text,
-        classification_keyword: "laptop", // 나중에 keyword 입력 해야함
-      },
-      { participation_id: participationId, feed_img: base64, feed_content: text },
-      { participation_id: participationId, feed_img: base64, feed_content: text },
-    ]
+    const dataForm = [{ challenge_id: challengeId, std_img: base64 }]
     await instance
       .post(urlType[methodNum], dataForm[methodNum], {})
       .then((res) => {
         console.log(res.status, res.data.message)
-        onChangeText("i'm feed")
         setImage(null)
-        navigation.push("CGRoom", (roomInfo = { roomInfo }))
+        navigation.goBack("CGRoom")
       })
       .catch((err) => {
         console.log(err)
         setImage(null)
+        navigation.goBack("CGRoom")
       })
     // const to_URL = BaseUrl + urlType[methodNum]
     // console.log(to_URL)
@@ -116,9 +93,17 @@ function ImageRegisterPage({ route }, { roomInfo }) {
     return <Text>No access to camera</Text>
   }
   return (
-    <View style={{ flex: 1 }}>
+    <LinearGradient
+      colors={[
+        `${ColorSet.paleBlueColor(1)}`,
+        `${ColorSet.paleBlueColor(1)}`,
+        `${ColorSet.yellowColor(1)}`,
+      ]}
+      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+    >
+      <TopMargin />
       {!image ? (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, width: "100%", marginTop: "10%" }}>
           <View style={styles.cameraContainer}>
             <Camera
               ref={(ref) => setCamera(ref)}
@@ -136,7 +121,7 @@ function ImageRegisterPage({ route }, { roomInfo }) {
           <Button title="Create Feed" onPress={() => createAuthImg()} />
         </View>
       )}
-    </View>
+    </LinearGradient>
   )
 }
 const styles = StyleSheet.create({
@@ -155,4 +140,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 })
-export default ImageRegisterPage
+export default ImageRegisterScreen

@@ -178,6 +178,27 @@ public class ChallengeService {
         return challengePresetRepository.findAll();
     }
 
+    public List<ChallengePresetData> getChallengePresetOngoing(Authentication authentication, LocalDate startDate, LocalDate endDate) throws InvalidUserException {
+        long userId = JwtTokenUtil.getUserIdByJWT(authentication);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
+        List<ChallengePreset> challengePresetList = challengePresetRepository.findAll();
+        List<Long> participatedChallengePresetId = challengeRepositorySupport.getParticipatedChallengePresetId(user, startDate, endDate);
+        List<ChallengePresetData> challengePresetDataList = new ArrayList<>();
+        for(ChallengePreset challengePreset : challengePresetList) {
+            if (participatedChallengePresetId.contains(challengePreset.getChallengePresetId())) {
+                challengePresetDataList.add(ChallengePresetData.of(challengePreset, true));
+            }
+        }
+        for(ChallengePreset challengePreset : challengePresetList) {
+            if (!participatedChallengePresetId.contains(challengePreset.getChallengePresetId())) {
+                challengePresetDataList.add(ChallengePresetData.of(challengePreset, false));
+            }
+        }
+
+        return challengePresetDataList;
+    }
+
     public List<ChallengeRankingData> getRankingDataList(Authentication authentication, long challengePresetId) throws InvalidUserException, InvalidChallengeIdException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
@@ -196,7 +217,7 @@ public class ChallengeService {
                 challengeRankingDataList.add(ChallengeRankingData.of(challengeList.get(i), rank));
                 continue;
             }
-            if((double)challengeList.get(i).getChallengeScore()/challengeList.get(i).getPeopleCnt() == (double)challengeList.get(i-1).getChallengeScore()/challengeList.get(i).getPeopleCnt()) {
+            if((double)challengeList.get(i).getChallengeScore()/challengeList.get(i).getPeopleCnt() == (double)challengeList.get(i-1).getChallengeScore()/challengeList.get(i-1).getPeopleCnt()) {
                 offset++;
                 challengeRankingDataList.add(ChallengeRankingData.of(challengeList.get(i), rank));
             } else {

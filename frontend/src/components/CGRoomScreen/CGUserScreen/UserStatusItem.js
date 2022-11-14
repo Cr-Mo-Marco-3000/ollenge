@@ -6,10 +6,33 @@ import { Modal, Portal } from "react-native-paper"
 import AppBoldText from "../../common/AppBoldText"
 import DateCheckBox from "./DateCheckBox"
 import ModalContent from "./ModalContent"
+import { ConvertDate } from "../../../functions/index"
 
 function UserStatusItem({ user }) {
-  const dayLst = ["월", "화", "수", "목", "금", "토", "일"]
+  const dayLst = ["", "월", "화", "수", "목", "금", "토", "일"]
   const [visible, setVisible] = useState(false)
+
+  const flag = new Array(7).fill(false)
+  const today = new Date()
+  let day = today.getDay()
+  if (day == 0) {
+    day = 7
+  }
+
+  const datelst = new Array()
+  for (const datetime of user.datetimeList) {
+    const date = datetime.split(" ")[0]
+    datelst.push(date)
+  }
+
+  for (var i = 0; i < day + 1; i++) {
+    const tempDay = new Date(today)
+    tempDay.setDate(today.getDate() - i)
+    const checkDate = ConvertDate(tempDay)
+    if (datelst.includes(checkDate)) {
+      flag[i] = 1
+    }
+  }
 
   function showModal() {
     setVisible(true)
@@ -41,8 +64,10 @@ function UserStatusItem({ user }) {
         <View style={styles.infoContainer}>
           <AppBoldText>{user.nickname}</AppBoldText>
           <View style={styles.dayContainer}>
-            {dayLst.map((day, key) => {
-              return <DateCheckBox day={day} checked={false} key={key} />
+            {dayLst.map((weekday, key) => {
+              if (key !== 0) {
+                return <DateCheckBox weekday={weekday} checked={flag[key]} key={key} />
+              }
             })}
           </View>
         </View>

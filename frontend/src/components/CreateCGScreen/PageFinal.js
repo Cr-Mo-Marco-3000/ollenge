@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react"
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
+import React, { useContext } from "react"
+import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import ColorSet from "../../style/ColorSet"
 import PageBase, { fontStyles } from "./PageBase"
 import DeviceInfo from "../../style/DeviceInfo"
-import { styles } from "../common/AppCard"
+
 import { useNavigation } from "@react-navigation/native"
+import apiSet from "../../api/index"
+import { RoomContext } from "../../../store/room-context"
 
 const { dw } = DeviceInfo
 const topText = `챌린지 정보는 시작 이후 변경이${"\n"}불가하니 신중히 입력 부탁드립니다.`
+const { challAPI } = apiSet
 
 const WarnSign = () => {
   return (
@@ -32,9 +35,10 @@ const Card = ({ title = "타이틀 없음", content = "컨텐츠 없음" }) => {
 }
 
 /** ---------------------------- Eport Default 영역 ---------------------------- */
-export default function Final({ info }) {
+export default function Final({ info, isRank, toNext, cancelAll, goBackToRoom }) {
   const period = `${info.startDate} ~ ${info.endDate}`
   const timing = `${info.startTime} ~ ${info.endTime}`
+  const roomCtx = useContext(RoomContext)
 
   const CGInfo = {
     "팀 이름": [info.challengeName, "Page1"],
@@ -47,22 +51,47 @@ export default function Final({ info }) {
     벌칙: [info.penaltyContent, "Page7"],
   }
   const navigation = useNavigation()
-
-  const createCG = () => {
-    console.log("CG Room 생성 API")
-    console.log(info)
+  console.log("YES BABY", isRank)
+  const checkCondition = (content) => {
+    if (isRank === true) {
+      if (
+        content === "챌린지 내용" ||
+        content === "인증 방식" ||
+        content === "챌린지 기간" ||
+        content === "인증 시간"
+      ) {
+        return true
+      }
+    }
+    return false
+  }
+  const createChallenge = async () => {
+    try {
+      const res = await challAPI.createCG(info)
+      const id = res.data.challengeCreatedData.challengeId
+      roomCtx.getRoomInfo(id)
+      roomCtx.getUserList(id)
+      navigation.push("CGRoom")
+    } catch (error) {
+      console.log(error.response)
+    }
   }
 
   return (
-    <PageBase toNext={"Submit"} toSubmit={() => createCG()}>
+    <PageBase toNext={toNext} toSubmit={() => createChallenge()} cancelAll={cancelAll}>
       <View style={frameStyles.wholeArea}>
         <WarnSign />
         <ScrollView style={{ width: "100%", marginBottom: 24 }}>
           {Object.keys(CGInfo).map((key) => {
             return (
-              <Pressable key={key} onPress={() => navigation.navigate(`${CGInfo[`${key}`][1]}`)}>
+              <TouchableOpacity
+                key={key}
+                activeOpacity={0.8}
+                disabled={checkCondition(key)}
+                onPress={() => navigation.navigate(`${CGInfo[`${key}`][1]}`)}
+              >
                 <Card title={key} content={CGInfo[`${key}`][0]} />
-              </Pressable>
+              </TouchableOpacity>
             )
           })}
         </ScrollView>
@@ -73,9 +102,8 @@ export default function Final({ info }) {
 
 const frameStyles = StyleSheet.create({
   wholeArea: {
-    alignItems: "flex-start",
     width: "100%",
-    height: "100%",
+    flex: 1,
   },
 
   warnArea: {

@@ -126,7 +126,8 @@ public class OAuthService {
 
     public boolean checkUser(JSONObject jsonObject) throws JSONException {
         String id = jsonObject.getString("id");
-        return userRepository.findUserByAuthCode(id).isPresent();
+        return userRepository.findUserByAuthCode
+                (id).isPresent();
     }
 
     public User createUser(JSONObject jsonObject) throws JSONException {

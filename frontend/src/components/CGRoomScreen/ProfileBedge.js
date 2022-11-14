@@ -28,7 +28,9 @@ const styles = StyleSheet.create({
     marginRight: RFPercentage(1),
   },
   activeBorder: {
-    shadowColor: `${ColorSet.greenColor(1)}`,
+    borderColor: `${ColorSet.orangeColor(0.6)}`,
+    borderWidth: 1,
+    shadowColor: `${ColorSet.orangeColor(1)}`,
     shadowOffset: {
       width: 0,
       height: 0,
@@ -36,6 +38,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 5.65,
 
-    elevation: 7,
+    elevation: 10,
   },
 })

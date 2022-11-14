@@ -2,7 +2,8 @@ package com.ollenge.db.repository;
 
 import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.api.response.data.UserCompletedChallengeData;
-import com.ollenge.api.response.data.UserParticipatedChallengeData;
+import com.ollenge.api.response.data.UserOngoingChallengeData;
+import com.ollenge.api.response.data.UserScheduledChallengeData;
 import com.ollenge.db.entity.*;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Repository
@@ -42,6 +44,38 @@ public class UserRepositorySupport {
             , qParticipation.challenge.endDate
             , ConstantImpl.create("%Y-%m-%d"));
 
+    DateTemplate formattedCreatedDateTime = Expressions.dateTemplate(
+            LocalDate.class
+            ,"DATE_FORMAT({0}, {1})"
+            , qFeed.createdDatetime
+            , ConstantImpl.create("%Y-%m-%d"));
+
+    public List<UserOngoingChallengeData> getUserOngoingChallenge(User user, boolean isRankingChallenge) {
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formatedToday = today.format(formatter);
+
+        List<Challenge> challengeList = jpaQueryFactory
+                .select(qParticipation.challenge)
+                .from(qParticipation)
+                .where(qParticipation.user.eq(user), formattedStartDate.loe(formatedToday).and(formattedEndDate.goe(formatedToday)) ,challengPreseteNotNull(isRankingChallenge))
+                .fetch();
+
+        List<Long> authChallengeIdList = jpaQueryFactory
+                .select(qParticipation.challenge.challengeId)
+                .from(qParticipation)
+                .join(qParticipation.feed, qFeed)
+                .where(qParticipation.user.eq(user), formattedStartDate.loe(formatedToday).and(formattedEndDate.goe(formatedToday)), formattedCreatedDateTime.eq(formatedToday),challengPreseteNotNull(isRankingChallenge))
+                .fetch();
+        HashSet<Long> authChallengeIdSet = new HashSet<>(authChallengeIdList);
+
+        List<UserOngoingChallengeData> participatedChallengeList = new ArrayList<>();
+        for (Challenge item : challengeList) {
+            participatedChallengeList.add(UserOngoingChallengeData.of(item, authChallengeIdSet.contains(item.getChallengeId())));
+        }
+        return participatedChallengeList;
+    }
+
     public List<UserCompletedChallengeData> getUserCompletedChallenge(User user, boolean isRankingChallenge) {
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -62,7 +96,7 @@ public class UserRepositorySupport {
         return participatedChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserChallenge(User user, String type, boolean isRankingChallenge) {
+    public List<UserScheduledChallengeData> getUserScheduledChallenge(User user, boolean isRankingChallenge) {
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formatedToday = today.format(formatter);
@@ -70,21 +104,14 @@ public class UserRepositorySupport {
         List<Challenge> challengeList = jpaQueryFactory
                 .select(qParticipation.challenge)
                 .from(qParticipation)
-                .where(qParticipation.user.eq(user), challengeDate(type, formatedToday) ,challengPreseteNotNull(isRankingChallenge))
+                .where(qParticipation.user.eq(user), formattedStartDate.gt(formatedToday) ,challengPreseteNotNull(isRankingChallenge))
                 .fetch();
 
-        List<UserParticipatedChallengeData> participatedChallengeList = new ArrayList<>();
+        List<UserScheduledChallengeData> scheduledChallengeDataList = new ArrayList<>();
         for (Challenge item : challengeList) {
-            participatedChallengeList.add(UserParticipatedChallengeData.of(item));
+            scheduledChallengeDataList.add(UserScheduledChallengeData.of(item));
         }
-        return participatedChallengeList;
-    }
-
-    private BooleanExpression challengeDate(String type, String formatedToday) {
-        if (type.equals("scheduled")) return formattedStartDate.gt(formatedToday);
-        else if (type.equals("ongoing")) return formattedStartDate.loe(formatedToday).and(formattedEndDate.goe(formatedToday));
-        else if (type.equals("completed")) return formattedEndDate.lt(formatedToday);
-        return null;
+        return scheduledChallengeDataList;
     }
 
     private BooleanExpression challengPreseteNotNull(boolean isRankingChallenge) {
@@ -134,10 +161,4 @@ public class UserRepositorySupport {
 
         return userRankData;
     }
-    /*
-            select c.*, p.*, (CASE WHEN f.participation_id IS NOT NULL THEN true ELSE false END) as todayAuthStat from participation p
-            left outer join (select participation_id from feed where DATE_FORMAT(created_datetime, '%Y-%m-%d')="2022-11-03") f on p.participation_id=f.participation_id
-            inner join challenge c on p.challenge_id=c.challenge_id
-            where p.user_id=1 and c.start_date<="2022-11-03" and c.end_date>="2022-11-03" and c.challenge_preset_id is null;
-        */
 }

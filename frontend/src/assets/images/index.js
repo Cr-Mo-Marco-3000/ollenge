@@ -12,11 +12,15 @@ import Heart2 from "./heart-icon-2.png"
 import Heart3 from "./heart-icon-3.png"
 import Heart4 from "./heart-icon-4.png"
 import ExclamMark from "./exclamation_question_mark_3d.png"
+import Clock from "./clock-dynamic-color.png"
+import Party from "./party.png"
 
 import { Image } from "react-native"
 
 import Triangle from "./triangle-icon.png"
 import Triangle2 from "./triangle-icon2.png"
+
+import Comment from "./comment-icon.png"
 
 export function OrangeLogo() {
   return <Image source={Orange} style={{ width: "100%", zIndex: -1 }} resizeMode="contain" />
@@ -77,4 +81,16 @@ export function CrownIcon() {
 
 export function ExclamMartIcon() {
   return <Image source={ExclamMark} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function ClockIcon() {
+  return <Image source={Clock} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function PartyIcon() {
+  return <Image source={Party} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function CommentIcon() {
+  return <Image source={Comment} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
 }

@@ -1,18 +1,27 @@
-import React from "react"
+import React, { useContext } from "react"
 
 import { StyleSheet, Image, Pressable, View } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
 
 import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
+import { AuthContext } from "../../../store/auth-context"
 
-function GainedBedgeItem(props) {
-  const iconName = "heart-icon-1"
-  const applied = props.applied ? props.applied : false
+function GainedBedgeItem({ type, typeData, grade }) {
+  const authCtx = useContext(AuthContext)
+  const userBadge = authCtx.userInfo.selectedBadge
+
+  let applied = false
+  if (type == userBadge.type && grade == userBadge.grade) {
+    applied = true
+  }
+
   return (
     <Pressable style={styles.bedgeItem}>
-      <Image source={require(`../../assets/images/${iconName}.png`)} style={styles.bedgeImage} />
-      <AppText size={2}>설명설명쑤얼라</AppText>
+      <Image source={typeData.src[grade]} style={styles.bedgeImage} />
+      <AppText size={2}>
+        {typeData.title} {typeData.checkpoint[grade]}회 완주
+      </AppText>
       {applied ? (
         <View style={styles.bedgeButton}>
           <AppText size={2}>착용 중</AppText>

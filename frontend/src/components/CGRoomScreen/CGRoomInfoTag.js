@@ -11,7 +11,7 @@ import { DefaultImage } from "../../assets/images"
 import AppBoldText from "../common/AppBoldText"
 import RoomInfoModalContent from "./RoomInfoModalContent"
 
-function CGRoomInfoTag({ roomInfo }) {
+function CGRoomInfoTag({ roomInfo, userList }) {
   const [visible, setVisible] = useState(false)
 
   function showModal() {
@@ -43,7 +43,7 @@ function CGRoomInfoTag({ roomInfo }) {
             paddingVertical: "10%",
           }}
         >
-          <RoomInfoModalContent roomInfo={roomInfo} hideModal={hideModal} />
+          <RoomInfoModalContent roomInfo={roomInfo} hideModal={hideModal} userList={userList} />
         </Modal>
       </Portal>
       <Pressable onPress={showModal} style={styles.btnContainer}>

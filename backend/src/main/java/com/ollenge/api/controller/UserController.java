@@ -4,13 +4,11 @@ import com.ollenge.api.exception.*;
 import com.ollenge.api.request.BadgePatchReq;
 import com.ollenge.api.request.ReportUserReq;
 import com.ollenge.api.request.UserPostReq;
-import com.ollenge.api.response.TotalUserRankGetRes;
-import com.ollenge.api.response.UserChallengeGetRes;
-import com.ollenge.api.response.UserCompletedGetRes;
-import com.ollenge.api.response.UserGetRes;
+import com.ollenge.api.response.*;
 import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.api.response.data.UserCompletedChallengeData;
-import com.ollenge.api.response.data.UserParticipatedChallengeData;
+import com.ollenge.api.response.data.UserOngoingChallengeData;
+import com.ollenge.api.response.data.UserScheduledChallengeData;
 import com.ollenge.api.service.BadgeService;
 import com.ollenge.api.service.UserService;
 import com.ollenge.common.model.response.BaseResponseBody;
@@ -95,9 +93,9 @@ public class UserController {
     })
   public ResponseEntity<? extends BaseResponseBody> getUserOngoingChallenge(@ApiIgnore Authentication authentication) {
         try {
-            List<UserParticipatedChallengeData> userChallengeList = userService.getUserOngoingUserChallenge(authentication);
-            List<UserParticipatedChallengeData> rankingChallengeList = userService.getUserOngoingRankingChallenge(authentication);
-            return ResponseEntity.status(200).body(UserChallengeGetRes.of(200, "유저별 참여 중인 챌린지 조회 성공", rankingChallengeList, userChallengeList));
+            List<UserOngoingChallengeData> userChallengeList = userService.getUserOngoingUserChallenge(authentication);
+            List<UserOngoingChallengeData> rankingChallengeList = userService.getUserOngoingRankingChallenge(authentication);
+            return ResponseEntity.status(200).body(UserOngoingGetRes.of(200, "유저별 참여 중인 챌린지 조회 성공", rankingChallengeList, userChallengeList));
         } catch (InvalidUserException invalidUserException) {
             invalidUserException.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));
@@ -116,9 +114,9 @@ public class UserController {
     })
     public ResponseEntity<? extends BaseResponseBody> getUserScheduledChallenge(@ApiIgnore Authentication authentication) {
         try {
-            List<UserParticipatedChallengeData> userChallengeList = userService.getUserScheduledUserChallenge(authentication);
-            List<UserParticipatedChallengeData> rankingChallengeList = userService.getUserScheduledRankingChallenge(authentication);
-            return ResponseEntity.status(200).body(UserChallengeGetRes.of(200, "유저별 참여 예정 챌린지 조회 성공", rankingChallengeList, userChallengeList));
+            List<UserScheduledChallengeData> userChallengeList = userService.getUserScheduledUserChallenge(authentication);
+            List<UserScheduledChallengeData> rankingChallengeList = userService.getUserScheduledRankingChallenge(authentication);
+            return ResponseEntity.status(200).body(UserScheduledGetRes.of(200, "유저별 참여 예정 챌린지 조회 성공", rankingChallengeList, userChallengeList));
         } catch (InvalidUserException invalidUserException) {
             invalidUserException.printStackTrace();
             return ResponseEntity.status(500).body(BaseResponseBody.of(400, "권한이 없습니다."));

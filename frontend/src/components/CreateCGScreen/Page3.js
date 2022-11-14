@@ -10,21 +10,22 @@ const words = {
   "자유 인증": "아무 사진을 등록해도 인증이 되는 방법입니다. 팀원들간의 기준에 따라 진행됩니다.",
 }
 
-export default function Page2({ info, setInfo }) {
-  const [auth, setAuth] = useState(info.authType)
+const reqForm = ["feature", "classifi", "none"]
+
+export default function Page2({ info, setInfo, toNext, cancelAll }) {
   const [selIndex, setSelIndex] = useState(-1)
+  const [auth, setAuth] = useState(info.authType)
   const [disabled, setDisabled] = useState(true)
 
   useEffect(() => {
     setInfo((prev) => {
-      return { ...prev, authType: Object.keys(words)[selIndex] }
+      return { ...prev, authType: auth }
     })
     setDisabled(auth === "")
-    console.log(auth)
   }, [auth, setAuth])
 
   return (
-    <PageBase toNext={"Page4"} disabled={disabled}>
+    <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
       {/* 랭킹 챌린지 종류별 카드 렌더링 */}
       {Object.keys(words).map((key, ind) => {
         return (
@@ -32,13 +33,13 @@ export default function Page2({ info, setInfo }) {
             key={ind}
             onPress={() => {
               setSelIndex(ind)
-              setAuth(Object.keys(words)[ind])
+              setAuth(reqForm[ind])
             }}
             style={{ width: "100%" }}
           >
-            <View style={styles.Card(selIndex === ind)}>
-              <Text style={styles.Title(selIndex === ind)}>{key}</Text>
-              <Text style={styles.Content(selIndex === ind)} numberOfLines={2}>
+            <View style={styles.Card(auth === reqForm[ind])}>
+              <Text style={styles.Title(auth === reqForm[ind])}>{key}</Text>
+              <Text style={styles.Content(auth === reqForm[ind])} numberOfLines={2}>
                 {words[key]}
               </Text>
             </View>

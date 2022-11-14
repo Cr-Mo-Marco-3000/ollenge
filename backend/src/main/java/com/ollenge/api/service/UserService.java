@@ -5,7 +5,8 @@ import com.ollenge.api.request.BadgePatchReq;
 import com.ollenge.api.request.ReportUserReq;
 import com.ollenge.api.response.data.TotalUserRankData;
 import com.ollenge.api.response.data.UserCompletedChallengeData;
-import com.ollenge.api.response.data.UserParticipatedChallengeData;
+import com.ollenge.api.response.data.UserOngoingChallengeData;
+import com.ollenge.api.response.data.UserScheduledChallengeData;
 import com.ollenge.common.util.JwtTokenUtil;
 import com.ollenge.common.util.StringUtils;
 import com.ollenge.db.entity.Badge;
@@ -70,35 +71,35 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<UserParticipatedChallengeData> getUserOngoingRankingChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserOngoingChallengeData> getUserOngoingRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> rankingChallengeList = userRepositorySupport.getUserChallenge(user, "ongoing",true);
+        List<UserOngoingChallengeData> rankingChallengeList = userRepositorySupport.getUserOngoingChallenge(user, true);
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserOngoingUserChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserOngoingChallengeData> getUserOngoingUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> userChallengeList = userRepositorySupport.getUserChallenge(user, "ongoing", false);
+        List<UserOngoingChallengeData> userChallengeList = userRepositorySupport.getUserOngoingChallenge(user, false);
         return userChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserScheduledRankingChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserScheduledChallengeData> getUserScheduledRankingChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> rankingChallengeList = userRepositorySupport.getUserChallenge(user, "scheduled", true);
+        List<UserScheduledChallengeData> rankingChallengeList = userRepositorySupport.getUserScheduledChallenge(user, true);
         return rankingChallengeList;
     }
 
-    public List<UserParticipatedChallengeData> getUserScheduledUserChallenge(Authentication authentication) throws InvalidUserException {
+    public List<UserScheduledChallengeData> getUserScheduledUserChallenge(Authentication authentication) throws InvalidUserException {
         long userId = JwtTokenUtil.getUserIdByJWT(authentication);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> { return new InvalidUserException("Invalid ID " + userId); });
-        List<UserParticipatedChallengeData> userChallengeList = userRepositorySupport.getUserChallenge(user, "scheduled", false);
+        List<UserScheduledChallengeData> userChallengeList = userRepositorySupport.getUserScheduledChallenge(user, false);
         return userChallengeList;
     }
 

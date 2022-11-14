@@ -1,90 +1,90 @@
 import * as React from "react"
-import { BottomNavigation } from "react-native-paper"
 import { StyleSheet } from "react-native"
 import * as Font from "expo-font"
 import AppLoading from "expo-app-loading"
 import { useState, useContext, useEffect } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { NavigationContainer } from "@react-navigation/native"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 
 import StartScreen from "./src/screens/StartScreen"
 import MyCGScreen from "./src/screens/MyCGScreen"
 import RankingCGScreen from "./src/screens/RankingCGScreen"
 import UserRankScreen from "./src/screens/UserRankScreen"
 import MyPageScreen from "./src/screens/MyPageScreen"
-import CreateCGScreen from "./src/screens/CreateCGScreen"
 
 import ColorSet from "./src/style/ColorSet"
 import AuthContextProvider, { AuthContext } from "./store/auth-context"
-
-const MyCGRoute = () => <MyCGScreen />
-
-const RankingCGRoute = () => <RankingCGScreen />
-
-const UserRankRoute = () => <UserRankScreen />
-
-const MyPageRoute = () => <MyPageScreen />
-
-const CreateCGRoute = () => <CreateCGScreen />
+import RoomContextProvider from "./store/room-context"
 
 function AuthStack() {
   return <StartScreen />
 }
 
 function AuthenticatedStack() {
-  const [index, setIndex] = React.useState(4)
-  const [routes] = React.useState([
-    {
-      key: "myCG",
-      title: "내 챌린지",
-      focusedIcon: "home",
-    },
-    { key: "rankingCG", title: "랭킹 챌린지", focusedIcon: "fire" },
-    { key: "userRank", title: "유저랭킹", focusedIcon: "crown" },
-    {
-      key: "myPage",
-      title: "마이페이지",
-      focusedIcon: "account",
-    },
-    { key: "createCG", title: "챌린지 생성", focusedIcon: "crown" },
-  ])
-
-  const renderScene = BottomNavigation.SceneMap({
-    myCG: MyCGRoute,
-    rankingCG: RankingCGRoute,
-    userRank: UserRankRoute,
-    myPage: MyPageRoute,
-    createCG: CreateCGRoute,
-  })
+  const Tab = createBottomTabNavigator()
 
   return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-      compact={false}
-      sceneAnimationType={"shifting"}
-      barStyle={styles.bottomNavContainer}
-      activeColor={`${ColorSet.orangeColor(1)}`}
-      inactiveColor={`${ColorSet.navyColor(1)}`}
-      theme={{
-        fonts: {
-          labelMedium: {
-            fontFamily: "HyeminBold",
-          },
-        },
-        colors: {
-          onSurfaceVariant: `${ColorSet.navyColor(1)}`,
-          onSurface: `${ColorSet.orangeColor(1)}`,
-          secondaryContainer: "#FF999900",
-        },
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarLabelStyle: { fontSize: 15, fontFamily: "HyeminBold" },
+        tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
+        tabBarInactiveTintColor: `${ColorSet.navyColor(1)}`,
+        tabBarStyle: { height: 70, paddingBottom: 5 },
       }}
-    />
+    >
+      <Tab.Screen
+        name="내 챌린지"
+        component={MyCGScreen}
+        options={{
+          unmountOnBlur: true,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="랭킹 챌린지"
+        component={RankingCGScreen}
+        options={{
+          unmountOnBlur: true,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="fire" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="유저 랭킹"
+        component={UserRankScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="crown" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="마이페이지"
+        component={MyPageScreen}
+        options={{
+          unmountOnBlur: true,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   )
 }
 
 function Navigation() {
   const authCtx = useContext(AuthContext)
-  return <>{authCtx.token && authCtx.isSigned ? <AuthenticatedStack /> : <AuthStack />}</>
+  return (
+    <NavigationContainer>
+      {authCtx.token && authCtx.isSigned ? <AuthenticatedStack /> : <AuthStack />}
+    </NavigationContainer>
+  )
 }
 
 function Root() {
@@ -128,7 +128,9 @@ function App() {
   return (
     <>
       <AuthContextProvider>
-        <Root />
+        <RoomContextProvider>
+          <Root />
+        </RoomContextProvider>
       </AuthContextProvider>
     </>
   )

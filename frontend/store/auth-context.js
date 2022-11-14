@@ -11,8 +11,10 @@ export const AuthContext = createContext({
   isAuthenticated: false,
   isSigned: false,
   userInfo: new Object(),
+  badgeData: new Object(),
   authenticate: (token) => {},
   getInfo: () => {},
+  getBadgeData: (userId) => {},
   signed: (flag) => {},
   logout: () => {},
 })
@@ -21,6 +23,7 @@ function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState()
   const [userFlag, setUserFlag] = useState()
   const [info, setInfo] = useState()
+  const [badge, setBadge] = useState()
 
   function authenticate(token) {
     setAuthToken(token)
@@ -31,11 +34,25 @@ function AuthContextProvider({ children }) {
   function infoData() {
     instance
       .get("/api/user")
-      .then((res) => setInfo(res.data))
+      .then((res) => {
+        setInfo(res.data)
+        instance
+          // .get(`/api/badge/${res.data.userId}`)
+          .get(`/api/badge/1`)
+          .then((res) => setBadge(res.data.badgeList))
+          .catch((err) => console.log(err))
+      })
       .catch((err) => {
         console.log(err)
         logout()
       })
+  }
+
+  function getBadge(userId) {
+    instance
+      .get(`/api/badge/${userId}`)
+      .then((res) => setBadge(res.data.badgeList))
+      .catch((err) => console.log(err))
   }
 
   function signed(flag) {
@@ -54,8 +71,10 @@ function AuthContextProvider({ children }) {
     isAuthenticated: !!authToken,
     isSigned: userFlag,
     userInfo: info,
+    badgeData: badge,
     authenticate: authenticate,
     getInfo: infoData,
+    getBadgeData: getBadge,
     signed: signed,
     logout: logout,
   }

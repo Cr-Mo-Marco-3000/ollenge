@@ -1,6 +1,6 @@
 import React from "react-native"
 import { Dimensions } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+// import { useNavigation } from "@react-navigation/native"
 import AppBoldText from "../common/AppBoldText"
 import styled from "styled-components"
 import BeforeStartCard from "./BeforeStartCard"
@@ -8,46 +8,57 @@ import {
   RankingChallengeIcon,
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
-import { FAB, Portal, Provider } from "react-native-paper"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { AuthorizationInstance } from "../../api/settings"
+import { RoomContext } from "../../../store/room-context"
+import NoContent from "./NoContent"
 
-const BeforeStart = (props) => {
-  const navigation = useNavigation()
+const BeforeStart = ({ navigation }) => {
+  // const navigation = useNavigation()
   const [rankingCGList, setRankingCGList] = useState([])
   const [userCGList, setUserCGList] = useState([])
   const instance = AuthorizationInstance()
-  const [fabButton, setfabButton] = useState(false)
-
-  const onStateChange = () => {
-    setfabButton(!fabButton)
-  }
-
-  const tempRankingCGList = [
-    {
-      challengeId: 34,
-      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      challengeName: "찬호와 아이들",
-      challengeTopic: "하루 3잔 물마시기",
-      startDate: new Date(2022, 10, 10),
-      endDate: new Date(2022, 10, 15),
-      peopleCnt: 4,
-    },
-  ]
-
-  const tempUserCGList = [
-    {
-      challengeId: 35,
-      challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      challengeName: "찬호와 아이들",
-      challengeTopic: "하루 3잔 물마시기",
-      startDate: new Date(2022, 10, 10),
-      endDate: new Date(2022, 10, 15),
-      peopleCnt: 4,
-    },
-  ]
 
   useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      const reload = async () => {
+        const res = await instance.get("/api/user/scheduled")
+        const NewRankingCGList = res.data.rankingChallengeList
+        const NewUserCGList = res.data.userChallengeList
+        setRankingCGList(NewRankingCGList)
+        setUserCGList(NewUserCGList)
+      }
+      reload()
+    })
+    return focusHandler
+  }, [navigation])
+
+  // const rankingCGList = [
+  //   {
+  //     challengeId: 34,
+  //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  //     challengeName: "찬호와 아이들",
+  //     challengeTopic: "하루 3잔 물마시기",
+  //     startDate: new Date(2022, 10, 10),
+  //     endDate: new Date(2022, 10, 15),
+  //     peopleCnt: 4,
+  //   },
+  // ]
+
+  // const userCGList = [
+  //   {
+  //     challengeId: 35,
+  //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
+  //     challengeName: "찬호와 아이들",
+  //     challengeTopic: "하루 3잔 물마시기",
+  //     startDate: new Date(2022, 10, 10),
+  //     endDate: new Date(2022, 10, 15),
+  //     peopleCnt: 4,
+  //   },
+  // ]
+
+  useEffect(() => {
+    // 리스트 렌더링
     const getChallenge = async () => {
       try {
         const res = await instance.get("/api/user/scheduled")
@@ -56,35 +67,34 @@ const BeforeStart = (props) => {
         setRankingCGList(NewRankingCGList)
         setUserCGList(NewUserCGList)
       } catch (err) {
-        // console.log(err)
+        console.log(err)
       }
     }
     getChallenge()
   }, [])
 
+  const roomCtx = useContext(RoomContext)
+  // 이미 나열되어 있는 리스트를 눌러 CGRoom에 진입하는 경우
+
   const pressHandler = (id) => {
-    props.idHandler(id)
+    roomCtx.getRoomInfo(id)
+    roomCtx.getUserList(id)
     navigation.push("CGRoom")
   }
 
   return (
-    <ScrollBackground>
-      <DivideView>
-        <IconView>
-          <RankingChallengeIcon />
-        </IconView>
-        <AppBoldText>랭킹 챌린지</AppBoldText>
-      </DivideView>
-      {tempRankingCGList.map((challengeInfo) => (
-        <BeforeStartCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))}
-      {/* {rankingCGList.map((challengeInfo) => (
+    <ChallengingBody>
+      {rankingCGList.length || userCGList.length ? (
+        <ScrollBackground>
+          {rankingCGList ? (
+            <DivideView>
+              <IconView>
+                <RankingChallengeIcon />
+              </IconView>
+              <AppBoldText>랭킹 챌린지</AppBoldText>
+            </DivideView>
+          ) : null}
+          {rankingCGList.map((challengeInfo) => (
             <BeforeStartCard
               key={challengeInfo.challengeId}
               challengeInfo={challengeInfo}
@@ -92,23 +102,16 @@ const BeforeStart = (props) => {
                 pressHandler(challengeInfo.challengeId)
               }}
             />
-          ))} */}
-      <DivideView>
-        <IconView>
-          <NormalChallengeIcon />
-        </IconView>
-        <AppBoldText>일반 챌린지</AppBoldText>
-      </DivideView>
-      {tempUserCGList.map((challengeInfo) => (
-        <BeforeStartCard
-          key={challengeInfo.challengeId}
-          challengeInfo={challengeInfo}
-          func={() => {
-            pressHandler(challengeInfo.challengeId)
-          }}
-        />
-      ))}
-      {/* {userCGList.map((challengeInfo) => (
+          ))}
+          {userCGList.length ? (
+            <DivideView>
+              <IconView>
+                <NormalChallengeIcon />
+              </IconView>
+              <AppBoldText>일반 챌린지</AppBoldText>
+            </DivideView>
+          ) : null}
+          {userCGList.map((challengeInfo) => (
             <BeforeStartCard
               key={challengeInfo.challengeId}
               challengeInfo={challengeInfo}
@@ -116,8 +119,12 @@ const BeforeStart = (props) => {
                 pressHandler(challengeInfo.challengeId)
               }}
             />
-          ))} */}
-    </ScrollBackground>
+          ))}
+        </ScrollBackground>
+      ) : (
+        <NoContent message={"시작 전인"} />
+      )}
+    </ChallengingBody>
   )
 }
 
@@ -138,4 +145,8 @@ export default BeforeStart
 const IconView = styled.View`
   width: 15%;
   height: 50px;
+`
+
+const ChallengingBody = styled.View`
+  height: 100%;
 `

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,7 +28,7 @@ public class Challenge {
     @JoinColumn(name = "challenge_preset_id")
     ChallengePreset challengePreset;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "challenge_result_id")
     ChallengeResult challengeResult;
 
@@ -75,4 +76,7 @@ public class Challenge {
 
     @OneToOne(mappedBy = "challenge")
     AuthClassification authClassification;
+
+    @OneToMany(mappedBy = "challenge")
+    List<Participation> participation;
 }

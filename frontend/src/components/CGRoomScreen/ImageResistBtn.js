@@ -7,12 +7,12 @@ import { ExclamMartIcon } from "../../assets/images"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
 
-function ImageResistBtn({ navigation }) {
+function ImageResistBtn({ navigation, roomInfo }) {
   return (
     <View style={styles.buttonBox}>
       <Pressable
         style={styles.innerButton}
-        onPress={() => navigation.push("CGImg", { methodNum: 0, participationId: 3 })}
+        onPress={(roomInfo) => navigation.push("CGImg", { roomInfo: { roomInfo } })}
       >
         <View style={{ flexDirection: "row" }}>
           <View style={{ width: 30, height: 30 }}>
