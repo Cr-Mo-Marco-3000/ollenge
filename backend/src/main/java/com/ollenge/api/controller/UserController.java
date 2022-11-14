@@ -158,7 +158,7 @@ public class UserController {
         try {
             List<TotalUserRankData> totalUserRankDataList = userService.getTotalUserRank(authentication);
             TotalUserRankData userRank = userService.getUserRank(authentication);
-            return ResponseEntity.status(200).body(TotalUserRankGetRes.of(200, "유저별 참여 완료 챌린지 조회 성공", userRank,totalUserRankDataList));
+            return ResponseEntity.status(200).body(TotalUserRankGetRes.of(200, "전체 유저 랭킹 조회 성공", userRank,totalUserRankDataList));
         } catch (InvalidUserException invalidUserException) {
             invalidUserException.printStackTrace();
             return ResponseEntity.status(400).body(BaseResponseBody.of(400, "권한이 없습니다."));
