@@ -33,7 +33,7 @@ pxSize={24}
 */
 const AppBoldText = (props) => {
   const selectedColor = props.color ? props.color : "navy"
-  const align = props.align ? props.align : "center"
+  const align = props.align ? props.align : "left"
   let selectedSize = 24
 
   if (!props.size && !props.pxSize) {
