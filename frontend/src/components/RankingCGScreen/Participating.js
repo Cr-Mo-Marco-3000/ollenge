@@ -15,7 +15,7 @@ import ParticipatingDetail from "./ParticipatingDetail"
 import { AuthorizationInstance } from "../../api/settings"
 import AppModal from "../common/AppModal"
 
-const Participating = () => {
+const Participating = (props) => {
   const [openModal, setOpenModal] = useState(false)
   const [nowPage, setNowPage] = useState(0)
   const instance = AuthorizationInstance()
@@ -53,6 +53,7 @@ const Participating = () => {
             participatingList={participatingList}
             startDate={startDate}
             endDate={endDate}
+            makeChallenge={props.makeChallenge}
           />
         </AppModal>
       )}

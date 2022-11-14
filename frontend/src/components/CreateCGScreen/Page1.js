@@ -10,7 +10,6 @@ export default function Page1({ info, setInfo, toNext, cancelAll }) {
   const [img, setImg] = useState(info.challengeImg)
   const [AwsUrl, setAwsUrl] = useState("")
   const [disabled, setDisabled] = useState(true)
-
   useEffect(() => {
     setInfo(() => {
       return { ...info, challengeName: name, challengeImg: AwsUrl }
