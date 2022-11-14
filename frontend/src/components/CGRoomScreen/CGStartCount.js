@@ -6,10 +6,11 @@ import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
 import { ClockIcon } from "../../assets/images"
 import { RoomContext } from "../../../store/room-context"
+import { LocalTime } from "../../functions/index"
 
 function CGStartCount() {
   const roomCtx = useContext(RoomContext)
-  const nowDate = new Date().getTime()
+  const nowDate = LocalTime().getTime()
   const startDate = new Date(roomCtx.roomInfo.startDate).getTime()
   const dDate = Math.ceil((startDate - nowDate) / 1000 / 60 / 60 / 24)
   return (

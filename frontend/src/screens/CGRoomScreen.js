@@ -18,6 +18,7 @@ import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
 import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
 import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
 import CGStartCount from "../components/CGRoomScreen/CGStartCount"
+import TodayAuthCount from "../components/CGRoomScreen/TodayAuthCount"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 import FeedsArea from "../components/CGRoomScreen/FeedsArea"
 
@@ -64,6 +65,7 @@ function CGRoomScreen() {
 
         <View style={styles.buttonContainer}>
           <CGStartCount />
+          <TodayAuthCount />
           <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
           <CGAuthBtn navigation={navigation} />
           <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />
