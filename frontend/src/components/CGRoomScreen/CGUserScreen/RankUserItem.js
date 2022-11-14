@@ -5,10 +5,10 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 
 import AppBoldText from "../../common/AppBoldText"
 import defaultImage from "../../../assets/images/default-image.png"
-import { HeartIcon1 } from "../../../assets/images"
 
-function RankUserItem({ user, rank, noRank, wholeDay }) {
+function RankUserItem({ user, rank, noRank, wholeDay, src }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
+
   return (
     <View style={styles.rootScreen}>
       {noRank ? (
@@ -27,7 +27,7 @@ function RankUserItem({ user, rank, noRank, wholeDay }) {
           />
         </View>
         <View style={styles.bedgeImgBox}>
-          <HeartIcon1 />
+          <Image source={src} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
         </View>
         <View style={{ width: "40%", marginRight: RFPercentage(1) }}>
           <AppBoldText pxSize={24} lineNumber={1}>

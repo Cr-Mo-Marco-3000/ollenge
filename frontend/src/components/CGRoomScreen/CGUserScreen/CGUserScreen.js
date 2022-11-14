@@ -14,7 +14,7 @@ function CGUserScreen() {
   const roomCtx = useContext(RoomContext)
   const roomInfo = roomCtx.roomInfo
   const userList = roomCtx.userList
-  const [isStarted, setIsStarted] = useState(true)
+  const [isStarted, setIsStarted] = useState(false)
 
   useEffect(() => {
     const now = LocalTime()

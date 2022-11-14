@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 
 import { View, StyleSheet, Image } from "react-native"
 import { RFPercentage } from "react-native-responsive-fontsize"
@@ -6,14 +6,16 @@ import { ProgressBar } from "react-native-paper"
 import { Calendar } from "react-native-calendars"
 
 import defaultImage from "../../../assets/images/default-image.png"
-import { CrownIcon } from "../../../assets/images"
 
 import ColorSet from "../../../style/ColorSet"
 import AppBoldText from "../../common/AppBoldText"
 import AppText from "../../common/AppText"
+import { RoomContext } from "./../../../../store/room-context"
 
 function ModalContent({ user }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
+  const roomCtx = useContext(RoomContext)
+  const roomInfo = roomCtx.roomInfo
 
   const markedDates = new Object()
   for (const date of user.datetimeList) {
@@ -29,14 +31,62 @@ function ModalContent({ user }) {
     }
   }
 
-  const startDate = new Date("2022-11-10")
+  const startDate = new Date(roomInfo.startDate)
   const year = new Date().getFullYear()
   const month = new Date().getMonth() + 1
   const date = new Date().getDate()
   const today = new Date(`${year}-${month}-${date}`)
 
   const wholeDay = Math.round((today.getTime() - startDate.getTime()) / 1000 / 60 / 60 / 24 + 1)
+  console.log(wholeDay)
 
+  const badgesImg = {
+    user: [
+      require("../../../assets/images/badges/User-0.png"),
+      require("../../../assets/images/badges/User-1.png"),
+      require("../../../assets/images/badges/User-2.png"),
+      require("../../../assets/images/badges/User-3.png"),
+    ],
+    ranking1: [
+      require("../../../assets/images/badges/WakeUp-0.png"),
+      require("../../../assets/images/badges/WakeUp-1.png"),
+      require("../../../assets/images/badges/WakeUp-2.png"),
+      require("../../../assets/images/badges/WakeUp-3.png"),
+    ],
+    ranking2: [
+      require("../../../assets/images/badges/Exercise-0.png"),
+      require("../../../assets/images/badges/Exercise-1.png"),
+      require("../../../assets/images/badges/Exercise-2.png"),
+      require("../../../assets/images/badges/Exercise-3.png"),
+    ],
+    ranking3: [
+      require("../../../assets/images/badges/Study-0.png"),
+      require("../../../assets/images/badges/Study-1.png"),
+      require("../../../assets/images/badges/Study-2.png"),
+      require("../../../assets/images/badges/Study-3.png"),
+    ],
+    ranking4: [
+      require("../../../assets/images/badges/Pills-0.png"),
+      require("../../../assets/images/badges/Pills-1.png"),
+      require("../../../assets/images/badges/Pills-2.png"),
+      require("../../../assets/images/badges/Pills-3.png"),
+    ],
+    ranking5: [
+      require("../../../assets/images/badges/Salad-0.png"),
+      require("../../../assets/images/badges/Salad-1.png"),
+      require("../../../assets/images/badges/Salad-2.png"),
+      require("../../../assets/images/badges/Salad-3.png"),
+    ],
+
+    ranking6: [
+      require("../../../assets/images/badges/Cleaning-0.png"),
+      require("../../../assets/images/badges/Cleaning-1.png"),
+      require("../../../assets/images/badges/Cleaning-2.png"),
+      require("../../../assets/images/badges/Cleaning-3.png"),
+    ],
+  }
+
+  console.log(badgesImg[user.selectedBadge.type][user.selectedBadge.grade - 1])
   return (
     <View style={styles.modalContainer}>
       <View style={styles.topContainer}>
@@ -48,9 +98,19 @@ function ModalContent({ user }) {
               resizeMode="cover"
             />
           </View>
-          <View style={styles.bedgeBox}>
-            <CrownIcon />
-          </View>
+          {user.selectedBadge != null ? (
+            <View style={styles.bedgeBox}>
+              <View style={{ width: RFPercentage(4), height: RFPercentage(4) }}>
+                <Image
+                  source={badgesImg[user.selectedBadge.type][user.selectedBadge.grade - 1]}
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode="cover"
+                />
+              </View>
+            </View>
+          ) : (
+            <></>
+          )}
         </View>
         <View style={styles.infoBox}>
           <AppBoldText>{user.nickname}</AppBoldText>
@@ -121,6 +181,7 @@ const styles = StyleSheet.create({
     width: RFPercentage(4),
     height: RFPercentage(6),
     backgroundColor: `${ColorSet.grayColor(0.8)}`,
+    justifyContent: "center",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderBottomRightRadius: 10,

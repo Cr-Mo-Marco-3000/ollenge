@@ -4,8 +4,6 @@ import com.ollenge.db.entity.User;
 import lombok.*;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDate;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,6 +18,7 @@ public class TotalUserRankData {
     String profileImg;
     int userScore;
     int rank;
+    BadgeGetData selectedBadge;
 
 
     public static TotalUserRankData of(User user, int i) {
@@ -29,6 +28,16 @@ public class TotalUserRankData {
         totalUserRankData.profileImg = user.getProfileImg();
         totalUserRankData.userScore = user.getUserScore();
         totalUserRankData.rank = i;
+        if(user.getBadge() != null) {
+            totalUserRankData.selectedBadge = new BadgeGetData();
+            totalUserRankData.selectedBadge.setBadgeId(user.getBadge().getBadgeId());
+            totalUserRankData.selectedBadge.setType(user.getBadge().getType());
+            totalUserRankData.selectedBadge.setGrade(user.getBadge().getGrade());
+            totalUserRankData.selectedBadge.setCreatedDatetime(user.getBadge().getCreatedDatetime());
+            totalUserRankData.selectedBadge.setBadgeFlag(user.getBadge().isBadgeFlag());
+        } else {
+            totalUserRankData.selectedBadge = null;
+        }
 
         return totalUserRankData;
     }

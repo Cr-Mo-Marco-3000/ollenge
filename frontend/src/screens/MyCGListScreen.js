@@ -1,4 +1,4 @@
-import React from "react-native"
+import React, { KeyboardAvoidingView } from "react-native"
 import styled from "styled-components"
 import AppBoldText from "../components/common/AppBoldText"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
@@ -61,53 +61,55 @@ function MyCGListScreen() {
     <Provider>
       {showCodeInput && (
         <Modal animationType="fade" statusBarTranslucent={true} transparent={true}>
-          <Outside onPress={openAndClose}>
-            {/* <InnerSide> */}
-            <InputView>
-              <CardView>
-                <AppCard>
-                  <Card>
-                    <InnerArea>
-                      <InnerRow>
-                        <IconView>
-                          <MailIcon />
-                        </IconView>
-                        {errorFlag ? (
-                          <ErrorFlagView>
-                            <AppBoldText pxSize={20}>초대 코드 입력</AppBoldText>
-                          </ErrorFlagView>
-                        ) : (
-                          <ErrorFlagView>
-                            <AppBoldText size={2} color={"hotPink"}>
-                              초대 코드를 확인해주세요!
-                            </AppBoldText>
-                          </ErrorFlagView>
-                        )}
-                      </InnerRow>
-                      <InnerRow>
-                        <AppTextInput
-                          textAlign="center"
-                          autoFocus={true}
-                          underlineColorAndroid={ColorSet.navyColor(0.3)}
-                          onChangeText={(e) => {
-                            setInputValue(e)
-                          }}
-                          onSubmitEditing={joinChallenge}
-                          blurOnSubmit={false}
-                        ></AppTextInput>
-                      </InnerRow>
-                      <InnerRow>
-                        <ButtonView>
-                          <AppButton handler={joinChallenge} title={"확인"} />
-                        </ButtonView>
-                      </InnerRow>
-                    </InnerArea>
-                  </Card>
-                </AppCard>
-              </CardView>
-            </InputView>
-            {/* </InnerSide> */}
-          </Outside>
+          <OutsideKeyboardAvoidingView behavior={"padding"}>
+            <Outside onPress={openAndClose}>
+              {/* <InnerSide> */}
+              <InputView>
+                <CardView>
+                  <AppCard>
+                    <Card>
+                      <InnerArea>
+                        <InnerRow>
+                          <IconView>
+                            <MailIcon />
+                          </IconView>
+                          {errorFlag ? (
+                            <ErrorFlagView>
+                              <AppBoldText pxSize={20}>초대 코드 입력</AppBoldText>
+                            </ErrorFlagView>
+                          ) : (
+                            <ErrorFlagView>
+                              <AppBoldText size={2} color={"hotPink"}>
+                                초대 코드를 확인해주세요!
+                              </AppBoldText>
+                            </ErrorFlagView>
+                          )}
+                        </InnerRow>
+                        <InnerRow>
+                          <AppTextInput
+                            textAlign="center"
+                            autoFocus={true}
+                            underlineColorAndroid={ColorSet.navyColor(0.3)}
+                            onChangeText={(e) => {
+                              setInputValue(e)
+                            }}
+                            onSubmitEditing={joinChallenge}
+                            blurOnSubmit={false}
+                          ></AppTextInput>
+                        </InnerRow>
+                        <InnerRow>
+                          <ButtonView>
+                            <AppButton handler={joinChallenge} title={"확인"} />
+                          </ButtonView>
+                        </InnerRow>
+                      </InnerArea>
+                    </Card>
+                  </AppCard>
+                </CardView>
+              </InputView>
+              {/* </InnerSide> */}
+            </Outside>
+          </OutsideKeyboardAvoidingView>
         </Modal>
       )}
       <Portal>
@@ -220,6 +222,10 @@ const HeaderTextView = styled.View`
 
 const HeaderTextColumn = styled.View`
   flex: 1;
+`
+const OutsideKeyboardAvoidingView = styled.KeyboardAvoidingView`
+  height: 100%;
+  width: 100%;
 `
 
 const Outside = styled.Pressable`
