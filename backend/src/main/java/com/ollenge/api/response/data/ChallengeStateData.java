@@ -1,5 +1,6 @@
 package com.ollenge.api.response.data;
 
+import com.ollenge.db.entity.User;
 import lombok.*;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,13 +20,24 @@ public class ChallengeStateData {
     String nickname;
     String profileImg;
     List<LocalDateTime> datetimeList;
+    BadgeGetData selectedBadge;
 
-    public static ChallengeStateData of(long userId, String nickname, String profileImg, List<LocalDateTime> datetimeList) {
+    public static ChallengeStateData of(User user, List<LocalDateTime> datetimeList) {
         ChallengeStateData challengeStateData = new ChallengeStateData();
-        challengeStateData.userId = userId;
-        challengeStateData.nickname = nickname;
-        challengeStateData.profileImg = profileImg;
+        challengeStateData.userId = user.getUserId();
+        challengeStateData.nickname = user.getNickname();
+        challengeStateData.profileImg = user.getProfileImg();
         challengeStateData.datetimeList = datetimeList;
+        if(user.getBadge() != null) {
+            challengeStateData.selectedBadge = new BadgeGetData();
+            challengeStateData.selectedBadge.setBadgeId(user.getBadge().getBadgeId());
+            challengeStateData.selectedBadge.setType(user.getBadge().getType());
+            challengeStateData.selectedBadge.setGrade(user.getBadge().getGrade());
+            challengeStateData.selectedBadge.setCreatedDatetime(user.getBadge().getCreatedDatetime());
+            challengeStateData.selectedBadge.setBadgeFlag(user.getBadge().isBadgeFlag());
+        } else {
+            challengeStateData.selectedBadge = null;
+        }
         return challengeStateData;
     }
 }

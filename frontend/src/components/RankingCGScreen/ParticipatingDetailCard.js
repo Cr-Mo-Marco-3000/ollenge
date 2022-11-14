@@ -10,27 +10,35 @@ import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
 import AppButton from "../common/AppButton"
 import * as Images from "../../assets/images/RankingCGScreen/RankingCGScreen.js"
-import { AuthorizationInstance } from "../../api/settings"
+import { useNavigation } from "@react-navigation/native"
 
 const screenWidth = Dimensions.get("window").width
 const screenHeight = Dimensions.get("window").height
 
 export default function ParticipatingDetailCard(props) {
-  const instance = AuthorizationInstance()
+  const navigation = useNavigation()
   const index = props.index
   const arrayLength = props.arrayLength
+
+  // 챌린지 정보
   const challengeInfo = props.challengeInfo
+
+  // 프리셋 주제, 상세정보
+  const presetTopic = challengeInfo.presetTopic
+  const presetDescription = challengeInfo.presetDescription
+
+  // 날짜관련
   const startDate = props.startDate.replace(/-/g, ".").slice(2)
   const endDate = props.endDate.replace(/-/g, ".").slice(2)
-  console.log(challengeInfo)
-  // const presetTopic = props.challengeInfo.presetTopic
-  // const challengePresetID = props.challengeInfo.challengePresetID
-  // const memberNumber = props.challengeInfo.memberNumber
-  // const progress = props.challengeInfo.progress
-  // const startDate = props.challengeInfo.startDate
-  // const endDate = props.challengeInfo.endDate
-  // const isParticipated = props.challengeInfo.isParticipated
-  // const peopleNumber = props.challengeInfo.peopleNumber
+  const yoilList = ["일", "월", "화", "수", "목", "금", "토", "일"]
+  const startYoil = yoilList[new Date(props.startDate).getDay()]
+  const endYoil = yoilList[new Date(props.endDate).getDay()]
+
+  // 시간관련
+  const startTime = challengeInfo.startTime
+  const endTime = challengeInfo.endTime
+
+  //
 
   // const presetObject = {
   //   1: () => <Images.SunIcon left={-30} top={-20} />,
@@ -38,6 +46,7 @@ export default function ParticipatingDetailCard(props) {
   //   3: () => <Images.GymIcon left={10} top={-50} />,
   // }
 
+  // 텍스트
   let authText = ""
 
   if (challengeInfo.authType === "feature") {
@@ -60,12 +69,22 @@ export default function ParticipatingDetailCard(props) {
     )
   }
 
-  const makeChallenge = async () => {
-    try {
-      const res = await instance.post("/api/challenge")
-    } catch (err) {
-      console.log(err.response.data)
+  const makeChallenge = () => {
+    // 예를 마지막에 날려주고
+    const info = {
+      authType: challengeInfo.authType,
+      challengeDescription: "",
+      challengeImg: "",
+      challengeName: "",
+      challengeTopic: challengeInfo.presetTopic,
+      startDate: props.startDate,
+      endDate: props.endDate,
+      startTime: challengeInfo.startTime,
+      endTime: challengeInfo.endTime,
+      rewardContent: "",
+      penaltyContent: "",
     }
+    props.makeChallenge(info)
   }
 
   return (
@@ -101,7 +120,7 @@ export default function ParticipatingDetailCard(props) {
             >
               <View>
                 <AppBoldText lineNumber={1} color="orange" pxSize={30}>
-                  {challengeInfo.presetTopic}
+                  {presetTopic}
                 </AppBoldText>
               </View>
               <View
@@ -112,8 +131,7 @@ export default function ParticipatingDetailCard(props) {
               >
                 <View>
                   <AppBoldText lineNumber={2} pxSize={14}>
-                    {challengeInfo.presetDescription}
-                    {/* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa */}
+                    {presetDescription}
                   </AppBoldText>
                 </View>
               </View>
@@ -132,8 +150,9 @@ export default function ParticipatingDetailCard(props) {
                       <AppText pxSize={13}>시작일</AppText>
                     </DetailUpperRow>
                     <DetailUnderRow>
-                      {/* <AppBoldText pxSize={15}>2022.10.31 (월)</AppBoldText> */}
-                      <AppBoldText pxSize={15}>{startDate} (월)</AppBoldText>
+                      <AppBoldText pxSize={15}>
+                        {startDate} ({startYoil})
+                      </AppBoldText>
                     </DetailUnderRow>
                   </RowText>
                 </DetailRow>
@@ -146,7 +165,9 @@ export default function ParticipatingDetailCard(props) {
                       <AppText pxSize={13}>종료일</AppText>
                     </DetailUpperRow>
                     <DetailUnderRow>
-                      <AppBoldText pxSize={15}>{endDate} (월)</AppBoldText>
+                      <AppBoldText pxSize={15}>
+                        {endDate} ({endYoil})
+                      </AppBoldText>
                     </DetailUnderRow>
                   </RowText>
                 </DetailRow>
@@ -175,10 +196,10 @@ export default function ParticipatingDetailCard(props) {
                     </DetailUpperRow>
                     <DetailUnderRow>
                       <AppBoldText pxSize={15}>
-                        매일 {parseInt(challengeInfo.endTime.slice(0, 2)) >= 12 ? "오후" : "오전"}
-                        {parseInt(challengeInfo.endTime.slice(0, 2)) > 12
-                          ? parseInt(challengeInfo.endTime.slice(0, 2)) - 12
-                          : parseInt(challengeInfo.endTime.slice(0, 2))}
+                        매일 {parseInt(endTime.slice(0, 2)) >= 12 ? "오후" : "오전"}
+                        {parseInt(endTime.slice(0, 2)) > 12
+                          ? parseInt(endTime.slice(0, 2)) - 12
+                          : parseInt(endTime.slice(0, 2))}
                         시
                       </AppBoldText>
                     </DetailUnderRow>

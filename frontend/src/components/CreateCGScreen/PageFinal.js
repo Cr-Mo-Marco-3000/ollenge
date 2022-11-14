@@ -67,6 +67,7 @@ export default function Final({ info, isRank, toNext, cancelAll, goBackToRoom })
   }
   const createChallenge = async () => {
     try {
+      console.log(info)
       const res = await challAPI.createCG(info)
       const id = res.data.challengeCreatedData.challengeId
       roomCtx.getRoomInfo(id)

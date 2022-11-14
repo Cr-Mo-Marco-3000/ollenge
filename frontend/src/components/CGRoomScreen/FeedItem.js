@@ -22,8 +22,10 @@ const FeedItem = (props) => {
   const feedImg = feedInfo.item.feedImg
   const commentNum = feedInfo.item.commentNum
   const feedContent = feedInfo.item.feedContent
+  const whenClosed = props.whenClosed
 
   const openAndClose = () => {
+    whenClosed()
     setOpenModal(!openModal)
   }
 

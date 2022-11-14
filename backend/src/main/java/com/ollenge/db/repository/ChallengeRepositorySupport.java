@@ -80,7 +80,7 @@ public class ChallengeRepositorySupport {
                     challengeStateMap.put(user, list);
                 });
         for (User user : challengeStateMap.keySet()) {
-            challengeStateDataList.add(ChallengeStateData.of(user.getUserId(), user.getNickname(), user.getProfileImg(), challengeStateMap.get(user)));
+            challengeStateDataList.add(ChallengeStateData.of(user, challengeStateMap.get(user)));
         }
         Collections.sort(challengeStateDataList, (user1, user2) -> {
             if(user1.getDatetimeList().size() == user2.getDatetimeList().size())

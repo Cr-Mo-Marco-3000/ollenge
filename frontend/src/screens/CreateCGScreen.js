@@ -34,7 +34,6 @@ export default function CreateCGScreen({ isRank = false, CGInfo = initialData })
   const goBack = () => {
     navigation.goBack()
   }
-
   return (
     <Stack.Navigator screenOptions={styles.screenOptions}>
       <Stack.Screen name="Page1" options={{ title: "팀 정보 설정" }}>

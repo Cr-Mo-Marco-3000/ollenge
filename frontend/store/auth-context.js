@@ -37,8 +37,7 @@ function AuthContextProvider({ children }) {
       .then((res) => {
         setInfo(res.data)
         instance
-          // .get(`/api/badge/${res.data.userId}`)
-          .get(`/api/badge/1`)
+          .get(`/api/badge/${res.data.userId}`)
           .then((res) => setBadge(res.data.badgeList))
           .catch((err) => console.log(err))
       })

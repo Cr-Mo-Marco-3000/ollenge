@@ -138,11 +138,8 @@ function MyCGListScreen() {
               },
             }}
           >
-            {/* <Tab.Screen name="도전 중">{(props) => <Challenging />}</Tab.Screen>
-            <Tab.Screen name="시작 전">{(props) => <BeforeStart />}</Tab.Screen> */}
             <Tab.Screen name="도전 중" component={Challenging} />
             <Tab.Screen name="시작 전" component={BeforeStart} />
-
             <Tab.Screen name="종료" component={Ended} />
           </Tab.Navigator>
           <FAB.Group
