@@ -11,14 +11,14 @@ const getToken = async () => {
 }
 
 /** { baseUrl: string } 데이터를 담고 있습니다 */
-function createInstance() {
+const createInstance = () => {
   const instance = axios.create({
     baseURL: BASE_URL,
   })
   return instance
 }
 
-function AuthorizationInstance() {
+const AuthorizationInstance = () => {
   const instance = axios.create({
     baseURL: BASE_URL,
   })

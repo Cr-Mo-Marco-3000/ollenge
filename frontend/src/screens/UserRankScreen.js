@@ -40,14 +40,14 @@ function UserRankScreen() {
         </PageBase>
       )}
       {status === "idle" && (
-        <NavigationContainer style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <Stack.Navigator screenOptions={styles.screenStyle} initialRouteName="RankList">
             <Stack.Screen name="RankList" options={{ headerShown: false }}>
               {() => <RankList rankInfo={data} />}
             </Stack.Screen>
             <Stack.Screen name="UserBadge" component={ShowUserBadge} />
           </Stack.Navigator>
-        </NavigationContainer>
+        </View>
       )}
     </>
   )

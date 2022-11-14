@@ -23,6 +23,6 @@ public class AuthStep {
     Challenge challenge;
 
     @Column(nullable = false)
-    int stepCount;
+    Integer stepCount;
 
 }

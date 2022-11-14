@@ -38,7 +38,7 @@ public class ChallengePreset {
     String presetDescription;
 
     @Column
-    int stepCount;
+    Integer stepCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "classification_type_id")

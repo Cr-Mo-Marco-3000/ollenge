@@ -20,7 +20,7 @@ const TopCard = ({ flex, user }) => {
             style={{ width: (dw * flex) / 12, height: (dw * flex) / 12 }}
           />
         </View>
-        <Image
+        {/* <Image
           source={
             flex === 5
               ? require("../../assets/images/UserRankList/1st_place.png")
@@ -35,7 +35,7 @@ const TopCard = ({ flex, user }) => {
             bottom: "15%",
             left: ["10%", "0%", "-10%"][flex - 3],
           }}
-        />
+        /> */}
         <Text>{user.nickname}</Text>
         <Text>{user.userScore}점</Text>
       </View>
