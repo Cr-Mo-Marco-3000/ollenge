@@ -31,6 +31,8 @@ function MyInfoScreen({ userInfo }) {
   const [badgesId, setBadgesId] = useState()
   const [selectedBadge, setSelectedBadge] = useState()
 
+  const userBadge = authCtx.userInfo.selectedBadge
+
   const badgesImg = {
     User: [
       require("../../assets/images/badges/User-0.png"),
@@ -105,8 +107,10 @@ function MyInfoScreen({ userInfo }) {
       [0, 0, 0, 0],
       [0, 0, 0, 0],
     ]
-    const userBadge = authCtx.userInfo.selectedBadge
-    setSelectedBadge(badgesImg[userBadge.type][userBadge.grade])
+
+    if (userBadge != null) {
+      setSelectedBadge(badgesImg[userBadge.type][userBadge.grade])
+    }
 
     const badgeData = authCtx.badgeData
     for (const badge of badgeData) {
@@ -172,13 +176,15 @@ function MyInfoScreen({ userInfo }) {
                 </View>
               </UserNicknameBox>
               <AppText>{userInfo.userScore}점</AppText>
-              <View style={{ width: RFPercentage(8), height: RFPercentage(8) }}>
-                <Image
-                  source={selectedBadge}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="cover"
-                />
-              </View>
+              {userBadge ? (
+                <View style={{ width: RFPercentage(8), height: RFPercentage(8) }}>
+                  <Image
+                    source={selectedBadge}
+                    style={{ width: "100%", height: "100%" }}
+                    resizeMode="cover"
+                  />{" "}
+                </View>
+              ) : null}
             </UserInfoBox>
             {badges ? (
               <BedgeCardContainer>

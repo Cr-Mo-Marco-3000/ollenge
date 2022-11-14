@@ -12,8 +12,10 @@ function GainedBedgeItem({ type, typeData, grade }) {
   const userBadge = authCtx.userInfo.selectedBadge
 
   let applied = false
-  if (type == userBadge.type && grade == userBadge.grade) {
-    applied = true
+  if (userBadge != null) {
+    if (type == userBadge.type && grade == userBadge.grade) {
+      applied = true
+    }
   }
 
   return (

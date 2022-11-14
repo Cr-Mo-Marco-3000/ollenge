@@ -19,7 +19,7 @@ function BedgeCard({ type, flag, idLst }) {
     User: {
       name: "꾸준한 노력가",
       title: "챌린지",
-      checkpoint: [1, 3, 5, 10],
+      checkpoint: [1, 2, 3, 4],
       src: [
         require("../../assets/images/badges/User-0.png"),
         require("../../assets/images/badges/User-1.png"),
@@ -30,7 +30,7 @@ function BedgeCard({ type, flag, idLst }) {
     WakeUp: {
       name: "힘 세고 강한 아침",
       title: "아침 기상",
-      checkpoint: [1, 2, 3, 5],
+      checkpoint: [1, 2, 3, 4],
       src: [
         require("../../assets/images/badges/WakeUp-0.png"),
         require("../../assets/images/badges/WakeUp-1.png"),
@@ -41,7 +41,7 @@ function BedgeCard({ type, flag, idLst }) {
     Exercise: {
       name: "운동 매니아",
       title: "운동",
-      checkpoint: [1, 2, 3, 5],
+      checkpoint: [1, 2, 3, 4],
       src: [
         require("../../assets/images/badges/Exercise-0.png"),
         require("../../assets/images/badges/Exercise-1.png"),
@@ -52,7 +52,7 @@ function BedgeCard({ type, flag, idLst }) {
     Study: {
       name: "척척박사",
       title: "공부",
-      checkpoint: [1, 2, 3, 5],
+      checkpoint: [1, 2, 3, 4],
       src: [
         require("../../assets/images/badges/Study-0.png"),
         require("../../assets/images/badges/Study-1.png"),
@@ -63,7 +63,7 @@ function BedgeCard({ type, flag, idLst }) {
     Pills: {
       name: "하루 한 알",
       title: "영양제",
-      checkpoint: [1, 2, 3, 5],
+      checkpoint: [1, 2, 3, 4],
       src: [
         require("../../assets/images/badges/Pills-0.png"),
         require("../../assets/images/badges/Pills-1.png"),
@@ -74,7 +74,7 @@ function BedgeCard({ type, flag, idLst }) {
     Salad: {
       name: "야채는 나의 힘",
       title: "샐러드",
-      checkpoint: [1, 2, 3, 5],
+      checkpoint: [1, 2, 3, 4],
       src: [
         require("../../assets/images/badges/Salad-0.png"),
         require("../../assets/images/badges/Salad-1.png"),
@@ -85,7 +85,7 @@ function BedgeCard({ type, flag, idLst }) {
     Cleaning: {
       name: "깨끗한 환경",
       title: "정리정돈",
-      checkpoint: [1, 2, 3, 5],
+      checkpoint: [1, 2, 3, 4],
       src: [
         require("../../assets/images/badges/Cleaning-0.png"),
         require("../../assets/images/badges/Cleaning-1.png"),
