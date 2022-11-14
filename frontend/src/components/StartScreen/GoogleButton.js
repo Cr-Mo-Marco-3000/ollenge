@@ -14,7 +14,7 @@ import { AuthContext } from "../../../store/auth-context"
 
 WebBrowser.maybeCompleteAuthSession()
 
-function GoogleButton(props) {
+const GoogleButton = (props) => {
   const navigation = useNavigation()
   const instance = createInstance()
   const authCtx = useContext(AuthContext)
