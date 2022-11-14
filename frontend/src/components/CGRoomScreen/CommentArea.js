@@ -9,8 +9,9 @@ import AppText from "../common/AppText"
 import { useState, useEffect } from "react"
 import defaultImage from "../../assets/images/default-image.png"
 import CommentItem from "./CommentItem"
+import { AuthorizationInstance } from "../../api/settings"
 
-// 본 피드
+const instance = AuthorizationInstance()
 
 const windowWidth = Dimensions.get("window").width
 
@@ -25,29 +26,22 @@ const CommentArea = (props) => {
     ...feedInfo,
     commentContent: feedInfo.feedContent,
   }
+  const feedId = feedInfo.feedId
 
-  const commentList = [
-    {
-      commentId: 1,
-      profileImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      userId: 34,
-      nickname: "앙냥뇽",
-      commentContent:
-        "머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요",
-      createdDatetime: "2022-11-15",
-      modifiedDatetime: "2022-11-15",
-    },
-    {
-      commentId: 2,
-      profileImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-      userId: 34,
-      nickname: "앙냥뇽",
-      commentContent:
-        "머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요머리아파요",
-      createdDatetime: "2022-11-15",
-      modifiedDatetime: "2022-11-15",
-    },
-  ]
+  const [commentList, setCommentList] = useState([])
+
+  useEffect(() => {
+    const getRes = async () => {
+      try {
+        const res = await instance.get(`/api/comment/${feedId}`)
+        const newCommentList = res.data.CommentList
+        setCommentList(newCommentList)
+      } catch (error) {
+        console.log(error.response.data)
+      }
+    }
+    getRes()
+  }, [])
 
   const [writedText, setWritedText] = useState("")
 
@@ -55,9 +49,23 @@ const CommentArea = (props) => {
     setWritedText(e)
   }
 
-  const submit = () => {
-    console.log(writedText)
-    setWritedText("")
+  const submit = async () => {
+    try {
+      if (writedText) {
+        const resPost = await instance.post("/api/comment", {
+          feedId: feedId,
+          commentContent: writedText,
+        })
+        const resGet = await instance.get(`/api/comment/${feedId}`)
+        const newCommentList = resGet.data.CommentList
+        setCommentList(newCommentList)
+        setWritedText("")
+      } else {
+        return
+      }
+    } catch (error) {
+      console.log(error.response)
+    }
   }
 
   return (
@@ -119,9 +127,9 @@ const CommentArea = (props) => {
         ))}
       </ScrollView>
       <TextInputView>
+        {/* 오토포커스이슈 */}
         <TextInput
           placeholder={"댓글을 입력하세요"}
-          autoFocus
           style={{
             elevation: 3,
           }}
