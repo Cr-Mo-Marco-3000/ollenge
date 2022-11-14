@@ -31,47 +31,45 @@ function MyInfoScreen({ userInfo }) {
   const [badgesId, setBadgesId] = useState()
   const [selectedBadge, setSelectedBadge] = useState()
 
-  const userBadge = authCtx.userInfo.selectedBadge
-
   const badgesImg = {
-    User: [
+    user: [
       require("../../assets/images/badges/User-0.png"),
       require("../../assets/images/badges/User-1.png"),
       require("../../assets/images/badges/User-2.png"),
       require("../../assets/images/badges/User-3.png"),
     ],
-    WakeUp: [
+    ranking1: [
       require("../../assets/images/badges/WakeUp-0.png"),
       require("../../assets/images/badges/WakeUp-1.png"),
       require("../../assets/images/badges/WakeUp-2.png"),
       require("../../assets/images/badges/WakeUp-3.png"),
     ],
-    Exercise: [
+    ranking2: [
       require("../../assets/images/badges/Exercise-0.png"),
       require("../../assets/images/badges/Exercise-1.png"),
       require("../../assets/images/badges/Exercise-2.png"),
       require("../../assets/images/badges/Exercise-3.png"),
     ],
-    Study: [
+    ranking3: [
       require("../../assets/images/badges/Study-0.png"),
       require("../../assets/images/badges/Study-1.png"),
       require("../../assets/images/badges/Study-2.png"),
       require("../../assets/images/badges/Study-3.png"),
     ],
-    Pills: [
+    ranking4: [
       require("../../assets/images/badges/Pills-0.png"),
       require("../../assets/images/badges/Pills-1.png"),
       require("../../assets/images/badges/Pills-2.png"),
       require("../../assets/images/badges/Pills-3.png"),
     ],
-    Salad: [
+    ranking5: [
       require("../../assets/images/badges/Salad-0.png"),
       require("../../assets/images/badges/Salad-1.png"),
       require("../../assets/images/badges/Salad-2.png"),
       require("../../assets/images/badges/Salad-3.png"),
     ],
 
-    Cleaning: [
+    ranking6: [
       require("../../assets/images/badges/Cleaning-0.png"),
       require("../../assets/images/badges/Cleaning-1.png"),
       require("../../assets/images/badges/Cleaning-2.png"),
@@ -81,13 +79,13 @@ function MyInfoScreen({ userInfo }) {
 
   useEffect(() => {
     const typeSet = {
-      User: 0,
-      WakeUp: 1,
-      Study: 2,
-      Exercise: 3,
-      Pills: 4,
-      Salad: 5,
-      Cleaning: 6,
+      user: 0,
+      ranking1: 1,
+      ranking2: 2,
+      ranking3: 3,
+      ranking4: 4,
+      ranking5: 5,
+      ranking6: 6,
     }
     const temp = [
       [0, 0, 0, 0],
@@ -108,8 +106,9 @@ function MyInfoScreen({ userInfo }) {
       [0, 0, 0, 0],
     ]
 
+    const userBadge = authCtx.userInfo.selectedBadge
     if (userBadge != null) {
-      setSelectedBadge(badgesImg[userBadge.type][userBadge.grade])
+      setSelectedBadge(badgesImg[userBadge.type][userBadge.grade - 1])
     }
 
     const badgeData = authCtx.badgeData
@@ -132,90 +131,92 @@ function MyInfoScreen({ userInfo }) {
 
   return (
     <Provider theme={theme}>
-      <ScrollView style={styles.rootScreen}>
-        <TopMargin />
-        <View style={styles.logoutBox}>
-          <Button
-            icon="logout"
-            textColor={`${ColorSet.navyColor(1)}`}
-            onPress={authCtx.logout}
-            theme={{
-              fonts: {
-                labelLarge: {
-                  fontFamily: "HyeminBold",
+      {userInfo ? (
+        <ScrollView style={styles.rootScreen}>
+          <TopMargin />
+          <View style={styles.logoutBox}>
+            <Button
+              icon="logout"
+              textColor={`${ColorSet.navyColor(1)}`}
+              onPress={authCtx.logout}
+              theme={{
+                fonts: {
+                  labelLarge: {
+                    fontFamily: "HyeminBold",
+                  },
                 },
-              },
-            }}
-          >
-            로그아웃
-          </Button>
-        </View>
-        <View style={styles.scrollContainer}>
-          <View style={styles.imageBox}>
-            {userInfo.profileImg ? (
-              <Image
-                source={{ uri: userInfo.profileImg }}
-                style={{ width: "100%", height: "100%", borderRadius: 100 }}
-              />
-            ) : (
-              <DefaultImage />
-            )}
+              }}
+            >
+              로그아웃
+            </Button>
           </View>
-          <View style={styles.infoContainer}>
-            <UserInfoBox>
-              <UserNicknameBox onPress={editPressHandler}>
-                <AppBoldText>{userInfo.nickname}</AppBoldText>
-                <View
-                  style={{
-                    width: RFPercentage(3),
-                    height: RFPercentage(3),
-                    marginLeft: 5,
-                  }}
-                >
-                  <PencilIcon />
-                </View>
-              </UserNicknameBox>
-              <AppText>{userInfo.userScore}점</AppText>
-              {userBadge ? (
-                <View style={{ width: RFPercentage(8), height: RFPercentage(8) }}>
-                  <Image
-                    source={selectedBadge}
-                    style={{ width: "100%", height: "100%" }}
-                    resizeMode="cover"
-                  />{" "}
-                </View>
-              ) : null}
-            </UserInfoBox>
-            {badges ? (
-              <BedgeCardContainer>
-                <View style={styles.bedgeCardItem}>
-                  <BedgeCard type={"User"} flag={badges[0]} idLst={badgesId[0]} />
-                </View>
-                <View style={styles.bedgeCardItem}>
-                  <BedgeCard type={"WakeUp"} flag={badges[1]} idLst={badgesId[1]} />
-                </View>
-                <View style={styles.bedgeCardItem}>
-                  <BedgeCard type={"Study"} flag={badges[2]} idLst={badgesId[2]} />
-                </View>
-                <View style={styles.bedgeCardItem}>
-                  <BedgeCard type={"Exercise"} flag={badges[3]} idLst={badgesId[3]} />
-                </View>
-                <View style={styles.bedgeCardItem}>
-                  <BedgeCard type={"Pills"} flag={badges[4]} idLst={badgesId[4]} />
-                </View>
-                <View style={styles.bedgeCardItem}>
-                  <BedgeCard type={"Salad"} flag={badges[5]} idLst={badgesId[5]} />
-                </View>
-                <View style={styles.bedgeCardItem}>
-                  <BedgeCard type={"Cleaning"} flag={badges[6]} idLst={badgesId[6]} />
-                </View>
-              </BedgeCardContainer>
-            ) : (
-              <></>
-            )}
+          <View style={styles.scrollContainer}>
+            <View style={styles.imageBox}>
+              {userInfo.profileImg ? (
+                <Image
+                  source={{ uri: userInfo.profileImg }}
+                  style={{ width: "100%", height: "100%", borderRadius: 100 }}
+                />
+              ) : (
+                <DefaultImage />
+              )}
+            </View>
+            <View style={styles.infoContainer}>
+              <UserInfoBox>
+                <UserNicknameBox onPress={editPressHandler}>
+                  <AppBoldText>{userInfo.nickname}</AppBoldText>
+                  <View
+                    style={{
+                      width: RFPercentage(3),
+                      height: RFPercentage(3),
+                      marginLeft: 5,
+                    }}
+                  >
+                    <PencilIcon />
+                  </View>
+                </UserNicknameBox>
+                <AppText>{userInfo.userScore}점</AppText>
+                {selectedBadge ? (
+                  <View style={{ width: RFPercentage(8), height: RFPercentage(8) }}>
+                    <Image
+                      source={selectedBadge}
+                      style={{ width: "100%", height: "100%" }}
+                      resizeMode="cover"
+                    />
+                  </View>
+                ) : null}
+              </UserInfoBox>
+              {badges ? (
+                <BedgeCardContainer>
+                  <View style={styles.bedgeCardItem}>
+                    <BedgeCard type={"user"} flag={badges[0]} idLst={badgesId[0]} />
+                  </View>
+                  <View style={styles.bedgeCardItem}>
+                    <BedgeCard type={"ranking1"} flag={badges[1]} idLst={badgesId[1]} />
+                  </View>
+                  <View style={styles.bedgeCardItem}>
+                    <BedgeCard type={"ranking2"} flag={badges[2]} idLst={badgesId[2]} />
+                  </View>
+                  <View style={styles.bedgeCardItem}>
+                    <BedgeCard type={"ranking3"} flag={badges[3]} idLst={badgesId[3]} />
+                  </View>
+                  <View style={styles.bedgeCardItem}>
+                    <BedgeCard type={"ranking4"} flag={badges[4]} idLst={badgesId[4]} />
+                  </View>
+                  <View style={styles.bedgeCardItem}>
+                    <BedgeCard type={"ranking5"} flag={badges[5]} idLst={badgesId[5]} />
+                  </View>
+                  <View style={styles.bedgeCardItem}>
+                    <BedgeCard type={"ranking6"} flag={badges[6]} idLst={badgesId[6]} />
+                  </View>
+                </BedgeCardContainer>
+              ) : (
+                <></>
+              )}
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      ) : null}
     </Provider>
   )
 }

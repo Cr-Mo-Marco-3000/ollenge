@@ -104,11 +104,6 @@ export default WaitingBedgeItem
 
 const styles = StyleSheet.create({
   modalContainer: { padding: "5%", alignItems: "center" },
-  bedgeItem: {
-    alignItems: "center",
-    flex: 1,
-    marginHorizontal: 5,
-  },
   btnBox: {
     marginTop: "5%",
     backgroundColor: `${ColorSet.paleBlueColor(1)}`,
@@ -116,6 +111,12 @@ const styles = StyleSheet.create({
     paddingVertical: "3%",
     borderRadius: 20,
   },
+  bedgeItem: {
+    alignItems: "center",
+    flex: 1,
+    marginHorizontal: 5,
+  },
+
   bedgeImage: {
     height: RFPercentage(8),
     width: RFPercentage(8),
