@@ -22,7 +22,6 @@ function UserStatus({ userList }) {
             {userList.map((user, key) => {
               if (!myInfo && user.userId === myUserId) {
                 setMyInfo(user)
-                console.log(myUserId)
                 return
               } else if (user.userId !== myUserId) {
                 return <UserStatusItem user={user} key={key} />

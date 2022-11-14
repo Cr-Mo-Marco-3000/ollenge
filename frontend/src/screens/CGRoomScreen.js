@@ -28,13 +28,13 @@ function CGRoomScreen() {
   const MyUserId = authCtx.userInfo.MyUserId
 
   const navigation = useNavigation()
-  const [isStarted, setIsStarted] = useState(true)
+  const [isStarted, setIsStarted] = useState(false)
   const [todayAuth, setTodayAuth] = useState(false)
 
   useEffect(() => {
     const now = LocalTime()
     const start = DateTime(roomInfo.startDate, roomInfo.startTime)
-    if (now - start >= 0) {
+    if (now.getTime() >= start.getTime()) {
       setIsStarted(true)
     }
 

@@ -9,7 +9,7 @@ import defaultImage from "../../../assets/images/default-image.png"
 import ColorSet from "../../../style/ColorSet"
 import AppBoldText from "../../common/AppBoldText"
 
-function FirtstUserItem({ user, wholeDay }) {
+function FirtstUserItem({ user, wholeDay, src }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   return (
     <View style={styles.itemContainer}>
@@ -30,7 +30,9 @@ function FirtstUserItem({ user, wholeDay }) {
               />
             </View>
             <View style={styles.bedgeBox}>
-              <CrownIcon />
+              <View style={{ width: RFPercentage(4), height: RFPercentage(4) }}>
+                <Image source={src} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+              </View>
             </View>
           </View>
           <AppBoldText lineNumber={1} pxSize={24}>
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
     width: RFPercentage(4),
     height: RFPercentage(6),
     backgroundColor: `${ColorSet.grayColor(0.8)}`,
+    justifyContent: "center",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     borderBottomRightRadius: 10,

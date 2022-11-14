@@ -7,7 +7,7 @@ import AppBoldText from "../../common/AppBoldText"
 import { HeartIcon1 } from "../../../assets/images"
 import defaultImage from "../../../assets/images/default-image.png"
 
-function MyRankItem({ user, rank, wholeDay }) {
+function MyRankItem({ user, rank, wholeDay, src }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   return (
     <View style={styles.rootScreen}>
@@ -23,7 +23,7 @@ function MyRankItem({ user, rank, wholeDay }) {
           />
         </View>
         <View style={styles.bedgeImgBox}>
-          <HeartIcon1 />
+          <Image source={src} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
         </View>
         <View style={{ flex: 1, marginRight: RFPercentage(1) }}>
           <AppBoldText pxSize={24} lineNumber={1}>

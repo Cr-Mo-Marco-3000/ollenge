@@ -19,6 +19,52 @@ function UserRanking({ userList }) {
   const roomCtx = useContext(RoomContext)
   const roomInfo = roomCtx.roomInfo
 
+  const badgesImg = {
+    user: [
+      require("../../../assets/images/badges/User-0.png"),
+      require("../../../assets/images/badges/User-1.png"),
+      require("../../../assets/images/badges/User-2.png"),
+      require("../../../assets/images/badges/User-3.png"),
+    ],
+    ranking1: [
+      require("../../../assets/images/badges/WakeUp-0.png"),
+      require("../../../assets/images/badges/WakeUp-1.png"),
+      require("../../../assets/images/badges/WakeUp-2.png"),
+      require("../../../assets/images/badges/WakeUp-3.png"),
+    ],
+    ranking2: [
+      require("../../../assets/images/badges/Exercise-0.png"),
+      require("../../../assets/images/badges/Exercise-1.png"),
+      require("../../../assets/images/badges/Exercise-2.png"),
+      require("../../../assets/images/badges/Exercise-3.png"),
+    ],
+    ranking3: [
+      require("../../../assets/images/badges/Study-0.png"),
+      require("../../../assets/images/badges/Study-1.png"),
+      require("../../../assets/images/badges/Study-2.png"),
+      require("../../../assets/images/badges/Study-3.png"),
+    ],
+    ranking4: [
+      require("../../../assets/images/badges/Pills-0.png"),
+      require("../../../assets/images/badges/Pills-1.png"),
+      require("../../../assets/images/badges/Pills-2.png"),
+      require("../../../assets/images/badges/Pills-3.png"),
+    ],
+    ranking5: [
+      require("../../../assets/images/badges/Salad-0.png"),
+      require("../../../assets/images/badges/Salad-1.png"),
+      require("../../../assets/images/badges/Salad-2.png"),
+      require("../../../assets/images/badges/Salad-3.png"),
+    ],
+
+    ranking6: [
+      require("../../../assets/images/badges/Cleaning-0.png"),
+      require("../../../assets/images/badges/Cleaning-1.png"),
+      require("../../../assets/images/badges/Cleaning-2.png"),
+      require("../../../assets/images/badges/Cleaning-3.png"),
+    ],
+  }
+
   const startDate = new Date(roomInfo.startDate)
   const year = new Date().getFullYear()
   const month = new Date().getMonth() + 1
@@ -38,14 +84,48 @@ function UserRanking({ userList }) {
             }
 
             if (key == 0) {
-              return <FirtstUserItem user={user} key={key} wholeDay={wholeDay} />
+              return (
+                <FirtstUserItem
+                  user={user}
+                  key={key}
+                  wholeDay={wholeDay}
+                  src={
+                    user.selectedBadge
+                      ? badgesImg[user.selectedBadge.type][user.selectedBadge.grade - 1]
+                      : null
+                  }
+                />
+              )
             } else {
-              return <RankUserItem user={user} key={key} rank={key + 1} wholeDay={wholeDay} />
+              return (
+                <RankUserItem
+                  user={user}
+                  key={key}
+                  rank={key + 1}
+                  wholeDay={wholeDay}
+                  src={
+                    user.selectedBadge
+                      ? badgesImg[user.selectedBadge.type][user.selectedBadge.grade - 1]
+                      : null
+                  }
+                />
+              )
             }
           })}
         </View>
       </ScrollView>
-      {myInfo ? <MyRankItem user={myInfo} rank={myRank} wholeDay={wholeDay} /> : null}
+      {myInfo ? (
+        <MyRankItem
+          user={myInfo}
+          rank={myRank}
+          wholeDay={wholeDay}
+          src={
+            myInfo.selectedBadge
+              ? badgesImg[myInfo.selectedBadge.type][myInfo.selectedBadge.grade - 1]
+              : null
+          }
+        />
+      ) : null}
     </View>
   )
 }
