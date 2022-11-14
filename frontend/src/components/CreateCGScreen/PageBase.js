@@ -135,7 +135,7 @@ const styles = {
 
   NextBtn: {
     ...baseStyle,
-    borderRadius: 18,
+    borderRadius: 10,
     padding: 12,
     marginBottom: 10,
     elevation: 12,

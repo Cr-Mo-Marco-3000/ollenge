@@ -8,8 +8,8 @@ const { dw, dh } = DeviceInfo
 const cw = (dw * 4.5) / 6
 
 const Case = styled.View`
-  width: ${cw};
-  height: ${cw};
+  width: ${cw}px;
+  height: ${cw}px;
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 12px;
   overflow: hidden;

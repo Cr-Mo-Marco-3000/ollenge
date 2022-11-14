@@ -1,148 +1,114 @@
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
-import { Text, View, Dimensions, Image, TouchableOpacity } from "react-native"
-import styled from "styled-components/native"
+import {
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Alert,
+} from "react-native"
 import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
 
 const { width: dw, height: dh } = Dimensions.get("window")
 
-const WholeFrame = styled.View`
-  background-color: rgba(255, 255, 255, 1);
-  align-items: center;
-  flex-direction: row;
-  height: ${(dw * 0.85 * 2) / 10}px;
-  margin-bottom: 10px;
-  flex: auto;
-  overflow: hidden;
-  border-radius: 10px;
-`
-
-export default function UserRankCard() {
-  const navigation = useNavigation()
-  function editPressHandler(num) {
-    navigation.push("UserBadge", { num })
-  }
+export const UserCard = ({ user }) => {
   return (
-    <View>
-      {/* ----------------------- 내 랭크 정보 ---------------------------------------------------------------------*/}
-      <TouchableOpacity
-        onPress={() => {
-          editPressHandler(122)
-        }}
-      >
-        <MyRankView>
-          <WholeFrame>
-            <View flex={2} justifyContent="center" alignItems="center">
-              <AppText>122</AppText>
-            </View>
-            <View flex={2}>
-              <Image
-                source={require("../../assets/profile/me2.jpg")}
-                style={{ width: "90%", height: "90%", borderRadius: 50 }}
-              />
-            </View>
-            <View flex={2} alignItems="center">
-              <Image
-                source={require("../../assets/images/heart-icon-2.png")}
-                style={{ width: "60%", height: "60%" }}
-              />
-            </View>
-            <View flex={3}>
-              <AppText lineNumber={1}>Chanasdasdasdsdas</AppText>
-            </View>
-            <View flex={3} justifyContent="center">
-              <AppText>123.5k</AppText>
-            </View>
-          </WholeFrame>
-        </MyRankView>
-      </TouchableOpacity>
-
-      {/* ----------------------- 두 번째 ---------------------------------------------------------------------*/}
-      <View style={{ flexDirection: "row" }}>
-        <WholeFrame>
-          <View justifyContent="center" alignItems="center" style={{ width: "15%" }}>
-            <AppText>7</AppText>
-          </View>
-          <View flex={2}>
-            <Image
-              source={require("../../assets/profile/me2.jpg")}
-              style={{ width: "90%", height: "90%", borderRadius: 10 }}
-            />
-          </View>
-          <View flex={2} alignItems="center">
-            <Image
-              source={require("../../assets/images/heart-icon-2.png")}
-              style={{ width: "60%", height: "60%" }}
-            />
-          </View>
-          <View flex={3}>
-            <AppText>Chan</AppText>
-          </View>
-          <View flex={3} justifyContent="center">
-            <AppText>123.5k</AppText>
-          </View>
-        </WholeFrame>
+    <View style={frameStyles.cardFrame}>
+      {/* 순위 표시하는 영역 */}
+      <View style={frameStyles.rankNum}>
+        <Text style={textStyles.common}>{user.rank}</Text>
       </View>
-      {/* ----------------------- 두 번째 ---------------------------------------------------------------------*/}
-      <View style={{ flexDirection: "row" }}>
-        <WholeFrame>
-          <View justifyContent="center" alignItems="center" style={{ width: "15%" }}>
-            <AppText>8</AppText>
-          </View>
-          <View flex={2}>
-            <Image
-              source={require("../../assets/profile/me2.jpg")}
-              style={{ width: "90%", height: "90%", borderRadius: 10 }}
-            />
-          </View>
-          <View flex={2} alignItems="center">
-            <Image
-              source={require("../../assets/images/heart-icon-2.png")}
-              style={{ width: "60%", height: "60%" }}
-            />
-          </View>
-          <View flex={3}>
-            <AppText>Chan</AppText>
-          </View>
-          <View flex={3} justifyContent="center">
-            <AppText>123.5k</AppText>
-          </View>
-        </WholeFrame>
+      {/* 이미지, 뱃지 등 정보 보여줄 곳 */}
+      <View style={frameStyles.contentArea}>
+        <View style={frameStyles.profileImg}>
+          <Image
+            style={{ width: "100%", height: "100%" }}
+            source={require("../../assets/images/default-image.png")}
+          />
+        </View>
+        <View style={frameStyles.badge}>
+          <Image
+            style={{ width: "60%", height: "60%", alignSelf: "center" }}
+            source={require("../../assets/images/heart-icon-1.png")}
+          />
+        </View>
+        <View style={frameStyles.nickname}>
+          <Text style={textStyles.common}>{user.nickname}</Text>
+        </View>
+        <View style={frameStyles.userScore}>
+          <Text style={textStyles.common}>{user.userScore}점</Text>
+        </View>
       </View>
-      {/* ----------------------- 두 번째 ---------------------------------------------------------------------*/}
-      <View style={{ flexDirection: "row" }}>
-        <WholeFrame>
-          <View justifyContent="center" alignItems="center" style={{ width: "15%" }}>
-            <AppText>9</AppText>
-          </View>
-          <View flex={2}>
-            <Image
-              source={require("../../assets/profile/me2.jpg")}
-              style={{ width: "90%", height: "90%", borderRadius: 10 }}
-            />
-          </View>
-          <View flex={2} alignItems="center">
-            <Image
-              source={require("../../assets/images/heart-icon-2.png")}
-              style={{ width: "60%", height: "60%" }}
-            />
-          </View>
-          <View flex={3}>
-            <AppText>Chan</AppText>
-          </View>
-          <View flex={3} justifyContent="center">
-            <AppText>123.5k</AppText>
-          </View>
-        </WholeFrame>
-      </View>
-
-      {/* 마지막 */}
     </View>
   )
 }
 
-const MyRankView = styled.View`
-  display: flex;
-  flex-direction: row;
-`
+export default function UserRankCard({ userList }) {
+  const navigation = useNavigation()
+
+  function getDetail(user) {
+    navigation.navigate("UserBadge", { user })
+  }
+
+  return (
+    <>
+      <ScrollView style={{ width: "100%", flex: 1, paddingTop: 24 }}>
+        {userList.map((user) => {
+          return (
+            <TouchableOpacity key={user.userId} style={{ flex: 1 }} onPress={() => getDetail(user)}>
+              <UserCard user={user} />
+            </TouchableOpacity>
+          )
+        })}
+      </ScrollView>
+    </>
+  )
+}
+
+const baseStyle = (num) => {
+  return {
+    flex: num,
+    alignItem: "center",
+    justifyContent: "center",
+    backgroundColor: "transparent",
+  }
+}
+
+const frameStyles = StyleSheet.create({
+  cardFrame: {
+    flex: 1,
+    flexDirection: "row",
+    height: (dw * 3) / 17,
+    marginBottom: 8,
+    paddingRight: "4%",
+  },
+
+  contentArea: {
+    flex: 16,
+    flexDirection: "row",
+    borderRadius: 10,
+    backgroundColor: "rgb(250, 253, 255)",
+    elevation: 8,
+  },
+
+  rankNum: { ...baseStyle(2) },
+  profileImg: {
+    ...baseStyle(3),
+    background: "black",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  badge: { ...baseStyle(3) },
+  nickname: { ...baseStyle(4) },
+  userScore: { ...baseStyle(4) },
+})
+
+const textStyles = StyleSheet.create({
+  common: {
+    textAlign: "center",
+  },
+})
