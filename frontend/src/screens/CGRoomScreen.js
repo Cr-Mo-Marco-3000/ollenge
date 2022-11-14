@@ -4,6 +4,7 @@ import { View, StyleSheet, Alert } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Provider } from "react-native-paper"
+import { useHeaderHeight } from "@react-navigation/elements"
 
 import ColorSet from "../style/ColorSet"
 import { LocalTime, DateTime, TodayCheck } from "../functions/index"
@@ -16,6 +17,7 @@ import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
 import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
 import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
 import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
+import CGStartCount from "../components/CGRoomScreen/CGStartCount"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 import FeedsArea from "../components/CGRoomScreen/FeedsArea"
 
@@ -28,6 +30,7 @@ function CGRoomScreen() {
   const MyUserId = authCtx.userInfo.MyUserId
 
   const navigation = useNavigation()
+  const headerHight = useHeaderHeight()
   const [isStarted, setIsStarted] = useState(false)
   const [todayAuth, setTodayAuth] = useState(false)
 
@@ -55,12 +58,12 @@ function CGRoomScreen() {
         style={{ flex: 1 }}
         colors={[`${ColorSet.whiteColor(1)}`, `${ColorSet.paleBlueColor(1)}`]}
       >
-        <TopMargin />
-        <TopMargin />
+        <View style={{ height: headerHight }} />
         <UserListTap navigation={navigation} />
         <CGRoomInfoTag roomInfo={roomInfo} userList={userList} />
 
         <View style={styles.buttonContainer}>
+          <CGStartCount />
           <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
           <CGAuthBtn navigation={navigation} />
           <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />
