@@ -5,7 +5,7 @@ import ColorSet from "../../style/ColorSet"
 import { TriangleIcon } from "../../assets/images"
 import AppBoldText from "./AppBoldText"
 import TopMargin from "./TopMargin"
-
+import { AntDesign } from "@expo/vector-icons"
 /*
 
 backgroundColor prop으로 배경색을,
@@ -45,7 +45,7 @@ export default function AppModal(props) {
           <GoBackDiv>
             <TriColumn1>
               <GoBackButton onPress={goBack}>
-                <TriangleIcon />
+                <AntDesign name="arrowleft" size={24} color="black" />
               </GoBackButton>
             </TriColumn1>
             <TriColumn2>
@@ -91,20 +91,9 @@ const TriColumn3 = styled(TriColumn)`
 `
 
 const GoBackButton = styled.Pressable`
-  width: 15px;
+  width: 20px;
   height: 20px;
   left: 30px;
-`
-
-const TitleView = styled.View`
-  position: absolute;
-  height: 100%;
-  top: 50;
-  height: ${buttonSize / 3 + 40}px;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  /* background-color: red; */
 `
 
 const ChildrenDiv = styled.View`

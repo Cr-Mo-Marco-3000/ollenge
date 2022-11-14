@@ -33,6 +33,7 @@ pxSize={24}
 */
 const AppBoldText = (props) => {
   const selectedColor = props.color ? props.color : "navy"
+  const align = props.align ? props.align : "center"
   let selectedSize = 24
 
   if (!props.size && !props.pxSize) {
@@ -54,7 +55,7 @@ const AppBoldText = (props) => {
     black: ColorSet.blackColor(1),
     deepOrange: ColorSet.deepOrangeColor(1),
     white: ColorSet.whiteColor(1),
-    ligntBlue: ColorSet.lightBlueColor(1),
+    lightBlue: ColorSet.lightBlueColor(1),
     gray: ColorSet.grayColor(1),
     hotPink: ColorSet.hotPinkColor(1),
     silver: ColorSet.silverColor(1),
@@ -67,6 +68,7 @@ const AppBoldText = (props) => {
         color: theme[selectedColor],
         fontSize: selectedSize,
         fontFamily: "HyeminBold",
+        textAlign: align,
       }}
       numberOfLines={props.lineNumber ? props.lineNumber : 0}
     >
