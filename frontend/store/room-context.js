@@ -10,6 +10,7 @@ export const RoomContext = createContext({
   userList: new Array(),
   isAuthed: false,
   isResist: false,
+  authImage: "",
   getRoomInfo: (challengeId) => {},
   getUserList: (challengeId) => {},
   getTodayAuth: (challengeId) => {},
@@ -21,6 +22,7 @@ function RoomContextProvider({ children }) {
   const [user, setUser] = useState(new Array())
   const [auth, setAuth] = useState(false)
   const [resist, setResist] = useState(false)
+  const [img, setImg] = useState("")
 
   function getRoom(challengeId) {
     instance
@@ -59,15 +61,19 @@ function RoomContextProvider({ children }) {
   const getResist = function (challengeId) {
     instance
       .get(`/auth/isstdimg/${challengeId}`)
-      .then((res) => setResist(res.data.isauthed))
+      .then((res) => {
+        setResist(res.data.isauthed)
+        // setImg(res.data.stdimg)
+      })
       .catch((err) => console.log(err))
   }
 
   const value = {
     roomInfo: info,
     userList: user,
-    isAuthed: false,
-    isResist: false,
+    isAuthed: auth,
+    isResist: resist,
+    authImage: img,
     getRoomInfo: getRoom,
     getUserList: getUser,
     getTodayAuth: getAuth,
