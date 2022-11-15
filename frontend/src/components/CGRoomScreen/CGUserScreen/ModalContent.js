@@ -38,7 +38,6 @@ function ModalContent({ user }) {
   const today = new Date(`${year}-${month}-${date}`)
 
   const wholeDay = Math.round((today.getTime() - startDate.getTime()) / 1000 / 60 / 60 / 24 + 1)
-  console.log(wholeDay)
 
   const badgesImg = {
     user: [

@@ -24,16 +24,15 @@ import FeedsArea from "../components/CGRoomScreen/FeedsArea"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
-  const authCtx = useContext(AuthContext)
 
   const roomInfo = roomCtx.roomInfo
   const userList = roomCtx.userList
-  const MyUserId = authCtx.userInfo.MyUserId
 
   const navigation = useNavigation()
   const headerHight = useHeaderHeight()
   const [isStarted, setIsStarted] = useState(false)
-  const [todayAuth, setTodayAuth] = useState(false)
+  const [isAuthed, setIsAuth] = useState(false)
+  const [isResist, setIsResist] = useState(false)
 
   useEffect(() => {
     const now = LocalTime()
@@ -41,17 +40,12 @@ function CGRoomScreen() {
     if (now.getTime() >= start.getTime()) {
       setIsStarted(true)
     }
+  }, [roomInfo])
 
-    userList.map((user) => {
-      if (user === MyUserId) {
-        const flag = TodayCheck(user.datetimeList)
-        if (flag) {
-          setTodayAuth(true)
-        }
-      }
-      return
-    })
-  }, [roomInfo, userList])
+  useEffect(() => {
+    setIsAuth(roomCtx.isAuthed)
+    setIsResist(roomCtx.isResist)
+  }, [roomCtx])
 
   return (
     <Provider>
