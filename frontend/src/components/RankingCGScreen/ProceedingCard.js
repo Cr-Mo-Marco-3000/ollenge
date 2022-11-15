@@ -1,15 +1,9 @@
 import React from "react-native"
 import { View, Dimensions, Image } from "react-native"
-// import ColorSet from "../../style/ColorSet"
-// import AppText from "../common/AppText"
+
 import AppBoldText from "../common/AppBoldText"
 import AppCard from "../common/AppCard"
-// import {
-//   GymIcon,
-//   NotebookIcon,
-//   SunIcon,
-//   BoyIcon,
-// } from "../../assets/images/RankingCGScreen/RankingCGScreen"
+
 import styled from "styled-components"
 
 export default function ProceedingCard(props) {
@@ -21,11 +15,7 @@ export default function ProceedingCard(props) {
 
   const presetTopic = challengeInfo.presetTopic
   const presetImg = challengeInfo.presetImg
-  // const presetObject = {
-  //   1: () => <SunIcon />,
-  //   2: () => <NotebookIcon />,
-  //   3: () => <GymIcon />,
-  // }
+
   // 레이아웃 정보
   const spaceHeight = 180
   const cardHeight = spaceHeight * 0.9

@@ -67,14 +67,19 @@ export default function Final({ info, isRank, toNext, cancelAll, goBackToRoom })
   }
   const createChallenge = async () => {
     try {
-      console.log(info)
       const res = await challAPI.createCG(info)
       const id = res.data.challengeCreatedData.challengeId
       roomCtx.getRoomInfo(id)
       roomCtx.getUserList(id)
-      navigation.push("CGRoom")
+      // navigation.navigate가 push보다 조금 더 발전된 느낌의 method
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: "내 챌린지", params: { screen: "CGList", params: { screen: "시작 전" } } },
+        ],
+      })
     } catch (error) {
-      console.log(error.response)
+      console.log(error.response, "씨발")
     }
   }
 

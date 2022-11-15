@@ -14,7 +14,6 @@ const RankingCGScreen = () => {
 
   const makeChallenge = async (info) => {
     const newInfo = {
-      ...selectedCGInfo,
       ...info,
     }
     setSelectedCGInfo(newInfo)

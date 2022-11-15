@@ -83,7 +83,12 @@ export default function ParticipatingDetailCard(props) {
       endTime: challengeInfo.endTime,
       rewardContent: "",
       penaltyContent: "",
+      classificationTypeID:
+        props.challengeInfo.classificationType !== undefined
+          ? props.challengeInfo.classificationType.classificationTypeId
+          : "",
     }
+    // console.log(props.challengeInfo.classificationType.classificationTypeId)
     props.makeChallenge(info)
   }
 

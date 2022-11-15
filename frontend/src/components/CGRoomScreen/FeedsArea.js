@@ -10,11 +10,11 @@ import { useIsFocused } from "@react-navigation/native"
 const FeedsArea = () => {
   const isFocused = useIsFocused()
   const instance = AuthorizationInstance()
+
   const roomCtx = useContext(RoomContext)
   const authCtx = useContext(AuthContext)
 
-  const roomInfo = roomCtx.roomInfo
-  const challengeId = roomInfo.challengeId
+  const challengeId = roomCtx.roomInfo.challengeId
 
   const flatListRef = useRef()
 
@@ -58,19 +58,24 @@ const FeedsArea = () => {
   // ]
 
   // 시작시 전체 List 불러오기
+
   const getRes = async () => {
-    try {
-      const res = await instance.get(`/api/feed/${challengeId}`)
-      const newFeedList = res.data.feedList
-      setfeedList(newFeedList)
-    } catch (error) {
-      console.log(error.response.data)
+    if (challengeId) {
+      try {
+        const res = await instance.get(`/api/feed/${challengeId}`)
+        const newFeedList = res.data.feedList
+        setfeedList(newFeedList)
+      } catch (error) {
+        console.log(error.response.data)
+      }
     }
   }
+
   const [feedList, setfeedList] = useState([])
+
   useEffect(() => {
     getRes()
-  }, [isFocused])
+  }, [isFocused, challengeId])
 
   // 보이는 피드 변경
   useEffect(() => {
