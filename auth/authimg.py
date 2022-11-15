@@ -30,7 +30,7 @@ from datetime import datetime
 # S3연결
 from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name, make_profile_url_name
 # DB 연결
-from pysql import execute_select_keword_list, execute_select_participation_id, execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
+from pysql import execute_select_authtype, execute_select_keword_list, execute_select_participation_id, execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
 # model 연결
 from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput, uploadImg
 # Header token
@@ -854,7 +854,7 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
 
     xy_e=explode_xy(sqs)
     A=shoelace_area(xy_e[0],xy_e[1])
-    print(A)
+    # print(A)
     # plt.imshow(dst,),plt.show()
     # cv2.waitKey()
     # cv2.destroyAllWindows()
@@ -991,6 +991,18 @@ async def isstdimg(challenge_id: str, Authorization: Optional[str] = Header(None
     try:
         challenge_id = str(challenge_id)
         participation_id = execute_select_participation_id(challenge_id, user_id)
+        isfeature=execute_select_authtype(challenge_id)
+        if isfeature:
+            pass
+        else:
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "message": f"feature auth type이 아닙니다.",
+                    "isauthed": True,
+                    "stdimg": None
+                    },
+            )
         if participation_id:
             participation_id = str(participation_id)
         else:

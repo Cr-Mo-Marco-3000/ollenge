@@ -170,6 +170,19 @@ def execute_select_participation_id(challenge_id, user_id):
         return False
 
 
+def execute_select_authtype(challenge_id):
+    challenge_id = int(challenge_id)
+    sql = """SELECT auth_type from challenge WHERE challenge_id = %s"""
+    vals = (challenge_id, )
+    result = execute_select2(sql, vals)
+    if result:
+        if result[0][0] == "feature":
+            return True
+        return result[0][0]
+    else:
+        return False
+
+
 # classification type id to keyword List
 def execute_select_keword_list(classification_type_id):
     classification_type_id = int(classification_type_id)
