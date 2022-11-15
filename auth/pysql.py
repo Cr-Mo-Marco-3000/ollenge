@@ -114,6 +114,17 @@ def execute_select_token_user_id(participation_id):
     else:
         return False
 
+# 닉네임 가져오기
+def execute_select_user_nickname(user_id):
+    user_id = int(user_id)
+    sql = f"SELECT nickname from user WHERE user_id = {user_id}"
+    result = execute_select(sql)
+    if result:
+        return result[0][0]
+    else:
+        return False
+
+
 
 # 프로필 이미지 업로드
 def execute_update_profile_img(user_id, img):

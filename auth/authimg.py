@@ -649,11 +649,12 @@ async def test(data: StdImgInput, Authorization: Optional[str] = Header(None)):
         try:
             to = make_std_url_name(participation_id)
             file_url = s3_upload(filename, 'homybk', to)
+            user_name = execute_select_user_nickname(user_id)
             if file_url:
                 now = datetime.now()
                 feed_time = now.strftime("%Y%m%d%H%M%S")
                 execute_insert_std_img(participation_id, file_url)
-                execute_insert_feed(participation_id, file_url, "", feed_time)
+                execute_insert_feed(participation_id, file_url, f"{user_name}님이 앞으로 인증할 사진입니다.", feed_time)
         except Exception as e:
             print(e)
             remove_img(filename)
