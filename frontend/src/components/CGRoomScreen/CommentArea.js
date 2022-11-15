@@ -57,7 +57,7 @@ const CommentArea = (props) => {
           commentContent: writedText,
         })
         const resGet = await instance.get(`/api/comment/${feedId}`)
-        const newCommentList = resGet.data.CommentList
+        const newCommentList = resGet.data.commentList
         setCommentList(newCommentList)
         setWritedText("")
       } else {
@@ -122,7 +122,7 @@ const CommentArea = (props) => {
             }}
           ></View>
         </View>
-        {commentList.map((commentInfo, idx) => (
+        {commentList?.map((commentInfo, idx) => (
           <CommentItem commentInfo={commentInfo} key={idx} />
         ))}
       </ScrollView>
