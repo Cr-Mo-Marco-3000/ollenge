@@ -50,7 +50,7 @@ function CGRoomInfoTag({ roomInfo, userList }) {
         <View style={styles.imgBox}>
           <DefaultImage />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, alignItems: "flex-start" }}>
           <AppBoldText lineNumber={1}>{roomInfo.challengeTopic}</AppBoldText>
         </View>
         <IconButton icon="plus" iconColor={`${ColorSet.navyColor(1)}`} size={RFPercentage(3)} />

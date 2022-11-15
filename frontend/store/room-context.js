@@ -22,7 +22,7 @@ function RoomContextProvider({ children }) {
   const [user, setUser] = useState(new Array())
   const [auth, setAuth] = useState(false)
   const [resist, setResist] = useState(false)
-  const [img, setImg] = useState("")
+  const [img, setImg] = useState()
 
   function getRoom(challengeId) {
     instance
@@ -63,7 +63,7 @@ function RoomContextProvider({ children }) {
       .get(`/auth/isstdimg/${challengeId}`)
       .then((res) => {
         setResist(res.data.isauthed)
-        // setImg(res.data.stdimg)
+        setImg(res.data.stdimg)
       })
       .catch((err) => console.log(err))
   }

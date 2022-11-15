@@ -15,9 +15,11 @@ import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
 import { useNavigation } from "@react-navigation/native"
 
-function AuthScreen() {
+function AuthScreen({ route }) {
   const instance = AuthorizationInstance()
   const navigation = useNavigation()
+
+  const { showAuthModal } = route.params
 
   const roomCtx = useContext(RoomContext)
   const roomInfo = roomCtx.roomInfo
@@ -48,6 +50,7 @@ function AuthScreen() {
   function inputHandler(text) {
     setInputText(text)
   }
+
   const authByImg = async () => {
     let urlType
     let dataForm
@@ -71,6 +74,9 @@ function AuthScreen() {
       .then((res) => {
         console.log(res.status, res.data.message)
         Alert.alert("인증이 완료되었습니다.")
+        roomCtx.getUserList(challengeId)
+        roomCtx.getTodayAuth(challengeId)
+        showAuthModal()
         navigation.goBack("CGRoom")
       })
       .catch((err) => {

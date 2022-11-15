@@ -21,13 +21,15 @@ const theme = {
   },
 }
 
-function ResistScreen() {
+function ResistScreen({ route }) {
   const roomCtx = useContext(RoomContext)
   const roomInfo = roomCtx.roomInfo
   const [uri, setUri] = useState()
   const [base64, setBase64] = useState()
   const [visible, setVisible] = useState(false)
   const [challengeId, setChallengeId] = useState(roomInfo.challengeId)
+
+  const { showResistModal } = route.params
 
   const cameraHandler = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
@@ -82,6 +84,7 @@ function ResistScreen() {
             base64={base64}
             challengeId={challengeId}
             resetCamera={resetCamera}
+            showResistModal={showResistModal}
           />
         </Modal>
       </Portal>

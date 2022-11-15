@@ -1,24 +1,28 @@
-import React from "react"
+import React, { useContext } from "react"
 
 import { Alert, Image, Pressable, StyleSheet, View } from "react-native"
 import AppText from "../common/AppText"
 import AppButton from "../common/AppButton"
 import { RFPercentage } from "react-native-responsive-fontsize"
-
-import { AuthorizationInstance } from "../../api/settings"
 import { useNavigation } from "@react-navigation/native"
 
-function ResistModalContent({ uri, base64, challengeId, resetCamera }) {
+import { AuthorizationInstance } from "../../api/settings"
+import { RoomContext } from "../../../store/room-context"
+
+function ResistModalContent({ uri, base64, challengeId, resetCamera, showResistModal }) {
   const instance = AuthorizationInstance()
   const navigation = useNavigation()
+  const roomCtx = useContext(RoomContext)
+
   const registAuthImg = async () => {
     const dataForm = { challenge_id: challengeId, std_img: base64 }
     await instance
       .post("/auth/stdimg", dataForm, {})
       .then((res) => {
         console.log(res.status, res.data.message)
-        Alert.alert("기준 사진이 등록되었습니다.")
         navigation.goBack("CGRoom")
+        showResistModal()
+        roomCtx.getImgResist(challengeId)
       })
       .catch((err) => {
         const errcode = err.response.data.errcode
@@ -44,6 +48,7 @@ function ResistModalContent({ uri, base64, challengeId, resetCamera }) {
         navigation.goBack("CGRoom")
       })
   }
+
   return (
     <View style={{ paddingHorizontal: "5%" }}>
       <View style={styles.imgBox}>
