@@ -1,5 +1,6 @@
 package com.ollenge.api.request;
 
+import com.ollenge.common.util.StringUtils;
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,6 @@ public class CommentPatchReq {
     @ApiParam(value = "댓글 내용")
     @NotBlank
     @Size(min = 1, max = 300)
-    @Pattern(regexp="^[가-힣a-zA-Z0-9 ]*$")
+    @Pattern(regexp= StringUtils.contentRegex)
     String commentContent;
 }
