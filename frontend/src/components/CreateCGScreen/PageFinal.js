@@ -79,7 +79,7 @@ export default function Final({ info, isRank, toNext, cancelAll, goBackToRoom })
         ],
       })
     } catch (error) {
-      console.log(error.response, "씨발")
+      console.log(error.response)
     }
   }
 
