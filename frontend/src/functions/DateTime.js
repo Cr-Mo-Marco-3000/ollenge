@@ -7,8 +7,7 @@
  */
 function DateTime(date, time) {
   const dateTime = new Date(`${date}T${time}`)
-  const krTimeDiff = 9 * 60 * 60 * 1000
-  const kr_curr = new Date(dateTime.getTime() + krTimeDiff)
-  return kr_curr
+  const curr = new Date(dateTime).toLocaleString("en-US", { timeZone: "Asia/Seoul" })
+  return new Date(curr)
 }
 export default DateTime

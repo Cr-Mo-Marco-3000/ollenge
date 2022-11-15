@@ -72,8 +72,6 @@ function AuthScreen({ route }) {
     await instance
       .post(urlType, dataForm, {})
       .then((res) => {
-        console.log(res.status, res.data.message)
-        Alert.alert("인증이 완료되었습니다.")
         roomCtx.getUserList(challengeId)
         roomCtx.getTodayAuth(challengeId)
         showAuthModal()
@@ -81,8 +79,6 @@ function AuthScreen({ route }) {
       })
       .catch((err) => {
         const errcode = err.response.data.errcode
-        console.log(errcode)
-        console.log(err.response.data.message)
         if (errcode === 0) {
           Alert.alert("이미 오늘 인증은 완료되었습니다.")
         } else if (errcode === 1) {

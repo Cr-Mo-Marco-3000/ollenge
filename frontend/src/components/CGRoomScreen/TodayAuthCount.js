@@ -8,44 +8,49 @@ import { ClockIcon } from "../../assets/images"
 import { RoomContext } from "../../../store/room-context"
 import { LocalTime, ConvertDate, DateTime } from "../../functions/index"
 
-function TodayAuthCount() {
-  const [diff, setDiff] = useState([0, 0, 0])
+function TodayAuthCount({ isTime }) {
+  const [diff, setDiff] = useState([0, 0])
   const roomCtx = useContext(RoomContext)
 
   useEffect(() => {
     const timer = setInterval(() => {
-      const today = LocalTime()
-      const todayDate = ConvertDate(today)
-      const endTime = DateTime(todayDate, roomCtx.roomInfo.endTime)
-      const startTime = DateTime(todayDate, roomCtx.roomInfo.startTime)
-      if (today < startTime) {
-        const timeDiff = startTime - today
-        const flag = 1
-        const diffHour = Math.floor((timeDiff / (1000 * 60 * 60)) % 24)
-        const diffMin = Math.floor((timeDiff / (1000 * 60)) % 60)
-        setDiff([flag, diffHour, diffMin])
-      } else if (startTime <= today < endTime) {
-        const timeDiff = endTime - today
-        const flag = 2
-        const diffHour = Math.floor((timeDiff / (1000 * 60 * 60)) % 24)
-        const diffMin = Math.floor((timeDiff / (1000 * 60)) % 60)
-        setDiff([flag, diffHour, diffMin])
+      if (roomCtx) {
+        const today = new Date()
+        const now = 60 * today.getHours() + today.getMinutes()
+        const start =
+          60 * Number(roomCtx.roomInfo.startTime.substring(0, 2)) +
+          Number(roomCtx.roomInfo.startTime.substring(3, 5))
+        const end =
+          60 * Number(roomCtx.roomInfo.endTime.substring(0, 2)) +
+          Number(roomCtx.roomInfo.endTime.substring(3, 5))
+
+        if (isTime == "waiting") {
+          const timeDiff = start - now
+          const diffHour = Math.floor((timeDiff / 60) % 24)
+          const diffMin = Math.floor(timeDiff % 60)
+          setDiff([diffHour, diffMin])
+        } else if (isTime == "playing") {
+          const timeDiff = end - now
+          const diffHour = Math.floor((timeDiff / 60) % 24)
+          const diffMin = Math.floor(timeDiff % 60)
+          setDiff([diffHour, diffMin])
+        }
       }
     }, 1000)
     return () => clearInterval(timer)
-  }, [])
+  }, [roomCtx])
 
   return (
     <>
-      {diff[0] != 0 ? (
+      {isTime != "end" ? (
         <View style={styles.btnContainer}>
           <View style={styles.imgBox}>
             <ClockIcon />
           </View>
           <AppText lineNumber={1} pxSize={20}>
-            {diff[0] == 1
-              ? `인증 시작까지  ${diff[1]}시간 ${diff[2]}분 남았습니다`
-              : `금일 마감까지 ${diff[1]}시간 ${diff[2]}분 남았습니다`}
+            {isTime == "waiting"
+              ? `인증 시작까지  ${diff[0]}시간 ${diff[1]}분 남았습니다`
+              : `금일 마감까지 ${diff[0]}시간 ${diff[1]}분 남았습니다`}
           </AppText>
         </View>
       ) : (
