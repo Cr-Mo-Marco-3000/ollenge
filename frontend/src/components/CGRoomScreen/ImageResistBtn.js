@@ -12,7 +12,7 @@ function ImageResistBtn({ navigation, roomInfo }) {
     <View style={styles.buttonBox}>
       <Pressable
         style={styles.innerButton}
-        onPress={(roomInfo) => navigation.push("CGImg", { roomInfo: { roomInfo } })}
+        onPress={() => navigation.push("CGImg", { roomInfo: roomInfo })}
       >
         <View style={{ flexDirection: "row" }}>
           <View style={{ width: 30, height: 30 }}>

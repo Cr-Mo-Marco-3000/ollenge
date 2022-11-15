@@ -11,7 +11,7 @@ function CGAuthBtn({ navigation }) {
         title={"오늘 챌린지 인증하기"}
         weight={1}
         pxSize={20}
-        handler={() => navigation.push("CGAuth", { methodNum: 1, participationId: 3 })}
+        handler={() => navigation.push("CGAuth")}
       ></AppButton>
     </View>
   )

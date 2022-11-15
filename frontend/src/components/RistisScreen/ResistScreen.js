@@ -1,16 +1,17 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 
 import AppText from "../common/AppText"
 import AppBoldText from "./../common/AppBoldText"
 import AppButton from "../common/AppButton"
 import ColorSet from "../../style/ColorSet"
 
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Alert } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { RFPercentage } from "react-native-responsive-fontsize"
 import * as ImagePicker from "expo-image-picker"
 import { Provider as FeedProvider, Portal, Modal, DefaultTheme } from "react-native-paper"
 import ResistModalContent from "./ResistModalContent"
+import { RoomContext } from "../../../store/room-context"
 
 const theme = {
   ...DefaultTheme,
@@ -21,9 +22,12 @@ const theme = {
 }
 
 function ResistScreen() {
+  const roomCtx = useContext(RoomContext)
+  const roomInfo = roomCtx.roomInfo
   const [uri, setUri] = useState()
   const [base64, setBase64] = useState()
   const [visible, setVisible] = useState(false)
+  const [challengeId, setChallengeId] = useState(roomInfo.challengeId)
 
   const cameraHandler = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
@@ -73,7 +77,12 @@ function ResistScreen() {
           contentContainerStyle={containerStyle}
           style={{ alignItems: "center", padding: 0, margin: 0, flex: 1, height: "100%" }}
         >
-          <ResistModalContent uri={uri} base64={base64} resetCamera={resetCamera} />
+          <ResistModalContent
+            uri={uri}
+            base64={base64}
+            challengeId={challengeId}
+            resetCamera={resetCamera}
+          />
         </Modal>
       </Portal>
       <LinearGradient

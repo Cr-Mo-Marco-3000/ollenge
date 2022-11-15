@@ -73,7 +73,7 @@ def execute_select_std_img(participation_id):
 def execute_insert_feed(participation_id, url, feed_content, feed_time):
     # 일단 같은 participation으로 들어가있으면 삭제
     participation_id = int(participation_id)
-    sql = """INSERT INTO feed (created_datetime, feed_content, feed_img, feed_type, participation_id) VALUES (%s, %s, %s, '1', %s);"""
+    sql = """INSERT INTO feed (created_datetime, feed_content, feed_img, feed_type, participation_id) VALUES (%s, %s, %s, 'user', %s);"""
     vals = (feed_time, feed_content, url, participation_id)
     # sql = f"INSERT INTO auth_standard_img (standard_img, participation_id) VALUES (url, {participation_id});"
     conn = get_connection()

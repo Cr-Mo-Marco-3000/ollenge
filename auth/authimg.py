@@ -650,7 +650,10 @@ async def test(data: StdImgInput, Authorization: Optional[str] = Header(None)):
             to = make_std_url_name(participation_id)
             file_url = s3_upload(filename, 'homybk', to)
             if file_url:
+                now = datetime.now()
+                feed_time = now.strftime("%Y%m%d%H%M%S")
                 execute_insert_std_img(participation_id, file_url)
+                execute_insert_feed(participation_id, file_url, "", feed_time)
         except Exception as e:
             print(e)
             remove_img(filename)
@@ -862,7 +865,7 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
             status_code=400,
             content={
                 "message": f"사진이 일치하지 않습니다.",
-                "errcode": 11
+                "errcode": 12
                 },
         )
     else:
@@ -960,7 +963,7 @@ async def isauthedtoday(challenge_id: int, Authorization: Optional[str] = Header
         )
 
 
-@app.get("/auth/isstdimg/{participation_id}")
+@app.get("/auth/isstdimg/{challenge_id}")
 async def isstdimg(challenge_id: str, Authorization: Optional[str] = Header(None)):
     if Authorization:
         btoken = Authorization.split()[1]
