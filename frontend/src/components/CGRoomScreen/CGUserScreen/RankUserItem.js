@@ -72,8 +72,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   profileImgBox: {
-    width: RFPercentage(7),
-    height: RFPercentage(7),
+    width: RFPercentage(8),
+    height: RFPercentage(8),
+    padding: "2%",
   },
   bedgeImgBox: {
     width: RFPercentage(5),

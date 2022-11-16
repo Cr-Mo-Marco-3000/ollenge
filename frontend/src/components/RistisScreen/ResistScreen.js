@@ -96,7 +96,6 @@ function ResistScreen({ route }) {
         ]}
         style={{ flex: 1, alignItems: "center" }}
       >
-        {/* <TopMargin /> */}
         <View style={{ flex: 1, justifyContent: "center" }}>
           <View style={{ alignItems: "center", justifyContent: "center" }}>
             <AppBoldText>인증 진행 시 최초 등록 이미지와의</AppBoldText>

@@ -67,9 +67,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%",
   },
   profileImgBox: {
-    width: RFPercentage(7),
-    height: RFPercentage(7),
-    marginHorizontal: "3%",
+    width: RFPercentage(8),
+    height: RFPercentage(8),
+    paddingVertical: "2%",
+    paddingHorizontal: "2%",
   },
   bedgeImgBox: {
     width: RFPercentage(5),

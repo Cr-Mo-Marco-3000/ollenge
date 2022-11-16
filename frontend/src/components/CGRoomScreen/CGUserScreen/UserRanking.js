@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   scrollScreen: {
     paddingVertical: "5%",
-    paddingHorizontal: "10%",
+    paddingHorizontal: "5%",
     width: "100%",
     flex: 1,
   },

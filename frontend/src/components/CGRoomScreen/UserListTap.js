@@ -31,8 +31,6 @@ function UserListTap({ navigation }) {
     }
   }, [userList])
 
-  console.log(myInfo)
-
   return (
     <View style={styles.imgListContainer}>
       <View style={styles.myProfileBox}>

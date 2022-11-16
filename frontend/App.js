@@ -17,6 +17,7 @@ import MyPageScreen from "./src/screens/MyPageScreen"
 import ColorSet from "./src/style/ColorSet"
 import AuthContextProvider, { AuthContext } from "./store/auth-context"
 import RoomContextProvider from "./store/room-context"
+import { RFPercentage } from "react-native-responsive-fontsize"
 
 function AuthStack() {
   return <StartScreen />
@@ -29,10 +30,11 @@ function AuthenticatedStack() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarLabelStyle: { fontSize: 15, fontFamily: "HyeminBold" },
+        tabBarLabelStyle: { fontSize: 12, fontFamily: "HyeminBold", paddingBottom: 5 },
         tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
         tabBarInactiveTintColor: `${ColorSet.navyColor(1)}`,
         tabBarStyle: { height: 70, paddingBottom: 5 },
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen
