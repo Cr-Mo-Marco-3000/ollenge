@@ -34,7 +34,7 @@ function CGRoomScreen() {
   const [isStarted, setIsStarted] = useState("")
   const [isAuthed, setIsAuth] = useState(false)
   const [isResist, setIsResist] = useState(false)
-  const [isTime, setIsTime] = useState(false)
+  const [isTime, setIsTime] = useState("")
 
   useEffect(() => {
     setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
@@ -56,13 +56,21 @@ function CGRoomScreen() {
         <UserListTap navigation={navigation} />
         <CGRoomInfoTag roomInfo={roomInfo} userList={userList} />
         <View style={styles.buttonContainer}>
-          <CGStartCount />
-          <TodayAuthCount isTime={isTime} />
-          <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
-          <CGAuthBtn navigation={navigation} />
-          <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />
+          {isStarted == "waiting" && (
+            <>
+              <CGStartCount />
+              <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
+            </>
+          )}
+          {isStarted == "playing" && !isAuthed && <TodayAuthCount isTime={isTime} />}
+          {isResist && isStarted == "palying" && isTime == "playing" && (
+            <CGAuthBtn navigation={navigation} />
+          )}
+          {!isResist && <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />}
         </View>
-        <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
+        {isStarted == "waiting" && (
+          <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
+        )}
         <FeedsArea></FeedsArea>
       </LinearGradient>
     </Provider>

@@ -1,5 +1,3 @@
-import { LocalTime } from "./index"
-
 const CGAuthTimeFlag = function (startTime, endTime) {
   if (startTime && endTime) {
     const today = new Date()

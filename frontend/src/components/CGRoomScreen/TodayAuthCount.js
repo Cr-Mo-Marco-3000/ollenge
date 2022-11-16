@@ -6,7 +6,6 @@ import ColorSet from "../../style/ColorSet"
 import AppText from "../common/AppText"
 import { ClockIcon } from "../../assets/images"
 import { RoomContext } from "../../../store/room-context"
-import { LocalTime, ConvertDate, DateTime } from "../../functions/index"
 
 function TodayAuthCount({ isTime }) {
   const [diff, setDiff] = useState([0, 0])
@@ -47,10 +46,15 @@ function TodayAuthCount({ isTime }) {
           <View style={styles.imgBox}>
             <ClockIcon />
           </View>
-          <AppText lineNumber={1} pxSize={20}>
-            {isTime == "waiting"
-              ? `인증 시작까지  ${diff[0]}시간 ${diff[1]}분 남았습니다`
-              : `금일 마감까지 ${diff[0]}시간 ${diff[1]}분 남았습니다`}
+          <AppText lineNumber={1} size={2}>
+            {isTime == "waiting" &&
+              diff[0] != 0 &&
+              `인증 시작까지  ${diff[0]}시간 ${diff[1]}분 남았습니다`}
+            {isTime == "waiting" && diff[0] == 0 && `인증 시작까지 ${diff[1]}분 남았습니다`}
+            {isTime == "playing" &&
+              diff[0] != 0 &&
+              `금일 마감까지 ${diff[0]}시간 ${diff[1]}분 남았습니다`}
+            {isTime == "playing" && diff[0] == 0 && `금일 마감까지 ${diff[1]}분 남았습니다`}
           </AppText>
         </View>
       ) : (
