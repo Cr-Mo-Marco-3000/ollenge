@@ -10,6 +10,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native"
+import ColorSet from "../../style/ColorSet"
 import { badgesTitle } from "./ShowUserBadge"
 
 const { width: dw, height: dh } = Dimensions.get("window")
@@ -69,7 +70,9 @@ export const UserCard = ({ user, isMe = false }) => {
           <Text style={textStyles.common}>{user.nickname}</Text>
         </View>
         <View style={frameStyles.userScore}>
-          <Text style={textStyles.common}>{user.userScore}점</Text>
+          <Text style={{ ...textStyles.common, color: ColorSet.orangeColor(1) }}>
+            {user.userScore}점
+          </Text>
         </View>
       </View>
     </View>
@@ -142,5 +145,6 @@ const textStyles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "HyeminBold",
     fontSize: dw * 0.04,
+    color: `${ColorSet.navyColor(1)}`,
   },
 })

@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { dw } from "../../style/DeviceInfo"
+import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
 
 const TopCard = ({ flex, user }) => {
@@ -37,12 +38,12 @@ const TopCard = ({ flex, user }) => {
             width: (dw * flex) / 35,
             height: (dw * flex) / 35,
             position: "absolute",
-            bottom: "15%",
+            bottom: "18%",
             left: ["10%", "0%", "-10%"][flex - 3],
           }}
         />
-        <AppText size={2.7}>{user.nickname}</AppText>
-        <AppText size={2.5}>{user.userScore}점</AppText>
+        <AppBoldText size={2.7}>{user.nickname}</AppBoldText>
+        <AppText size={2.3}>{user.userScore}점</AppText>
       </View>
     </TouchableOpacity>
   )

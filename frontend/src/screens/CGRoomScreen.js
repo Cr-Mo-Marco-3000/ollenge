@@ -35,7 +35,7 @@ function CGRoomScreen() {
   const [isAuthed, setIsAuth] = useState(false)
   const [isResist, setIsResist] = useState(false)
   const [isTime, setIsTime] = useState("")
-
+  console.log("I am isAuthed => ", isAuthed)
   useEffect(() => {
     setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
     setIsTime(CGAuthTimeFlag(roomInfo.startTime, roomInfo.endTime))
@@ -63,7 +63,7 @@ function CGRoomScreen() {
             </>
           )}
           {isStarted == "playing" && !isAuthed && <TodayAuthCount isTime={isTime} />}
-          {isResist && isStarted == "playing" && isTime == "playing" && (
+          {isResist && isStarted == "playing" && isTime == "playing" && !isAuthed && (
             <CGAuthBtn navigation={navigation} />
           )}
           {!isResist && <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />}
