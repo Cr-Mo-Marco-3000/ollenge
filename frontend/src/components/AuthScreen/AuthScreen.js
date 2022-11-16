@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
-import { View, StyleSheet, Pressable, Image, TextInput, Alert } from "react-native"
+import { View, StyleSheet, Pressable, Image, TextInput, Alert, Keyboard } from "react-native"
 import { useHeaderHeight } from "@react-navigation/elements"
 import { Button } from "react-native-paper"
 import * as ImagePicker from "expo-image-picker"
@@ -29,9 +29,19 @@ function AuthScreen({ route }) {
   const [inputText, setInputText] = useState("")
   const [challengeId, setChallengeId] = useState(roomInfo.challengeId)
   const [authType, setAuthType] = useState(roomInfo.authType)
+  const [showKey, setShowKey] = useState(false)
 
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", () => {
+      setShowKey(true)
+    })
+    Keyboard.addListener("keyboardDidHide", () => {
+      setShowKey(false)
+    })
+  }, [])
   const cameraHandler = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
+
     if (permissionResult.granted == false) {
       Alert.alert("카메라 권한을 승인하지 않았습니다")
       return
@@ -113,30 +123,32 @@ function AuthScreen({ route }) {
   return (
     <View style={styles.rootScreen}>
       <View style={{ height: headerHight }} />
-      <Pressable style={styles.authContainer} onPress={cameraHandler}>
-        {uri ? (
-          <Image
-            source={{ uri: uri }}
-            style={{ width: "100%", height: "100%" }}
-            resizeMode="cover"
-          />
-        ) : (
-          <Button
-            icon="camera"
-            textColor={`${ColorSet.paleBlueColor(1)}`}
-            theme={{
-              fonts: {
-                labelLarge: {
-                  fontFamily: "HyeminBold",
-                  fontSize: 18,
+      {showKey === false && (
+        <Pressable style={styles.authContainer} onPress={cameraHandler}>
+          {uri ? (
+            <Image
+              source={{ uri: uri }}
+              style={{ width: "100%", height: "100%" }}
+              resizeMode="cover"
+            />
+          ) : (
+            <Button
+              icon="camera"
+              textColor={`${ColorSet.paleBlueColor(1)}`}
+              theme={{
+                fonts: {
+                  labelLarge: {
+                    fontFamily: "HyeminBold",
+                    fontSize: 18,
+                  },
                 },
-              },
-            }}
-          >
-            인증 사진 촬영
-          </Button>
-        )}
-      </Pressable>
+              }}
+            >
+              인증 사진 촬영
+            </Button>
+          )}
+        </Pressable>
+      )}
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: "row", height: 30 }}>
           <View style={{ width: 30, height: 30, marginRight: "2%" }}>

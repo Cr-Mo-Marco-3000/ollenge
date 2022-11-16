@@ -123,8 +123,7 @@ const styles = {
 
   CancelBtn: {
     fontSize: dw * 0.05,
-    padding: dh * 0.005,
-    textDecorationLine: "underline",
+    padding: dh * 0.002,
     textAlign: "center",
   },
 
