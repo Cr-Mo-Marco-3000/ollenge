@@ -63,7 +63,7 @@ function CGRoomScreen() {
             </>
           )}
           {isStarted == "playing" && !isAuthed && <TodayAuthCount isTime={isTime} />}
-          {isResist && isStarted == "palying" && isTime == "playing" && (
+          {isResist && isStarted == "playing" && isTime == "playing" && (
             <CGAuthBtn navigation={navigation} />
           )}
           {!isResist && <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />}

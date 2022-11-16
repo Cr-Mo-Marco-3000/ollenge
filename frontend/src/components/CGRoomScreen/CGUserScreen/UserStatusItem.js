@@ -25,12 +25,12 @@ function UserStatusItem({ user }) {
     datelst.push(date)
   }
 
-  for (var i = 0; i < day + 1; i++) {
+  for (var i = 0; i < day; i++) {
     const tempDay = new Date(today)
     tempDay.setDate(today.getDate() - i)
     const checkDate = ConvertDate(tempDay)
     if (datelst.includes(checkDate)) {
-      flag[i] = 1
+      flag[day - i] = 1
     }
   }
 

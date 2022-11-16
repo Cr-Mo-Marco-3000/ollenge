@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 import { View, StyleSheet, ScrollView, Pressable } from "react-native"
+
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { Avatar } from "react-native-paper"
 import { useContext, useState } from "react"
@@ -18,12 +19,24 @@ function UserListTap({ navigation }) {
   const userInfo = authCtx.userInfo
   const userList = roomCtx.userList
 
-  const [myInfo, setMyInfo] = useState(new Object())
+  const [myInfo, setMyInfo] = useState()
+
+  useEffect(() => {
+    if (userList) {
+      userList.map((user) => {
+        if (user.userId == userInfo.userId) {
+          setMyInfo(user)
+        }
+      })
+    }
+  }, [userList])
+
+  console.log(myInfo)
 
   return (
     <View style={styles.imgListContainer}>
       <View style={styles.myProfileBox}>
-        {Object.keys(myInfo).length !== 0 ? (
+        {myInfo ? (
           <ProfileBedge url={myInfo.profileImg} isActive={TodayCheck(myInfo.datetimeList)} />
         ) : null}
       </View>
@@ -33,12 +46,7 @@ function UserListTap({ navigation }) {
         showsHorizontalScrollIndicator={false}
       >
         {userList.map((user, index) => {
-          if (user.userId === userInfo.userId) {
-            if (Object.keys(myInfo).length === 0) {
-              setMyInfo(user)
-            }
-            return
-          } else {
+          if (user.userId !== userInfo.userId) {
             return (
               <ProfileBedge
                 key={index}

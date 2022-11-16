@@ -2,7 +2,6 @@ import ConvertDate from "./ConvertDate"
 
 function TodayCheck(lst) {
   const today = ConvertDate(new Date())
-  console.log(new Date())
   const datetimeLst = []
   for (const datetime of lst) {
     const date = datetime.split(" ")[0]
