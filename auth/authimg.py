@@ -115,6 +115,43 @@ def is_auth_intime(participation_id):
         return [3, now.strftime("%Y%m%d%H%M%S")]
 
 
+def checkcross(a, b, c, d):
+    a1, a2 = a
+    b1, b2 = b
+    c1, c2 = c
+    d1, d2 = d
+    if a1!=b1:
+        p1 = (a2 - b2)/(a1 - b1)
+        q1 = a1*((a2-b2)/(b1-a1))+a2
+        lin1 = [1, p1, q1]
+    else:
+        p1 = -1
+        q1 = a1
+        lin1 = [0, p1, q1]
+    
+    if c1 != d1:
+        p2 = (c2 - d2)/(c1 - d1)
+        q2 = c1*((c2-d2)/(d1-c1))+c2
+        lin2 = [1, p2, q2]
+    else:
+        p2 = -1
+        q2 = c1
+        lin2 = [0, p2, q2]
+
+    lin3 = []
+    for p in range(3):
+        lin3.append(lin1[p]-lin2[p])
+    
+    x, y = a
+    cal1 = -lin3[0]*y + lin3[1]*x+lin3[2]
+    x, y = b
+    cal2 = -lin3[0]*y + lin3[1]*x+lin3[2]
+    cro = cal1*cal2
+    if cro >= 0:
+        return True
+    else:
+        return False
+
 
 stub = service_pb2_grpc.V2Stub(ClarifaiChannel.get_grpc_channel())
 
@@ -840,7 +877,10 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
 
     # 입력 영상에 호모그래피 H 행렬로 투시 변환
     corners2 = cv2.perspectiveTransform(corners1, H)
-
+    edgePoints1 = []
+    for p in range(4):
+        edgePoints1.append(list(corners2[p][0]))
+    edgePoints2 = edgePoints1[1:]+[edgePoints1[0]]
     # corners2는 입력 영상에 좌표가 표현되있으므로 입력영상의 넓이 만큼 쉬프트
     corners2 = corners2 + np.float32([w, 0])
 
@@ -860,6 +900,8 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
     # cv2.waitKey()
     # cv2.destroyAllWindows()
     # # 사각형의 넓이에 따라 출력
+    con1 = checkcross(*edgePoints1)
+    con2 = checkcross(*edgePoints2)
     if A<=30:
         remove_img(filename)
         return JSONResponse(
@@ -869,7 +911,7 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
                 "errcode": 12
                 },
         )
-    else:
+    elif con1 and con2:
         try:
             to = make_feature_url_name(participation_id)
             file_url = s3_upload(filename, 'homybk', to)
@@ -892,6 +934,15 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
             status_code=200,
             content={
                 "message": f"완료되었습니다.",
+                },
+        )
+    else:
+        remove_img(filename)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"사진이 일치하지 않습니다.",
+                "errcode": 12
                 },
         )
 
