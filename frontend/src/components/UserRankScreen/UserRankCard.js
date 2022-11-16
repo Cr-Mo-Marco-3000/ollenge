@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native"
-import React from "react"
+import React, { useState } from "react"
 import {
   Text,
   View,
@@ -10,31 +10,60 @@ import {
   ScrollView,
   Alert,
 } from "react-native"
-import ColorSet from "../../style/ColorSet"
-import AppText from "../common/AppText"
+import { badgesTitle } from "./ShowUserBadge"
 
 const { width: dw, height: dh } = Dimensions.get("window")
 
-export const UserCard = ({ user }) => {
+export const UserCard = ({ user, isMe = false }) => {
+  const { selectedBadge } = user
   return (
     <View style={frameStyles.cardFrame}>
       {/* 순위 표시하는 영역 */}
-      <View style={frameStyles.rankNum}>
-        <Text style={textStyles.common}>{user.rank}</Text>
-      </View>
+      {isMe === false && (
+        <View style={frameStyles.rankNum}>
+          <Text style={textStyles.common}>{user.rank}등</Text>
+        </View>
+      )}
       {/* 이미지, 뱃지 등 정보 보여줄 곳 */}
       <View style={frameStyles.contentArea}>
+        {isMe === true && (
+          <View style={frameStyles.rankNum}>
+            <Text style={textStyles.common}>{user.rank}등</Text>
+          </View>
+        )}
         <View style={frameStyles.profileImg}>
           <Image
-            style={{ width: "100%", height: "100%" }}
-            source={require("../../assets/images/default-image.png")}
+            style={{
+              width: "80%",
+              height: "80%",
+              alignSelf: "center",
+              borderRadius: 10,
+            }}
+            resizeMode="cover"
+            source={
+              user.profileImg === null
+                ? require("../../assets/images/default-image.png")
+                : { uri: user.profileImg }
+            }
           />
         </View>
         <View style={frameStyles.badge}>
-          <Image
-            style={{ width: "60%", height: "60%", alignSelf: "center" }}
-            source={require("../../assets/images/heart-icon-1.png")}
-          />
+          {selectedBadge !== null && (
+            <Image
+              style={{ width: "60%", height: "60%", alignSelf: "center" }}
+              source={badgesTitle[selectedBadge.type].src[selectedBadge.grade]}
+            />
+          )}
+          {selectedBadge === null && (
+            <View
+              style={{
+                backgroundColor: "rgb(217, 217, 217)",
+                flex: 1,
+                margin: 5,
+                borderRadius: 12,
+              }}
+            ></View>
+          )}
         </View>
         <View style={frameStyles.nickname}>
           <Text style={textStyles.common}>{user.nickname}</Text>
@@ -84,7 +113,8 @@ const frameStyles = StyleSheet.create({
     flexDirection: "row",
     height: (dw * 3) / 17,
     marginBottom: 8,
-    paddingRight: "4%",
+    paddingHorizontal: "2%",
+    justifyContent: "center",
   },
 
   contentArea: {
@@ -110,5 +140,7 @@ const frameStyles = StyleSheet.create({
 const textStyles = StyleSheet.create({
   common: {
     textAlign: "center",
+    fontFamily: "HyeminBold",
+    fontSize: dw * 0.04,
   },
 })

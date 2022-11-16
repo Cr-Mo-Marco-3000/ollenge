@@ -1,18 +1,18 @@
 import React from "react"
-import { Button, ScrollView, View } from "react-native"
-import TopMargin from "../common/TopMargin"
+import { ScrollView, TouchableOpacity, View } from "react-native"
+
 import TopUserArea from "./TopUserArea"
 import UserRankCard from "./UserRankCard"
-import { LinearGradient } from "expo-linear-gradient"
-import ColorSet from "../../style/ColorSet"
 import DeviceInfo from "../../style/DeviceInfo"
 import PageBase from "./PageBase"
 import { UserCard } from "./UserRankCard"
+import { useNavigation } from "@react-navigation/native"
 
-const { dw, dh } = DeviceInfo
+const { dw } = DeviceInfo
 
-export default function RankList({ rankInfo }) {
+const RankList = ({ rankInfo }) => {
   const userList = rankInfo.rankingList
+  const navigation = useNavigation()
   const myInfo = rankInfo.userRank
   return (
     <PageBase>
@@ -26,22 +26,26 @@ export default function RankList({ rankInfo }) {
           height: (dw * 4) / 17,
           position: "absolute",
           bottom: 0,
-
+          alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <View
+        <TouchableOpacity
+          activeOpacity={0.9}
           style={{
             flex: 1,
-            margin: 4,
             paddingTop: 8,
             borderRadius: 12,
             backgroundColor: "rgba(255, 255, 255, 0)",
+            alignItems: "center",
           }}
+          onPress={() => navigation.navigate("UserBadge", { user: myInfo })}
         >
-          <UserCard user={myInfo} />
-        </View>
+          <UserCard user={myInfo} isMe={true} />
+        </TouchableOpacity>
       </View>
     </PageBase>
   )
 }
+
+export default RankList

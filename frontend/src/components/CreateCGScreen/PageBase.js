@@ -7,7 +7,6 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  KeyboardAvoidingView,
 } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 
@@ -16,15 +15,13 @@ import ColorSet from "../../style/ColorSet"
 
 /** 페이지에서 사용할 스타일들 정리 */
 import { StyleSheet } from "react-native"
-import DeviceInfo from "../../style/DeviceInfo"
+import DeviceInfo, { dh } from "../../style/DeviceInfo"
 import { useNavigation } from "@react-navigation/native"
 
 const { dw } = DeviceInfo
 
 const CancelBtn = (props) => {
-  const navigation = useNavigation()
   return (
-    // <Pressable onPress={() => console.log("챌린지 생성 취소는 아직")}>
     <Pressable onPress={props.cancelAll}>
       <Text style={styles.CancelBtn}>챌린지 생성 취소</Text>
     </Pressable>
@@ -69,15 +66,13 @@ export default function PageBase(props) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <LinearGradient
-        style={{ flex: 1 }}
+        style={{ flex: 1, overflow: "hidden" }}
         colors={[`${ColorSet.paleBlueColor(1)}`, `${ColorSet.yellowColor(1)}`]}
         end={{ x: 0.5, y: 1 }}
         locations={[0.2, 1]}
       >
         <View style={styles.TopArea}>
-          {/* <KeyboardAvoidingView style={{ width: "100%", flex: 1 }} behavior="position"> */}
           <View style={styles.ContentArea}>{props.children}</View>
-          {/* </KeyboardAvoidingView> */}
           {showKey !== true && props.hideBtn !== true && (
             <View style={styles.BottomArea}>
               <NextBtn
@@ -120,7 +115,7 @@ export const fontStyles = StyleSheet.create({
 const baseStyle = { width: "100%", justifyContent: "center", alignItems: "center" }
 
 const styles = {
-  TopArea: { ...baseStyle, flex: 1, padding: "4%", marginTop: 120 },
+  TopArea: { ...baseStyle, flex: 1, padding: "4%", marginTop: 90 },
 
   ContentArea: { ...baseStyle, flex: 1 },
 
@@ -128,7 +123,7 @@ const styles = {
 
   CancelBtn: {
     fontSize: dw * 0.05,
-    padding: 8,
+    padding: dh * 0.005,
     textDecorationLine: "underline",
     textAlign: "center",
   },
@@ -137,7 +132,7 @@ const styles = {
     ...baseStyle,
     borderRadius: 10,
     padding: 12,
-    marginBottom: 10,
+    marginBottom: dh * 0.01,
     elevation: 12,
   },
   NextBtnText: {

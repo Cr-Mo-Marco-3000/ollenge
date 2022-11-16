@@ -1,10 +1,13 @@
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { dw, dh } from "../../style/DeviceInfo"
+import { dw } from "../../style/DeviceInfo"
+import AppText from "../common/AppText"
 
 const TopCard = ({ flex, user }) => {
   const navigation = useNavigation()
+  const imgSrc = user.profileImg
+
   const getDetail = () => {
     navigation.navigate("UserBadge", { user })
   }
@@ -16,11 +19,13 @@ const TopCard = ({ flex, user }) => {
         )}
         <View style={frameStyle.imgFrame(flex)}>
           <Image
-            source={require("../../assets/images/default-image.png")}
+            source={
+              imgSrc === null ? require("../../assets/images/default-image.png") : { uri: imgSrc }
+            }
             style={{ width: (dw * flex) / 12, height: (dw * flex) / 12 }}
           />
         </View>
-        {/* <Image
+        <Image
           source={
             flex === 5
               ? require("../../assets/images/UserRankList/1st_place.png")
@@ -35,9 +40,9 @@ const TopCard = ({ flex, user }) => {
             bottom: "15%",
             left: ["10%", "0%", "-10%"][flex - 3],
           }}
-        /> */}
-        <Text>{user.nickname}</Text>
-        <Text>{user.userScore}점</Text>
+        />
+        <AppText size={2.7}>{user.nickname}</AppText>
+        <AppText size={2.5}>{user.userScore}점</AppText>
       </View>
     </TouchableOpacity>
   )
@@ -59,7 +64,7 @@ const frameStyle = StyleSheet.create({
     flexDirection: "row",
     flex: 1,
     paddingLeft: "10%",
-    paddingRight: "10%",
+    paddingRight: "5%",
   },
 
   cardFrame: (flex) => {

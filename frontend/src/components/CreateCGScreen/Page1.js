@@ -4,6 +4,7 @@ import PageBase, { fontStyles } from "./PageBase"
 import ImagePicker from "../common/ImagePicker"
 import TextInputContainer from "../common/TextInputContainer"
 import { dw, dh } from "../../style/DeviceInfo"
+import ColorSet from "../../style/ColorSet"
 
 export default function Page1({ info, setInfo, toNext, cancelAll }) {
   const [name, setName] = useState(info.challengeName)
@@ -22,19 +23,16 @@ export default function Page1({ info, setInfo, toNext, cancelAll }) {
 
   return (
     <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
-      <KeyboardAvoidingView
-        style={{ width: "100%", flex: 1, justifyContent: "center" }}
-        behavior="height"
-      >
-        <View style={{ width: "100%", flex: 1, justifyContent: "center" }}>
-          <View style={{ flex: 1, marginBottom: dh * 0.1 }}>
+      <Text style={frameStyles.titleText}>팀 정보 입력</Text>
+
+      <KeyboardAvoidingView style={{ width: "100%", flex: 1 }} behavior="height">
+        <View style={{ height: "100%", justifyContent: "center" }}>
+          <View flex={3}>
             <ImagePicker imageUri={img} imageUriHandler={setImg} imageBase64Handler={setAwsUrl} />
           </View>
-          <View style={{ width: "100%", flex: 1 }}>
+          <View flex={2}>
             <Text style={frameStyles.inputArea}>팀 이름</Text>
-            <View style={{ width: "100%" }}>
-              <TextInputContainer inputText={name} inputHandler={setName} />
-            </View>
+            <TextInputContainer inputText={name} inputHandler={setName} />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -43,6 +41,11 @@ export default function Page1({ info, setInfo, toNext, cancelAll }) {
 }
 
 const frameStyles = {
+  titleText: {
+    ...fontStyles.HyeminBold({ size: 9 }),
+    textAlign: "center",
+  },
+
   inputArea: {
     ...fontStyles.HyeminBold({ size: 7 }),
     textAlign: "center",

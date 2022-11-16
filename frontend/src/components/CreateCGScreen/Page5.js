@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, View } from "react-native"
 import PageBase, { fontStyles } from "./PageBase"
 import DatepickerRange from "react-native-range-datepicker"
 import ColorSet from "../../style/ColorSet"
+import { dh } from "../../style/DeviceInfo"
 
 // react-native-range-datepicker의 RandeDatePicker 의 index 파일 수정해야함(원찬호 파일 기준)!
 // Month.js 파일도...
@@ -30,11 +31,12 @@ export default function Page5({ info, setInfo, toNext, cancelAll }) {
       return { ...prev, startDate: SD, endDate: ED }
     })
 
-    setDisabled(isNaN(date.startDate) || isNaN(date.endDate))
+    setDisabled((info.startDate === "") | (info.endDate === ""))
   }, [date, setDate])
 
   return (
     <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
+      <Text style={styles.header}>챌린지 기간 설정</Text>
       <View style={styles.calendar}>
         <DatepickerRange
           showClose={false}
@@ -45,7 +47,7 @@ export default function Page5({ info, setInfo, toNext, cancelAll }) {
             if (startDay > today) {
               setDate({ startDate: sd, endDate: ud })
             } else {
-              Alert.alert("시작일은 다음날부터 지정 가능합니다")
+              Alert.alert("시작일은 오늘 이후로만 지정 가능합니다")
             }
           }}
           buttonColor={`${ColorSet.navyColor(1)}`}
@@ -63,8 +65,13 @@ export default function Page5({ info, setInfo, toNext, cancelAll }) {
 const styles = StyleSheet.create({
   calendar: {
     flex: 1,
-    marginBottom: 28,
+    marginBottom: dh * 0.01,
     borderRadius: 12,
     alignSelf: "center",
+    overflow: "hidden",
+    borderColor: "navy",
+    borderWidth: 1,
   },
+
+  header: { ...fontStyles.HyeminBold({ size: 9 }), textAlign: "center", marginBottom: dh * 0.02 },
 })

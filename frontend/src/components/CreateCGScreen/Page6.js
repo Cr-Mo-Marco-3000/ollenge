@@ -5,6 +5,7 @@ import PageBase, { fontStyles } from "./PageBase"
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker"
 import ColorSet from "../../style/ColorSet"
 import AppButton from "../common/AppButton"
+import { dh } from "../../style/DeviceInfo"
 
 const formChanger = (dateData) => {
   const hour = "0" + dateData.getHours()
@@ -13,21 +14,22 @@ const formChanger = (dateData) => {
 }
 
 export default function Page6({ info, setInfo, toNext, cancelAll }) {
-  const [startTime, setStartTime] = useState(new Date(0))
-  const [endTime, setEndTime] = useState(new Date(0))
+  const [startTime, setStartTime] = useState(info.startTime)
+  const [endTime, setEndTime] = useState(info.endTime)
   const [disabled, setDisabled] = useState(false)
 
-  const onChange = (event, selectedDate, type) => {
+  const changeDate = (event, selectedDate, type) => {
+    const newValue = formChanger(selectedDate)
     if (type === "start") {
-      setStartTime(selectedDate)
+      setStartTime(newValue)
     } else {
-      setEndTime(selectedDate)
+      setEndTime(newValue)
     }
   }
   const showTimepicker = (type) => {
     DateTimePickerAndroid.open({
-      value: type === "start" ? startTime : endTime,
-      onChange: (event, selectedDate) => onChange(event, selectedDate, type),
+      value: new Date(),
+      onChange: (event, selectedDate) => changeDate(event, selectedDate, type),
       mode: "time",
       is24Hour: true,
     })
@@ -37,31 +39,32 @@ export default function Page6({ info, setInfo, toNext, cancelAll }) {
     setInfo((prev) => {
       return {
         ...prev,
-        startTime: formChanger(startTime) + ":00",
-        endTime: formChanger(endTime) + ":00",
+        startTime: startTime,
+        endTime: endTime,
       }
     })
-    if (endTime !== "00:00:00" && startTime > endTime) {
+    if (endTime !== "" && startTime > endTime) {
       Alert.alert("종료시간은 시작시간 보다 커야합니다!")
-    } else {
-      setDisabled((startTime === "00:00:00" && endTime === "00:00:00") || startTime >= endTime)
     }
+    setDisabled(startTime === "" || endTime === "" || startTime >= endTime)
   }, [startTime, setStartTime, endTime, setEndTime])
   return (
     <>
       <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
-        {/* <Text style={fontStyles.HyeminBold({ size: 9 })}>챌린지 인증 시간 설정</Text> */}
+        <Text style={{ ...fontStyles.HyeminBold({ size: 9 }), marginBottom: dh * 0.05 }}>
+          인증 시간 설정
+        </Text>
         <Text style={fontStyles.HyeminBold({ size: 4 })}>
           챌린지 인증 시간을 입력해주세요.{"\n"}해당 시간이 지나가면 그날 인증은 불가능합니다.
         </Text>
         <View style={frameStyles.wholeFrame}>
           <View style={frameStyles.pickerTop}>
             <Text style={{ ...textStyles.pickerTop(), flex: 1 }}>
-              {formChanger(startTime) !== "00:00" ? formChanger(startTime) : "Start Time"}
+              {startTime !== "" ? startTime : "Start Time"}
             </Text>
             <Text style={textStyles.pickerTop(9)}>/</Text>
             <Text style={{ ...textStyles.pickerTop(), flex: 1 }}>
-              {formChanger(endTime) !== "00:00" ? formChanger(endTime) : "End Time"}
+              {endTime !== "" ? endTime : "End Time"}
             </Text>
           </View>
           <View style={frameStyles.pickerBot}>
