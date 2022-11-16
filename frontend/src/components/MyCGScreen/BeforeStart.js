@@ -81,7 +81,6 @@ const BeforeStart = ({ navigation }) => {
     roomCtx.getUserList(id)
     navigation.push("CGRoom")
   }
-  console.log(rankingCGList)
   return (
     <ChallengingBody>
       {rankingCGList.length || userCGList.length ? (
