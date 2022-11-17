@@ -22,7 +22,7 @@ function RankingCGListScreen(props) {
         <Header>
           <HeaderTextView>
             <HeaderTextColumn>
-              <AppBoldText>랭킹 챌린지</AppBoldText>
+              <AppBoldText align={"left"}>랭킹 챌린지</AppBoldText>
             </HeaderTextColumn>
             <HeaderTextColumn></HeaderTextColumn>
           </HeaderTextView>

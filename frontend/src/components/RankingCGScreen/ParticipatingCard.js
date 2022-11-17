@@ -73,7 +73,7 @@ export default function ParticipatingCard(props) {
                     justifyContent: "center",
                   }}
                 >
-                  <AppBoldText lineNumber={1} pxSize={pxSize} color="navy">
+                  <AppBoldText align={"left"} lineNumber={1} pxSize={pxSize} color="navy">
                     {presetTopic}
                   </AppBoldText>
                 </TextRow>
@@ -83,7 +83,7 @@ export default function ParticipatingCard(props) {
                     top: 5,
                   }}
                 >
-                  <AppBoldText pxSize={pxSize * 0.65} color="navy">
+                  <AppBoldText align={"left"} pxSize={pxSize * 0.65} color="navy">
                     {startDate} - {endDate} (한달)
                   </AppBoldText>
                 </TextRow>
@@ -92,7 +92,9 @@ export default function ParticipatingCard(props) {
                     top: 7,
                   }}
                 >
-                  <AppBoldText color="orange">D-{dDate}</AppBoldText>
+                  <AppBoldText align={"left"} color="orange">
+                    D-{dDate}
+                  </AppBoldText>
                 </TextRow>
                 <TextRow></TextRow>
               </View>
@@ -100,7 +102,7 @@ export default function ParticipatingCard(props) {
             {/* 오른쪽 => 이미지만 들어갈곳 */}
             <View
               style={{
-                flex: 5,
+                flex: 3.5,
               }}
             >
               <View
@@ -108,10 +110,14 @@ export default function ParticipatingCard(props) {
                   height: "100%",
                   width: "100%",
                   overflow: "hidden",
+                  opacity: 0.5,
                 }}
               >
-                <Image source={{ uri: presetImg }}></Image>
-                {/* {presetObject[challengePresetID]()} */}
+                <Image
+                  source={{ uri: presetImg }}
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode={"contain"}
+                ></Image>
               </View>
             </View>
           </View>

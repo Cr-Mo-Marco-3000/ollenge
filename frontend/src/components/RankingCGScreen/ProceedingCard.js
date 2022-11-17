@@ -10,21 +10,20 @@ import styled from "styled-components"
 import ProceedingRank from "./ProceedingRank"
 import { dh } from "./../../style/DeviceInfo"
 import ColorSet from "../../style/ColorSet"
-
+import { BoyIcon } from "../../assets/images/RankingCGScreen/RankingCGScreen"
 export default function ProceedingCard(props) {
   const windowWidth = Dimensions.get("window").width
   // 카드 정보
   const startDate = props.startDate.replace(/-/g, ".").slice(2)
   const endDate = props.endDate.replace(/-/g, ".").slice(2)
-  const challengeInfo = props.challengeInfo
 
+  const challengeInfo = props.challengeInfo
   const presetTopic = challengeInfo.presetTopic
   const presetImg = challengeInfo.presetImg
-
+  const participated = challengeInfo.participated
   // 레이아웃 정보
   const spaceHeight = 180
   const cardHeight = spaceHeight * 0.9
-
   // 카드 높이 * 70%(상단높이) * 상단높이 위쪽 깎기 * 보다 약간 작게
   // const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
   const pxSize = windowWidth * 0.05
@@ -97,7 +96,7 @@ export default function ProceedingCard(props) {
                       justifyContent: "center",
                     }}
                   >
-                    <AppBoldText lineNumber={1} pxSize={pxSize} color="navy">
+                    <AppBoldText align={"left"} lineNumber={1} pxSize={pxSize} color="navy">
                       {presetTopic}
                     </AppBoldText>
                   </TextRow>
@@ -107,8 +106,8 @@ export default function ProceedingCard(props) {
                       top: 5,
                     }}
                   >
-                    <AppBoldText pxSize={pxSize * 0.65} color="navy">
-                      {startDate} - {endDate} (2주)
+                    <AppBoldText align={"left"} pxSize={pxSize * 0.65} color="navy">
+                      {startDate} - {endDate} (한달)
                     </AppBoldText>
                   </TextRow>
                   {/* 얜 안씀 */}
@@ -123,54 +122,51 @@ export default function ProceedingCard(props) {
                   >
                     {/* 버튼 자체 => styled component */}
                     {/* <Button
-                    style={{
-                      backgroundColor: ColorSet.navyColor(1),
-                    }}
-                  > */}
-                    {/* 버튼 내부 공간, 양 50%공간으로 쪼갬 */}
-                    {/* <ButtonInner> */}
-                    {/* 아이콘 들어가는 공간 */}
-                    {/* <View
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          width: "50%",
-                        }}
-                      >
-                        <BoyIcon />
-                      </View> */}
-                    {/* ~명 들어가는 공간 */}
-                    {/* <View
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          width: "50%",
-                          right: 3,
-                        }}
-                      >
-                        <AppBoldText color="white" pxSize={65 * 0.2}>
-                          {peopleNumber}
-                        </AppBoldText>
-                      </View>
-                    </ButtonInner>
-                  </Button> */}
-                    {/* {isParticipated && (
-                    <Button
                       style={{
-                        backgroundColor: ColorSet.orangeColor(0.7),
+                        backgroundColor: ColorSet.navyColor(1),
                       }}
                     >
-                      <ButtonInner
+                      <ButtonInner>
+                        <View
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "40%",
+                          }}
+                        >
+                          <BoyIcon />
+                        </View>
+                        <View
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "60%",
+                            right: 3,
+                          }}
+                        >
+                          <AppBoldText color="white" pxSize={65 * 0.18}>
+                            몇명
+                          </AppBoldText>
+                        </View>
+                      </ButtonInner>
+                    </Button> */}
+                    {participated && (
+                      <Button
                         style={{
-                          justifyContent: "center",
+                          backgroundColor: ColorSet.orangeColor(0.7),
                         }}
                       >
-                        <AppBoldText color="white" pxSize={65 * 0.2}>
-                          참여 중
-                        </AppBoldText>
-                      </ButtonInner>
-                    </Button>
-                  )} */}
+                        <ButtonInner
+                          style={{
+                            justifyContent: "center",
+                          }}
+                        >
+                          <AppBoldText color="white" pxSize={65 * 0.18}>
+                            참여 중
+                          </AppBoldText>
+                        </ButtonInner>
+                      </Button>
+                    )}
                   </TextRow>
                 </View>
               </View>
@@ -178,7 +174,7 @@ export default function ProceedingCard(props) {
               {/* 각 이미지는, 사이즈 설정을 다르게 해야 해서, 이미지 모듈 파일에서 직접 조정 */}
               <View
                 style={{
-                  flex: 5,
+                  flex: 3.5,
                 }}
               >
                 <View
@@ -186,10 +182,14 @@ export default function ProceedingCard(props) {
                     height: "100%",
                     width: "100%",
                     overflow: "hidden",
+                    opacity: 0.5,
                   }}
                 >
-                  {/* {presetObject[challengePresetID]()} */}
-                  <Image source={{ uri: presetImg }}></Image>
+                  <Image
+                    source={{ uri: presetImg }}
+                    style={{ width: "100%", height: "100%", position: "absolute" }}
+                    resizeMode={"contain"}
+                  ></Image>
                 </View>
               </View>
             </Pressable>
