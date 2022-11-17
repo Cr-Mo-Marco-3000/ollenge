@@ -43,10 +43,10 @@ function FirtstUserItem({ user, wholeDay, src }) {
               <></>
             )}
           </View>
-          <AppBoldText lineNumber={1} pxSize={24}>
+          <AppBoldText lineNumber={1} size={2.5}>
             {user.nickname}
           </AppBoldText>
-          <AppBoldText color={"white"} pxSize={20}>
+          <AppBoldText color={"white"} size={2.3}>
             {Math.round((user.datetimeList.length / wholeDay) * 100)}%
           </AppBoldText>
         </LinearGradient>

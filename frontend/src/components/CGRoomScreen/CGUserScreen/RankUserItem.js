@@ -5,6 +5,7 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 
 import AppBoldText from "../../common/AppBoldText"
 import defaultImage from "../../../assets/images/default-image.png"
+import ColorSet from "../../../style/ColorSet"
 
 function RankUserItem({ user, rank, noRank, wholeDay, src }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
@@ -27,17 +28,28 @@ function RankUserItem({ user, rank, noRank, wholeDay, src }) {
           />
         </View>
         <View style={styles.bedgeImgBox}>
-          <Image source={src} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+          {src ? (
+            <Image source={src} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+          ) : (
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: 10,
+                backgroundColor: `${ColorSet.grayColor(1)}`,
+              }}
+            />
+          )}
         </View>
-        <View style={{ width: "40%", marginRight: RFPercentage(1) }}>
-          <AppBoldText pxSize={24} lineNumber={1}>
+        <View style={{ flex: 1 }}>
+          <AppBoldText size={2.5} lineNumber={1}>
             {user.nickname}
           </AppBoldText>
         </View>
         {noRank ? (
           <></>
         ) : (
-          <AppBoldText color={"orange"} pxSize={18}>
+          <AppBoldText color={"orange"} size={2.3}>
             {Math.round((user.datetimeList.length / wholeDay) * 100)}%
           </AppBoldText>
         )}
@@ -50,7 +62,7 @@ export default RankUserItem
 const styles = StyleSheet.create({
   rootScreen: {
     width: "100%",
-    paddingVertical: "3%",
+    paddingBottom: "3%",
     flexDirection: "row",
     alignItems: "center",
   },
@@ -58,7 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     width: "100%",
-    height: RFPercentage(8),
+    height: RFPercentage(9),
     backgroundColor: "white",
     borderRadius: 10,
     shadowColor: "#000",
@@ -70,16 +82,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 3,
     alignItems: "center",
+    paddingHorizontal: "2%",
   },
   profileImgBox: {
-    width: RFPercentage(8),
-    height: RFPercentage(8),
+    width: RFPercentage(9),
+    height: RFPercentage(9),
     padding: "2%",
   },
   bedgeImgBox: {
-    width: RFPercentage(5),
-    height: RFPercentage(5),
-    marginLeft: RFPercentage(1),
-    marginRight: RFPercentage(2),
+    padding: "2%",
+    width: RFPercentage(9),
+    height: RFPercentage(9),
   },
 })

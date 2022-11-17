@@ -6,12 +6,12 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 import defaultImage from "../../assets/images/default-image.png"
 import ColorSet from "../../style/ColorSet"
 
-function ProfileBedge({ url, isActive }) {
+function ProfileBedge({ uri, isActive }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   return (
     <View style={isActive ? [styles.imgBox, styles.activeBorder] : [styles.imgBox, styles.border]}>
       <Image
-        source={url ? { uri: url } : { uri: defaultImageUri }}
+        source={uri ? { uri: uri } : { uri: defaultImageUri }}
         style={{ width: "100%", height: "100%", borderRadius: 100 }}
         resizeMode="cover"
       />
