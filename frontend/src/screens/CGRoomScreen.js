@@ -35,7 +35,7 @@ function CGRoomScreen() {
   const [isAuthed, setIsAuth] = useState(false)
   const [isResist, setIsResist] = useState(false)
   const [isTime, setIsTime] = useState("")
-  console.log("I am isAuthed => ", isAuthed)
+
   useEffect(() => {
     setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
     setIsTime(CGAuthTimeFlag(roomInfo.startTime, roomInfo.endTime))
