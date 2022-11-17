@@ -1,10 +1,15 @@
 import React from "react-native"
-import { View, Dimensions, Image } from "react-native"
+import { View, Dimensions, Image, Pressable } from "react-native"
+import { Modal, Portal } from "react-native-paper"
+import { useState } from "react"
 
 import AppBoldText from "../common/AppBoldText"
 import AppCard from "../common/AppCard"
 
 import styled from "styled-components"
+import ProceedingRank from "./ProceedingRank"
+import { dh } from "./../../style/DeviceInfo"
+import ColorSet from "../../style/ColorSet"
 
 export default function ProceedingCard(props) {
   const windowWidth = Dimensions.get("window").width
@@ -23,81 +28,109 @@ export default function ProceedingCard(props) {
   // 카드 높이 * 70%(상단높이) * 상단높이 위쪽 깎기 * 보다 약간 작게
   // const circleHeightWidth = 200 * 0.7 * 0.95 * 0.75
   const pxSize = windowWidth * 0.05
+
+  const [visible, setVisible] = useState(false)
+
+  function showModal() {
+    setVisible(true)
+  }
+
+  function hideModal() {
+    setVisible(false)
+  }
+
+  const containerStyle = {
+    backgroundColor: `${ColorSet.paleBlueColor(1)}`,
+    width: "100%",
+    height: dh * 1.05,
+  }
+
   return (
-    <View
-      style={{
-        backgroundColor: "#edf8ff",
-        height: spaceHeight,
-        justifyContent: "flex-start",
-        alignItems: "center",
-      }}
-    >
+    <>
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={containerStyle}
+          style={{ alignItems: "center", paddingHorizontal: "0%", paddingVertical: "0%" }}
+        >
+          <ProceedingRank challengeInfo={challengeInfo} hideModal={hideModal} />
+        </Modal>
+      </Portal>
       <View
         style={{
-          height: cardHeight,
-          width: "90%",
+          height: spaceHeight,
+          justifyContent: "flex-start",
+          alignItems: "center",
         }}
       >
-        <AppCard>
-          <View
-            style={{
-              flexDirection: "row",
-              height: "100%",
-              width: "100%",
-            }}
-          >
-            {/* 왼쪽 => 글이 들어갈곳 */}
-            <View
+        <View
+          style={{
+            height: cardHeight,
+            width: "90%",
+          }}
+        >
+          <AppCard>
+            <Pressable
+              onPress={showModal}
               style={{
-                flex: 5,
-                justifyContent: "center",
-                left: 30,
+                flexDirection: "row",
+                height: "100%",
+                width: "100%",
               }}
             >
+              {/* 왼쪽 => 글이 들어갈곳 */}
               <View
                 style={{
-                  height: "70%",
+                  flex: 5,
+                  justifyContent: "center",
+                  left: 30,
                 }}
               >
-                <TextRow
+                <View
                   style={{
-                    justifyContent: "center",
+                    height: "70%",
                   }}
                 >
-                  <AppBoldText lineNumber={1} pxSize={pxSize} color="navy">
-                    {presetTopic}
-                  </AppBoldText>
-                </TextRow>
-                <TextRow
-                  style={{
-                    justifyContent: "center",
-                    top: 5,
-                  }}
-                >
-                  <AppBoldText pxSize={pxSize * 0.65} color="navy">
-                    {startDate} - {endDate} (2주)
-                  </AppBoldText>
-                </TextRow>
-                {/* 얜 안씀 */}
-                <TextRow></TextRow>
-                <TextRow
-                  style={{
-                    position: "relative",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    left: -5,
-                  }}
-                >
-                  {/* 버튼 자체 => styled component */}
-                  {/* <Button
+                  <TextRow
+                    style={{
+                      justifyContent: "center",
+                    }}
+                  >
+                    <AppBoldText lineNumber={1} pxSize={pxSize} color="navy">
+                      {presetTopic}
+                    </AppBoldText>
+                  </TextRow>
+                  <TextRow
+                    style={{
+                      justifyContent: "center",
+                      top: 5,
+                    }}
+                  >
+                    <AppBoldText pxSize={pxSize * 0.65} color="navy">
+                      {startDate} - {endDate} (2주)
+                    </AppBoldText>
+                  </TextRow>
+                  {/* 얜 안씀 */}
+                  <TextRow></TextRow>
+                  <TextRow
+                    style={{
+                      position: "relative",
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
+                      left: -5,
+                    }}
+                  >
+                    {/* 버튼 자체 => styled component */}
+                    {/* <Button
                     style={{
                       backgroundColor: ColorSet.navyColor(1),
                     }}
                   > */}
-                  {/* 버튼 내부 공간, 양 50%공간으로 쪼갬 */}
-                  {/* <ButtonInner> */}
-                  {/* 아이콘 들어가는 공간 */}
-                  {/* <View
+                    {/* 버튼 내부 공간, 양 50%공간으로 쪼갬 */}
+                    {/* <ButtonInner> */}
+                    {/* 아이콘 들어가는 공간 */}
+                    {/* <View
                         style={{
                           justifyContent: "center",
                           alignItems: "center",
@@ -106,8 +139,8 @@ export default function ProceedingCard(props) {
                       >
                         <BoyIcon />
                       </View> */}
-                  {/* ~명 들어가는 공간 */}
-                  {/* <View
+                    {/* ~명 들어가는 공간 */}
+                    {/* <View
                         style={{
                           justifyContent: "center",
                           alignItems: "center",
@@ -121,7 +154,7 @@ export default function ProceedingCard(props) {
                       </View>
                     </ButtonInner>
                   </Button> */}
-                  {/* {isParticipated && (
+                    {/* {isParticipated && (
                     <Button
                       style={{
                         backgroundColor: ColorSet.orangeColor(0.7),
@@ -138,31 +171,32 @@ export default function ProceedingCard(props) {
                       </ButtonInner>
                     </Button>
                   )} */}
-                </TextRow>
+                  </TextRow>
+                </View>
               </View>
-            </View>
-            {/* 오른쪽 => 이미지만 들어갈곳 */}
-            {/* 각 이미지는, 사이즈 설정을 다르게 해야 해서, 이미지 모듈 파일에서 직접 조정 */}
-            <View
-              style={{
-                flex: 5,
-              }}
-            >
+              {/* 오른쪽 => 이미지만 들어갈곳 */}
+              {/* 각 이미지는, 사이즈 설정을 다르게 해야 해서, 이미지 모듈 파일에서 직접 조정 */}
               <View
                 style={{
-                  height: "100%",
-                  width: "100%",
-                  overflow: "hidden",
+                  flex: 5,
                 }}
               >
-                {/* {presetObject[challengePresetID]()} */}
-                <Image source={{ uri: presetImg }}></Image>
+                <View
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    overflow: "hidden",
+                  }}
+                >
+                  {/* {presetObject[challengePresetID]()} */}
+                  <Image source={{ uri: presetImg }}></Image>
+                </View>
               </View>
-            </View>
-          </View>
-        </AppCard>
+            </Pressable>
+          </AppCard>
+        </View>
       </View>
-    </View>
+    </>
   )
 }
 
