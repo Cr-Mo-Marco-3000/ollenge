@@ -11,6 +11,51 @@ import AppText from "./../../common/AppText"
 import InviteCodeBtn from "./../InviteCodeBtn"
 
 function WaitingUserScreen({ userList, roomInfo }) {
+  const badgesImg = {
+    user: [
+      require("../../../assets/images/badges/User-0.png"),
+      require("../../../assets/images/badges/User-1.png"),
+      require("../../../assets/images/badges/User-2.png"),
+      require("../../../assets/images/badges/User-3.png"),
+    ],
+    ranking1: [
+      require("../../../assets/images/badges/WakeUp-0.png"),
+      require("../../../assets/images/badges/WakeUp-1.png"),
+      require("../../../assets/images/badges/WakeUp-2.png"),
+      require("../../../assets/images/badges/WakeUp-3.png"),
+    ],
+    ranking2: [
+      require("../../../assets/images/badges/Exercise-0.png"),
+      require("../../../assets/images/badges/Exercise-1.png"),
+      require("../../../assets/images/badges/Exercise-2.png"),
+      require("../../../assets/images/badges/Exercise-3.png"),
+    ],
+    ranking3: [
+      require("../../../assets/images/badges/Study-0.png"),
+      require("../../../assets/images/badges/Study-1.png"),
+      require("../../../assets/images/badges/Study-2.png"),
+      require("../../../assets/images/badges/Study-3.png"),
+    ],
+    ranking4: [
+      require("../../../assets/images/badges/Pills-0.png"),
+      require("../../../assets/images/badges/Pills-1.png"),
+      require("../../../assets/images/badges/Pills-2.png"),
+      require("../../../assets/images/badges/Pills-3.png"),
+    ],
+    ranking5: [
+      require("../../../assets/images/badges/Salad-0.png"),
+      require("../../../assets/images/badges/Salad-1.png"),
+      require("../../../assets/images/badges/Salad-2.png"),
+      require("../../../assets/images/badges/Salad-3.png"),
+    ],
+
+    ranking6: [
+      require("../../../assets/images/badges/Cleaning-0.png"),
+      require("../../../assets/images/badges/Cleaning-1.png"),
+      require("../../../assets/images/badges/Cleaning-2.png"),
+      require("../../../assets/images/badges/Cleaning-3.png"),
+    ],
+  }
   return (
     <Provider>
       <LinearGradient style={{ flex: 1 }} colors={["white", `${ColorSet.paleBlueColor(1)}`]}>
@@ -20,7 +65,18 @@ function WaitingUserScreen({ userList, roomInfo }) {
         <ScrollView style={styles.scrollContainer}>
           <View style={styles.innerScrollContainer}>
             {userList.map((user, key) => {
-              return <RankUserItem user={user} key={key} noRank={true} />
+              return (
+                <RankUserItem
+                  user={user}
+                  key={key}
+                  noRank={true}
+                  src={
+                    user.selectedBadge
+                      ? badgesImg[user.selectedBadge.type][user.selectedBadge.grade]
+                      : null
+                  }
+                />
+              )
             })}
           </View>
         </ScrollView>
