@@ -10,6 +10,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class ChallengeRepositorySupport {
     public List<Challenge> getRankingChallengeListTopicPeriod (LocalDate startDate, LocalDate endDate, ChallengePreset challengePreset) {
         StringPath aliasAchievement = Expressions.stringPath("achievement");
         List<Tuple> challengeTuple = jpaQueryFactory
-                .select(qChallenge, qChallenge.challengeScore.castToNum(Integer.class).divide(qChallenge.peopleCnt.castToNum(Integer.class)).as("achievement"))
+                .select(qChallenge, qChallenge.challengeScore.castToNum(BigDecimal.class).divide(qChallenge.peopleCnt.castToNum(BigDecimal.class)).as("achievement"))
                 .from(qChallenge)
                 .where(qChallenge.startDate.eq(startDate)
                         .and(qChallenge.endDate.eq(endDate))
