@@ -7,11 +7,9 @@ import { Provider } from "react-native-paper"
 import { useHeaderHeight } from "@react-navigation/elements"
 
 import ColorSet from "../style/ColorSet"
-import { LocalTime, DateTime, CGStartFlag, CGAuthTimeFlag } from "../functions/index"
+import { CGStartFlag, CGAuthTimeFlag } from "../functions/index"
 import { RoomContext } from "../../store/room-context"
-import { AuthContext } from "../../store/auth-context"
 
-import TopMargin from "./../components/common/TopMargin"
 import UserListTap from "../components/CGRoomScreen/UserListTap"
 import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
 import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
@@ -21,7 +19,7 @@ import CGStartCount from "../components/CGRoomScreen/CGStartCount"
 import TodayAuthCount from "../components/CGRoomScreen/TodayAuthCount"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 import FeedsArea from "../components/CGRoomScreen/FeedsArea"
-import AppBoldText from "../components/common/AppBoldText"
+import EndingReport from "../components/CGRoomScreen/EndingReport"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
@@ -42,11 +40,8 @@ function CGRoomScreen() {
   }, [roomInfo])
 
   useEffect(() => {
-    console.log(1)
     setIsAuth(roomCtx.isAuthed)
-    console.log(2)
     setIsResist(roomCtx.isResist)
-    console.log(3)
   }, [roomCtx])
 
   return (
@@ -66,6 +61,7 @@ function CGRoomScreen() {
             </>
           )}
           {isStarted == "playing" && !isAuthed && <TodayAuthCount isTime={isTime} />}
+          {isStarted == "end" && <EndingReport />}
           {isResist && isStarted == "playing" && isTime == "playing" && !isAuthed && (
             <CGAuthBtn navigation={navigation} />
           )}
@@ -74,6 +70,7 @@ function CGRoomScreen() {
         {isStarted == "waiting" && (
           <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
         )}
+
         <FeedsArea></FeedsArea>
       </LinearGradient>
     </Provider>
