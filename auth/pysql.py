@@ -84,6 +84,20 @@ def execute_insert_feed(participation_id, url, feed_content, feed_time):
     conn.close()
 
 
+def execute_insert_feed_admin(participation_id, url, feed_content, feed_time):
+    # 일단 같은 participation으로 들어가있으면 삭제
+    participation_id = int(participation_id)
+    sql = """INSERT INTO feed (created_datetime, feed_content, feed_img, feed_type, participation_id) VALUES (%s, %s, %s, 'admin', %s);"""
+    vals = (feed_time, feed_content, url, participation_id)
+    # sql = f"INSERT INTO auth_standard_img (standard_img, participation_id) VALUES (url, {participation_id});"
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(sql, vals)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
 # challenge 인증 시간 뽑아내는 용
 def execute_select_challenge_auth_time(participation_id):
     participation_id = int(participation_id)
@@ -94,7 +108,7 @@ def execute_select_challenge_auth_time(participation_id):
 # challenge 오늘 인증 확인 용
 def execute_select_isauth(participation_id, feed_time):
     participation_id = int(participation_id)
-    sql = """SELECT * FROM feed WHERE participation_id=%s and created_datetime LIKE %s;"""
+    sql = """SELECT * FROM feed WHERE participation_id=%s and created_datetime LIKE %s and feed_type='user';"""
     qr = feed_time+"%"
     vals = (participation_id, qr)
     result = execute_select2(sql, vals)
@@ -189,7 +203,7 @@ def execute_select_authtype(challenge_id):
     if result:
         if result[0][0] == "feature":
             return True
-        return result[0][0]
+        return False
     else:
         return False
 
