@@ -43,7 +43,7 @@ public class ChallengeRepositorySupport {
     public List<Challenge> getRankingChallengeListTopicPeriod (LocalDate startDate, LocalDate endDate, ChallengePreset challengePreset) {
         StringPath aliasAchievement = Expressions.stringPath("achievement");
         List<Tuple> challengeTuple = jpaQueryFactory
-                .select(qChallenge, qChallenge.challengeScore.castToNum(Double.class).divide(qChallenge.peopleCnt.castToNum(Double.class)).as("achievement"))
+                .select(qChallenge, qChallenge.challengeScore.castToNum(Integer.class).divide(qChallenge.peopleCnt.castToNum(Integer.class)).as("achievement"))
                 .from(qChallenge)
                 .where(qChallenge.startDate.eq(startDate)
                         .and(qChallenge.endDate.eq(endDate))
