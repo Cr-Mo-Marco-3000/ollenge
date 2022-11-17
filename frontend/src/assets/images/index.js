@@ -23,6 +23,8 @@ import Triangle2 from "./triangle-icon2.png"
 
 import Comment from "./comment-icon.png"
 
+import Megaphone from "./megaphone-icon.png"
+
 export function OrangeLogo() {
   return <Image source={Orange} style={{ width: "100%", zIndex: -1 }} resizeMode="contain" />
 }
@@ -98,4 +100,8 @@ export function CommentIcon() {
 
 export function HappyIcon() {
   return <Image source={Happy} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function MegaphoneIcon() {
+  return <Image source={Megaphone} style={{ width: "100%", height: "100%" }} resizeMode="contain" />
 }
