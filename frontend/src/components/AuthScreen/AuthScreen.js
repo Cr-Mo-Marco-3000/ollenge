@@ -82,10 +82,8 @@ function AuthScreen({ route }) {
     await instance
       .post(urlType, dataForm, {})
       .then((res) => {
-        roomCtx.getUserList(challengeId)
-        roomCtx.getTodayAuth(challengeId)
-        showAuthModal()
         navigation.goBack("CGRoom")
+        showAuthModal()
       })
       .catch((err) => {
         const errcode = err.response.data.errcode

@@ -30,7 +30,7 @@ from datetime import datetime
 # S3연결
 from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name, make_profile_url_name
 # DB 연결
-from pysql import execute_select_authtype, execute_select_keword_list, execute_select_participation_id, execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
+from pysql import execute_insert_feed_admin, execute_select_user_nickname, execute_select_authtype, execute_select_keword_list, execute_select_participation_id, execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
 # model 연결
 from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput, uploadImg
 # Header token
@@ -691,7 +691,7 @@ async def test(data: StdImgInput, Authorization: Optional[str] = Header(None)):
                 now = datetime.now()
                 feed_time = now.strftime("%Y%m%d%H%M%S")
                 execute_insert_std_img(participation_id, file_url)
-                execute_insert_feed(participation_id, file_url, f"{user_name}님이 앞으로 인증할 사진입니다.", feed_time)
+                execute_insert_feed_admin(participation_id, file_url, f"{user_name}님이 앞으로 인증할 사진입니다.", feed_time)
         except Exception as e:
             print(e)
             remove_img(filename)

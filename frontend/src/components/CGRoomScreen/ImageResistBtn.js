@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useContext, useRef, useState } from "react"
 
 import { View, StyleSheet, Pressable } from "react-native"
 import { Modal, Portal } from "react-native-paper"
@@ -8,10 +8,13 @@ import ColorSet from "../../style/ColorSet"
 import { ExclamMartIcon } from "../../assets/images"
 import AppText from "../common/AppText"
 import AppBoldText from "../common/AppBoldText"
+import { RoomContext } from "./../../../store/room-context"
 
 function ImageResistBtn({ navigation }) {
   const animation = useRef(null)
   const [visible, setVisible] = useState(false)
+  const roomCtx = useContext(RoomContext)
+  const challengeId = roomCtx.roomInfo.challengeId
 
   function showResistModal() {
     setVisible(true)
@@ -19,6 +22,7 @@ function ImageResistBtn({ navigation }) {
 
   function hideModal() {
     setVisible(false)
+    roomCtx.getImgResist(challengeId)
   }
 
   const containerStyle = {

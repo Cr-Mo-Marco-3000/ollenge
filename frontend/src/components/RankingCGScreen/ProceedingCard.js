@@ -42,7 +42,7 @@ export default function ProceedingCard(props) {
   const containerStyle = {
     backgroundColor: `${ColorSet.paleBlueColor(1)}`,
     width: "100%",
-    height: dh * 1.05,
+    height: dh * 1.1,
   }
 
   return (

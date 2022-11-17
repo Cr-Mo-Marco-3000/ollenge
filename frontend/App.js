@@ -33,7 +33,7 @@ function AuthenticatedStack() {
         tabBarLabelStyle: { fontSize: 12, fontFamily: "HyeminBold", paddingBottom: 5 },
         tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
         tabBarInactiveTintColor: `${ColorSet.navyColor(1)}`,
-        tabBarStyle: { height: 70, paddingBottom: 5 },
+        tabBarStyle: { height: "8%", paddingBottom: 5 },
         tabBarHideOnKeyboard: true,
       }}
     >

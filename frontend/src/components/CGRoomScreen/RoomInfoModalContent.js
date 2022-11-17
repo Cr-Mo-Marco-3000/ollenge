@@ -43,7 +43,7 @@ function RoomInfoModalContent({ roomInfo, hideModal, userList }) {
       const startTime = timeFunc(roomInfo.startTime)
       const endTime = timeFunc(roomInfo.endTime)
       setTime([startTime, endTime])
-      if (roomInfo.authType === "class") {
+      if (roomInfo.authType === "classifi") {
         setAuthType("이미지 특성 분석")
       } else if (roomInfo.authType === "feature") {
         setAuthType("이미지 비교")

@@ -40,7 +40,6 @@ function SignupScreen() {
   }
 
   async function buttonHandler() {
-    console.log(nicknameInput)
     const data = new Object()
     // 프로필 이미지 등록
     if (profileImageBase64) {
