@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { setScore } from "../../screens/UserRankScreen"
 import { dw } from "../../style/DeviceInfo"
 import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
@@ -43,7 +44,7 @@ const TopCard = ({ flex, user }) => {
           }}
         />
         <AppBoldText size={2.7}>{user.nickname}</AppBoldText>
-        <AppText size={2.3}>{user.userScore}점</AppText>
+        <AppText size={2.3}>{setScore(user.userScore)}점</AppText>
       </View>
     </TouchableOpacity>
   )

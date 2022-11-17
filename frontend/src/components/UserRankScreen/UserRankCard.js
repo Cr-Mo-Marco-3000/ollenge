@@ -10,6 +10,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native"
+import { setScore } from "../../screens/UserRankScreen"
 import ColorSet from "../../style/ColorSet"
 import { badgesTitle } from "./ShowUserBadge"
 
@@ -71,7 +72,7 @@ export const UserCard = ({ user, isMe = false }) => {
         </View>
         <View style={frameStyles.userScore}>
           <Text style={{ ...textStyles.common, color: ColorSet.orangeColor(1) }}>
-            {user.userScore}점
+            {setScore(user.userScore)}점
           </Text>
         </View>
       </View>

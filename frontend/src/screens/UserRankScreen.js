@@ -10,6 +10,11 @@ import PageBase from "../components/UserRankScreen/PageBase"
 import { AuthorizationInstance } from "../api/settings"
 import { useNavigation } from "@react-navigation/native"
 
+export const setScore = (score) => {
+  const val = score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  return val
+}
+
 const Stack = createNativeStackNavigator()
 
 const UserRankScreen = () => {

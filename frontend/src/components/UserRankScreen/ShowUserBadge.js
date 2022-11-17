@@ -7,6 +7,7 @@ import AppText from "../common/AppText"
 import { AuthorizationInstance } from "../../api/settings"
 import NotGainedBedgeItem from "../MyPageScreen/NotGainedBedgeItem"
 import AppBoldText from "../common/AppBoldText"
+import { setScore } from "../../screens/UserRankScreen"
 
 const { dw, dh } = DeviceInfo
 const instance = AuthorizationInstance()
@@ -81,7 +82,7 @@ const ShowUserBadge = ({ navigation, route }) => {
             <View alignItems="center" style={{ marginVertical: dh * 0.025 }}>
               <AppBoldText size={6}>{nickname}</AppBoldText>
               <AppText size={4} color={"orange"}>
-                {userScore}점
+                {setScore(userScore)}점
               </AppText>
             </View>
           </View>
