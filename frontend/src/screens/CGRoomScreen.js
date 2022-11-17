@@ -42,8 +42,11 @@ function CGRoomScreen() {
   }, [roomInfo])
 
   useEffect(() => {
+    console.log(1)
     setIsAuth(roomCtx.isAuthed)
+    console.log(2)
     setIsResist(roomCtx.isResist)
+    console.log(3)
   }, [roomCtx])
 
   return (

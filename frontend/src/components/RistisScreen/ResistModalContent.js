@@ -7,22 +7,18 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 import { useNavigation } from "@react-navigation/native"
 
 import { AuthorizationInstance } from "../../api/settings"
-import { RoomContext } from "../../../store/room-context"
 
 function ResistModalContent({ uri, base64, challengeId, resetCamera, showResistModal }) {
   const instance = AuthorizationInstance()
   const navigation = useNavigation()
-  const roomCtx = useContext(RoomContext)
 
   const registAuthImg = async () => {
     const dataForm = { challenge_id: challengeId, std_img: base64 }
     await instance
       .post("/auth/stdimg", dataForm, {})
       .then((res) => {
-        console.log(res.status, res.data.message)
         navigation.goBack("CGRoom")
         showResistModal()
-        roomCtx.getImgResist(challengeId)
       })
       .catch((err) => {
         const errcode = err.response.data.errcode

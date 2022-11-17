@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 
 import { View, StyleSheet, Pressable } from "react-native"
 import { Modal, Portal } from "react-native-paper"
@@ -10,12 +10,15 @@ import { HappyIcon } from "../../assets/images"
 import AppButton from "../common/AppButton"
 import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
+import { RoomContext } from "../../../store/room-context"
 
 import ColorSet from "../../style/ColorSet"
 
 function CGAuthBtn({ navigation }) {
   const animation = useRef(null)
   const [visible, setVisible] = useState(false)
+  const roomCtx = useContext(RoomContext)
+  const challengeId = roomCtx.roomInfo.challengeId
 
   function showAuthModal() {
     setVisible(true)
@@ -23,6 +26,8 @@ function CGAuthBtn({ navigation }) {
 
   function hideModal() {
     setVisible(false)
+    roomCtx.getUserList(challengeId)
+    roomCtx.getTodayAuth(challengeId)
   }
 
   const containerStyle = {
