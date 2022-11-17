@@ -62,10 +62,10 @@ public class ChallengeRepositorySupport {
     }
 
     public List<ChallengeStateData> getChallengeState(Challenge challenge) {
-        List<Tuple> result = jpaQueryFactory.select(qParticipation.user, qFeed.createdDatetime)
+        List<Tuple> result = jpaQueryFactory.select(qParticipation.user, qFeed.createdDatetime, qFeed.feedType)
                 .from(qFeed)
                 .rightJoin(qFeed.participation, qParticipation)
-                .where(qParticipation.challenge.eq(challenge), qFeed.feedType.eq("user"))
+                .where(qParticipation.challenge.eq(challenge))
                 .fetch();
 
         List<ChallengeStateData> challengeStateDataList = new ArrayList<>();
@@ -74,8 +74,9 @@ public class ChallengeRepositorySupport {
                 .forEach(tuple -> {
                     User user = tuple.get(qParticipation.user);
                     LocalDateTime datetime = tuple.get(qFeed.createdDatetime);
+                    String feedType = tuple.get(qFeed.feedType);
                     List<LocalDateTime> list = challengeStateMap.getOrDefault(user, new ArrayList<>());
-                    if (datetime != null) {
+                    if (feedType != null && feedType.equals("user") && datetime != null) {
                         list.add(datetime);
                     }
                     challengeStateMap.put(user, list);
