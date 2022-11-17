@@ -64,7 +64,7 @@ public class ChallengeRepositorySupport {
         List<Tuple> result = jpaQueryFactory.select(qParticipation.user, qFeed.createdDatetime)
                 .from(qFeed)
                 .rightJoin(qFeed.participation, qParticipation)
-                .where(qParticipation.challenge.eq(challenge))
+                .where(qParticipation.challenge.eq(challenge), qFeed.feedType.eq("user"))
                 .fetch();
 
         List<ChallengeStateData> challengeStateDataList = new ArrayList<>();
