@@ -35,7 +35,7 @@ const Modal = ({ title, value, valueHandler, setPick }) => {
             width: dw * 0.8,
             height: dw * 0.8,
             backgroundColor: "white",
-            borderRadius: 24,
+            borderRadius: 10,
             padding: 36,
             alignItems: "center",
             justifyContent: "space-between",
@@ -47,13 +47,13 @@ const Modal = ({ title, value, valueHandler, setPick }) => {
             numberOfLines={6}
             maxLength={50}
             style={{
-              ...fontStyles.HyeminBold({ size: 5, color: "black" }),
+              ...fontStyles.HyeminBold({ size: 6, color: "black" }),
               width: "100%",
               flex: 1,
-              padding: 12,
+              padding: 24,
               borderWidth: 2,
               marginBottom: 18,
-              borderRadius: 12,
+              borderRadius: 10,
               textAlign: "left",
             }}
             value={value}
@@ -64,7 +64,7 @@ const Modal = ({ title, value, valueHandler, setPick }) => {
             style={{
               width: "100%",
               backgroundColor: `${ColorSet.navyColor(1)}`,
-              borderRadius: 24,
+              borderRadius: 12,
               padding: 12,
             }}
           >
@@ -91,9 +91,11 @@ export default function Page7({ info, setInfo, toNext, cancelAll }) {
   return (
     <>
       <PageBase toNext={toNext} disabled={false} cancelAll={cancelAll}>
-        <View flex={2} justifyContent="flex-end">
-          {/* <Text style={fontStyles.HyeminBold({ size: 9, bold: "bold" })}>보상 / 벌칙 입력</Text> */}
-          <Text style={fontStyles.HyeminBold({ size: 5 })}>
+        <View flex={2} justifyContent="center">
+          <Text style={{ ...fontStyles.HyeminBold({ size: 9 }), marginBottom: 16 }}>
+            보상 / 벌칙 입력
+          </Text>
+          <Text style={fontStyles.Hyemin({ size: 5 })}>
             챌린지가 끝난 후 등수에 따른{"\n"}보상 혹은 벌칙이 있다면 입력해주세요{"\n"}(선택 사항)
           </Text>
         </View>

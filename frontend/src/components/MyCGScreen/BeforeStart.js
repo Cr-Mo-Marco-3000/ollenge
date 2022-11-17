@@ -81,12 +81,11 @@ const BeforeStart = ({ navigation }) => {
     roomCtx.getUserList(id)
     navigation.push("CGRoom")
   }
-
   return (
     <ChallengingBody>
       {rankingCGList.length || userCGList.length ? (
         <ScrollBackground>
-          {rankingCGList ? (
+          {rankingCGList.length ? (
             <DivideView>
               <IconView>
                 <RankingChallengeIcon />

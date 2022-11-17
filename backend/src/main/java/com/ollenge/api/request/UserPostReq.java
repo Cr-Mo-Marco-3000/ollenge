@@ -1,5 +1,6 @@
 package com.ollenge.api.request;
 
+import com.ollenge.common.util.StringUtils;
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class UserPostReq {
 
     @ApiParam(value = "닉네임")
     @Size(min = 2, max = 14)
-    @Pattern(regexp="^[가-힣a-zA-Z0-9]*$")
+    @Pattern(regexp= StringUtils.nicknameRegex)
     String nickname;
 
     @ApiParam(value = "유저 설명")

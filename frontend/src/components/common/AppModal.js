@@ -45,7 +45,7 @@ export default function AppModal(props) {
           <GoBackDiv>
             <TriColumn1>
               <GoBackButton onPress={goBack}>
-                <AntDesign name="arrowleft" size={24} color="black" />
+                <AntDesign name="arrowleft" size={24} color={`${ColorSet.navyColor(1)}`} />
               </GoBackButton>
             </TriColumn1>
             <TriColumn2>

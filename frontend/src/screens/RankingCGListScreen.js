@@ -10,42 +10,45 @@ import Proceeding from "../components/RankingCGScreen/Proceeeding"
 import TopMargin from "../components/common/TopMargin"
 import ParticipatingDetail from "../components/RankingCGScreen/ParticipatingDetail"
 import CreateCGScreen from "./CreateCGScreen"
+import { Provider } from "react-native-paper"
 
 function RankingCGListScreen(props) {
   const Tab = createMaterialTopTabNavigator()
 
   return (
-    <Body>
-      <TopMargin />
-      <Header>
-        <HeaderTextView>
-          <HeaderTextColumn>
-            <AppBoldText>랭킹 챌린지</AppBoldText>
-          </HeaderTextColumn>
-          <HeaderTextColumn></HeaderTextColumn>
-        </HeaderTextView>
-      </Header>
+    <Provider>
+      <Body>
+        <TopMargin />
+        <Header>
+          <HeaderTextView>
+            <HeaderTextColumn>
+              <AppBoldText>랭킹 챌린지</AppBoldText>
+            </HeaderTextColumn>
+            <HeaderTextColumn></HeaderTextColumn>
+          </HeaderTextView>
+        </Header>
 
-      <Tab.Navigator
-        style={{
-          flex: 8,
-        }}
-        screenOptions={{
-          tabBarLabelStyle: { fontSize: 16, fontFamily: "HyeminBold" },
-          tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
-          tabBarInactiveTintColor: `${ColorSet.navyColor(0.5)}`,
-          tabBarIndicatorStyle: {
-            backgroundColor: `${ColorSet.orangeColor(1)}`,
-          },
-        }}
-      >
-        <Tab.Screen name="진행 중" component={Proceeding} />
-        <Tab.Screen name="참여 신청">
-          {() => <Participating makeChallenge={props.makeChallenge} />}
-        </Tab.Screen>
-      </Tab.Navigator>
-      {/* 아래부분 */}
-    </Body>
+        <Tab.Navigator
+          style={{
+            flex: 8,
+          }}
+          screenOptions={{
+            tabBarLabelStyle: { fontSize: 16, fontFamily: "HyeminBold" },
+            tabBarActiveTintColor: `${ColorSet.orangeColor(1)}`,
+            tabBarInactiveTintColor: `${ColorSet.navyColor(0.5)}`,
+            tabBarIndicatorStyle: {
+              backgroundColor: `${ColorSet.orangeColor(1)}`,
+            },
+          }}
+        >
+          <Tab.Screen name="진행 중" component={Proceeding} />
+          <Tab.Screen name="참여 신청">
+            {() => <Participating makeChallenge={props.makeChallenge} />}
+          </Tab.Screen>
+        </Tab.Navigator>
+        {/* 아래부분 */}
+      </Body>
+    </Provider>
   )
 }
 

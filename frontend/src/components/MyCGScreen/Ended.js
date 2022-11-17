@@ -133,7 +133,7 @@ const Ended = () => {
         return pre + cur.myFeedCnt / days
       }, averageSuccess)
 
-      averageSuccess = Math.round((averageSuccess / participateNumber) * 100 * 1000) / 1000
+      averageSuccess = Math.round((averageSuccess / participateNumber) * 100 * 100) / 100
       let totalScore = newRCGList.reduce((pre, cur) => {
         const score = cur.myFeedCnt * 10
         return pre + score

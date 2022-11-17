@@ -30,7 +30,7 @@ from datetime import datetime
 # S3연결
 from pys3 import s3_connection, s3_upload, s3_download, BUCKET_NAME, make_std_url_name, make_feature_url_name, make_classification_url_name, make_common_url_name, make_profile_url_name
 # DB 연결
-from pysql import execute_select_keword_list, execute_select_participation_id, execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
+from pysql import execute_select_authtype, execute_select_keword_list, execute_select_participation_id, execute_insert_std_img, execute_select_std_img, execute_insert_feed, execute_select_challenge_auth_time, execute_select_isauth, execute_select_token_user_id, execute_update_profile_img,execute_feed_cnt_increase,execute_challenge_score_increase
 # model 연결
 from inputbasemodel import StdImgInput, FeatureInput, classificationpicture, CommonInput, uploadImg
 # Header token
@@ -114,6 +114,43 @@ def is_auth_intime(participation_id):
     else:
         return [3, now.strftime("%Y%m%d%H%M%S")]
 
+
+def checkcross(a, b, c, d):
+    a1, a2 = a
+    b1, b2 = b
+    c1, c2 = c
+    d1, d2 = d
+    if a1!=b1:
+        p1 = (a2 - b2)/(a1 - b1)
+        q1 = a1*((a2-b2)/(b1-a1))+a2
+        lin1 = [1, p1, q1]
+    else:
+        p1 = -1
+        q1 = a1
+        lin1 = [0, p1, q1]
+    
+    if c1 != d1:
+        p2 = (c2 - d2)/(c1 - d1)
+        q2 = c1*((c2-d2)/(d1-c1))+c2
+        lin2 = [1, p2, q2]
+    else:
+        p2 = -1
+        q2 = c1
+        lin2 = [0, p2, q2]
+
+    lin3 = []
+    for p in range(3):
+        lin3.append(lin1[p]-lin2[p])
+    
+    x, y = a
+    cal1 = -lin3[0]*y + lin3[1]*x+lin3[2]
+    x, y = b
+    cal2 = -lin3[0]*y + lin3[1]*x+lin3[2]
+    cro = cal1*cal2
+    if cro >= 0:
+        return True
+    else:
+        return False
 
 
 stub = service_pb2_grpc.V2Stub(ClarifaiChannel.get_grpc_channel())
@@ -649,8 +686,12 @@ async def test(data: StdImgInput, Authorization: Optional[str] = Header(None)):
         try:
             to = make_std_url_name(participation_id)
             file_url = s3_upload(filename, 'homybk', to)
+            user_name = execute_select_user_nickname(user_id)
             if file_url:
+                now = datetime.now()
+                feed_time = now.strftime("%Y%m%d%H%M%S")
                 execute_insert_std_img(participation_id, file_url)
+                execute_insert_feed(participation_id, file_url, f"{user_name}님이 앞으로 인증할 사진입니다.", feed_time)
         except Exception as e:
             print(e)
             remove_img(filename)
@@ -836,7 +877,10 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
 
     # 입력 영상에 호모그래피 H 행렬로 투시 변환
     corners2 = cv2.perspectiveTransform(corners1, H)
-
+    edgePoints1 = []
+    for p in range(4):
+        edgePoints1.append(list(corners2[p][0]))
+    edgePoints2 = edgePoints1[1:]+[edgePoints1[0]]
     # corners2는 입력 영상에 좌표가 표현되있으므로 입력영상의 넓이 만큼 쉬프트
     corners2 = corners2 + np.float32([w, 0])
 
@@ -851,21 +895,23 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
 
     xy_e=explode_xy(sqs)
     A=shoelace_area(xy_e[0],xy_e[1])
-    print(A)
+    # print(A)
     # plt.imshow(dst,),plt.show()
     # cv2.waitKey()
     # cv2.destroyAllWindows()
     # # 사각형의 넓이에 따라 출력
+    con1 = checkcross(*edgePoints1)
+    con2 = checkcross(*edgePoints2)
     if A<=30:
         remove_img(filename)
         return JSONResponse(
             status_code=400,
             content={
                 "message": f"사진이 일치하지 않습니다.",
-                "errcode": 11
+                "errcode": 12
                 },
         )
-    else:
+    elif con1 and con2:
         try:
             to = make_feature_url_name(participation_id)
             file_url = s3_upload(filename, 'homybk', to)
@@ -888,6 +934,15 @@ async def featimg(data:FeatureInput, Authorization: Optional[str] = Header(None)
             status_code=200,
             content={
                 "message": f"완료되었습니다.",
+                },
+        )
+    else:
+        remove_img(filename)
+        return JSONResponse(
+            status_code=400,
+            content={
+                "message": f"사진이 일치하지 않습니다.",
+                "errcode": 12
                 },
         )
 
@@ -960,7 +1015,7 @@ async def isauthedtoday(challenge_id: int, Authorization: Optional[str] = Header
         )
 
 
-@app.get("/auth/isstdimg/{participation_id}")
+@app.get("/auth/isstdimg/{challenge_id}")
 async def isstdimg(challenge_id: str, Authorization: Optional[str] = Header(None)):
     if Authorization:
         btoken = Authorization.split()[1]
@@ -988,6 +1043,18 @@ async def isstdimg(challenge_id: str, Authorization: Optional[str] = Header(None
     try:
         challenge_id = str(challenge_id)
         participation_id = execute_select_participation_id(challenge_id, user_id)
+        isfeature=execute_select_authtype(challenge_id)
+        if isfeature:
+            pass
+        else:
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "message": f"feature auth type이 아닙니다.",
+                    "isauthed": True,
+                    "stdimg": None
+                    },
+            )
         if participation_id:
             participation_id = str(participation_id)
         else:

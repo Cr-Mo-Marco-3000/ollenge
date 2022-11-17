@@ -29,16 +29,24 @@ function FirtstUserItem({ user, wholeDay, src }) {
                 resizeMode="cover"
               />
             </View>
-            <View style={styles.bedgeBox}>
-              <View style={{ width: RFPercentage(4), height: RFPercentage(4) }}>
-                <Image source={src} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+            {src ? (
+              <View style={styles.bedgeBox}>
+                <View style={{ width: RFPercentage(4), height: RFPercentage(4) }}>
+                  <Image
+                    source={src}
+                    style={{ width: "100%", height: "100%" }}
+                    resizeMode="cover"
+                  />
+                </View>
               </View>
-            </View>
+            ) : (
+              <></>
+            )}
           </View>
-          <AppBoldText lineNumber={1} pxSize={24}>
+          <AppBoldText lineNumber={1} size={2.5}>
             {user.nickname}
           </AppBoldText>
-          <AppBoldText color={"white"} pxSize={20}>
+          <AppBoldText color={"white"} size={2.3}>
             {Math.round((user.datetimeList.length / wholeDay) * 100)}%
           </AppBoldText>
         </LinearGradient>

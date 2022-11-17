@@ -12,9 +12,6 @@ const Stack = createNativeStackNavigator()
 
 function MyPageScreen() {
   const authCtx = useContext(AuthContext)
-  // const userId = authCtx.userInfo.userId
-  const userId = 1
-
   return (
     <Stack.Navigator
       screenOptions={{
@@ -25,10 +22,10 @@ function MyPageScreen() {
       }}
     >
       <Stack.Screen name="MyInfo" options={{ headerShown: false }}>
-        {(props) => <MyInfoScreen userInfo={authCtx.userInfo} />}
+        {() => <MyInfoScreen userInfo={authCtx.userInfo} />}
       </Stack.Screen>
       <Stack.Screen name="EditInfo">
-        {(props) => <MyInfoEditScreen userInfo={authCtx.userInfo} />}
+        {() => <MyInfoEditScreen userInfo={authCtx.userInfo} />}
       </Stack.Screen>
     </Stack.Navigator>
   )

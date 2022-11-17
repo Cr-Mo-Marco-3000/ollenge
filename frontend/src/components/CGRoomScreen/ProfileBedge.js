@@ -6,12 +6,12 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 import defaultImage from "../../assets/images/default-image.png"
 import ColorSet from "../../style/ColorSet"
 
-function ProfileBedge({ url, isActive }) {
+function ProfileBedge({ uri, isActive }) {
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   return (
-    <View style={isActive ? [styles.imgBox, styles.activeBorder] : styles.imgBox}>
+    <View style={isActive ? [styles.imgBox, styles.activeBorder] : [styles.imgBox, styles.border]}>
       <Image
-        source={url ? { uri: url } : { uri: defaultImageUri }}
+        source={uri ? { uri: uri } : { uri: defaultImageUri }}
         style={{ width: "100%", height: "100%", borderRadius: 100 }}
         resizeMode="cover"
       />
@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
     marginRight: RFPercentage(1),
   },
   activeBorder: {
-    borderColor: `${ColorSet.orangeColor(0.6)}`,
-    borderWidth: 1,
-    shadowColor: `${ColorSet.orangeColor(1)}`,
+    borderColor: "#1fd184",
+    borderWidth: 3,
+    shadowColor: `${ColorSet.yellowColor(1)}`,
     shadowOffset: {
       width: 0,
       height: 0,
@@ -38,6 +38,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 5.65,
 
-    elevation: 10,
+    elevation: 5,
+  },
+  border: {
+    borderColor: `${ColorSet.grayColor(1)}`,
+    borderWidth: 3,
   },
 })

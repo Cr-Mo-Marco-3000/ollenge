@@ -29,9 +29,15 @@ const Card = ({ title = "타이틀 없음", content = "컨텐츠 없음" }) => {
   return (
     <View style={frameStyles.cardArea}>
       <Text style={textStyles.cardTitle}>{title}</Text>
-      <Text style={textStyles.cardContent}>{content}</Text>
+      <Text style={textStyles.cardContent}>{content === "" ? "입력값 없음" : content}</Text>
     </View>
   )
+}
+
+const authTypeContent = {
+  none: "자유로운 인증 ",
+  classifi: "사물의 특성을 파악해 인증",
+  feature: "기준이 되는 사진과 비교해 인증",
 }
 
 /** ---------------------------- Eport Default 영역 ---------------------------- */
@@ -43,7 +49,7 @@ export default function Final({ info, isRank, toNext, cancelAll, goBackToRoom })
   const CGInfo = {
     "팀 이름": [info.challengeName, "Page1"],
     "챌린지 내용": [info.challengeTopic, "Page2"],
-    "인증 방식": [info.authType, "Page3"],
+    "인증 방식": [authTypeContent[info.authType], "Page3"],
     "챌린지 설명": [info.challengeDescription, "Page4"],
     "챌린지 기간": [period, "Page5"],
     "인증 시간": [timing, "Page6"],
@@ -51,7 +57,6 @@ export default function Final({ info, isRank, toNext, cancelAll, goBackToRoom })
     벌칙: [info.penaltyContent, "Page7"],
   }
   const navigation = useNavigation()
-  console.log("YES BABY", isRank)
   const checkCondition = (content) => {
     if (isRank === true) {
       if (
@@ -67,12 +72,17 @@ export default function Final({ info, isRank, toNext, cancelAll, goBackToRoom })
   }
   const createChallenge = async () => {
     try {
-      console.log(info)
       const res = await challAPI.createCG(info)
       const id = res.data.challengeCreatedData.challengeId
       roomCtx.getRoomInfo(id)
       roomCtx.getUserList(id)
-      navigation.push("CGRoom")
+      // navigation.navigate가 push보다 조금 더 발전된 느낌의 method
+      navigation.reset({
+        index: 0,
+        routes: [
+          { name: "내 챌린지", params: { screen: "CGList", params: { screen: "시작 전" } } },
+        ],
+      })
     } catch (error) {
       console.log(error.response)
     }

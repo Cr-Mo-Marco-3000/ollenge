@@ -6,71 +6,40 @@ import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
 import { AuthContext } from "../../../store/auth-context"
 import { useIsFocused } from "@react-navigation/native"
-
-const FeedsArea = () => {
+const FeedsArea = (props) => {
   const isFocused = useIsFocused()
   const instance = AuthorizationInstance()
+
   const roomCtx = useContext(RoomContext)
   const authCtx = useContext(AuthContext)
 
-  const roomInfo = roomCtx.roomInfo
-  const challengeId = roomInfo.challengeId
+  const challengeId = roomCtx.roomInfo.challengeId
+  // const challengeId = props.challengeId
 
   const flatListRef = useRef()
 
   const [feedsListShowed, setFeedsListShowed] = useState([])
   const [feedCount, setFeedCount] = useState(1)
 
-  // const feedList = [
-  //   {
-  //     feedID: 1,
-  //     feedType: "assdf",
-  //     profileImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     userId: 37,
-  //     nickname: "아무무",
-  //     feedImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     feedContent: "오늘 챌린지 인증 완료!",
-  //     createdDatetime: "2022-11-15",
-  //     commentNum: 3,
-  //   },
-  //   {
-  //     feedID: 2,
-  //     feedType: "assdf",
-  //     profileImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     userId: 37,
-  //     nickname: "아무무",
-  //     feedImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     feedContent: "오늘 챌린지 인증 완료!",
-  //     createdDatetime: "2022-11-15",
-  //     commentNum: 3,
-  //   },
-  //   {
-  //     feedID: 3,
-  //     feedType: "assdf",
-  //     profileImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     userId: 37,
-  //     nickname: "아무무",
-  //     feedImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     feedContent: "오늘 챌린지 인증 완료!",
-  //     createdDatetime: "2022-11-15",
-  //     commentNum: 3,
-  //   },
-  // ]
-
   // 시작시 전체 List 불러오기
   const getRes = async () => {
-    try {
-      const res = await instance.get(`/api/feed/${challengeId}`)
-      const newFeedList = res.data.feedList
-      setfeedList(newFeedList)
-    } catch (error) {
-      console.log(error.response.data)
+    if (challengeId) {
+      try {
+        const res = await instance.get(`/api/feed/${challengeId}`)
+        const newFeedList = res.data.feedList
+        setfeedList(newFeedList)
+        setFeedsListShowed(newFeedList.slice(0, 5))
+      } catch (error) {
+        console.log(error.response.data)
+      }
     }
   }
+
   const [feedList, setfeedList] = useState([])
+
   useEffect(() => {
     getRes()
-  }, [isFocused])
+  }, [isFocused, challengeId])
 
   // 보이는 피드 변경
   useEffect(() => {
@@ -85,6 +54,7 @@ const FeedsArea = () => {
     setFeedCount(feedCount + 1)
     // flatListRef.current.scrollToIndex({ index: 0 })
   }
+
   return (
     <FeedBody
       data={feedsListShowed}
@@ -94,6 +64,7 @@ const FeedsArea = () => {
       onEndReachedThreshold={0.5}
       refreshing={true}
       ref={flatListRef}
+      extraData={challengeId}
     ></FeedBody>
   )
 }

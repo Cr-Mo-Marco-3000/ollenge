@@ -34,7 +34,7 @@ const CommentArea = (props) => {
     const getRes = async () => {
       try {
         const res = await instance.get(`/api/comment/${feedId}`)
-        const newCommentList = res.data.CommentList
+        const newCommentList = res.data.commentList
         setCommentList(newCommentList)
       } catch (error) {
         console.log(error.response.data)
@@ -57,7 +57,7 @@ const CommentArea = (props) => {
           commentContent: writedText,
         })
         const resGet = await instance.get(`/api/comment/${feedId}`)
-        const newCommentList = resGet.data.CommentList
+        const newCommentList = resGet.data.commentList
         setCommentList(newCommentList)
         setWritedText("")
       } else {
@@ -122,7 +122,7 @@ const CommentArea = (props) => {
             }}
           ></View>
         </View>
-        {commentList.map((commentInfo, idx) => (
+        {commentList?.map((commentInfo, idx) => (
           <CommentItem commentInfo={commentInfo} key={idx} />
         ))}
       </ScrollView>
@@ -147,7 +147,7 @@ export default CommentArea
 const Body = styled.KeyboardAvoidingView`
   flex: 1;
   width: 100%;
-  background-color: white;
+  background-color: ${ColorSet.paleBlueColor(1)};
 `
 const TopView = styled.View`
   height: 50px;

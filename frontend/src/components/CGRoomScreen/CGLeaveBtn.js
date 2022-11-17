@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
   btnContainer: {
     width: RFPercentage(8),
     height: RFPercentage(8),
+    zIndex: 10,
     backgroundColor: `${ColorSet.navyColor(1)}`,
     alignItems: "center",
     justifyContent: "center",

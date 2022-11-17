@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Text, TextInput, View } from "react-native"
+import { dh } from "../../style/DeviceInfo"
 import PageBase, { fontStyles } from "./PageBase"
 
 export default function Page4({ info, setInfo, toNext, cancelAll }) {
@@ -13,6 +14,7 @@ export default function Page4({ info, setInfo, toNext, cancelAll }) {
 
   return (
     <PageBase toNext={toNext} disabled={false} cancelAll={cancelAll}>
+      <Text style={styles.header}>팀 설명 입력</Text>
       <View style={styles.wholeFrame}>
         <View>
           <Text style={styles.Content}>
@@ -62,4 +64,5 @@ const styles = {
     elevation: 12,
     padding: 12,
   },
+  header: { ...fontStyles.HyeminBold({ size: 9 }), textAlign: "center" },
 }

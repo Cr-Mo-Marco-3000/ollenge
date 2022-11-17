@@ -25,16 +25,14 @@ function MyCGScreen() {
         headerTitleStyle: { fontFamily: "HyeminBold" },
       }}
     >
-      <Stack.Screen name="CGList" options={{ headerShown: false }}>
-        {() => <MyCGListScreen />}
-      </Stack.Screen>
-      <Stack.Screen name="CGRoom" options={{ title: `${roomCtx.roomInfo.challengeName}` }}>
-        {() => <CGRoomScreen />}
-      </Stack.Screen>
+      <Stack.Screen name="CGList" options={{ headerShown: false }} component={MyCGListScreen} />
+      <Stack.Screen
+        name="CGRoom"
+        options={{ title: `${roomCtx.roomInfo.challengeName}` }}
+        component={CGRoomScreen}
+      />
 
-      <Stack.Screen name="CGUser" options={{ title: "" }}>
-        {() => <CGUserScreen />}
-      </Stack.Screen>
+      <Stack.Screen name="CGUser" options={{ title: "" }} component={CGUserScreen} />
       <Stack.Screen name="CGAuth" component={AuthScreen} options={{ title: "오늘 챌린지 인증" }} />
       <Stack.Screen name="CGImg" component={ResistScreen} options={{ title: "인증 이미지 입력" }} />
       <Stack.Screen name="CGCreate" options={{ title: "" }}>

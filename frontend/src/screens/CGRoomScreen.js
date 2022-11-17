@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from "react"
 
-import { View, StyleSheet, Alert } from "react-native"
+import { View, StyleSheet, Alert, ScrollView } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Provider } from "react-native-paper"
+import { useHeaderHeight } from "@react-navigation/elements"
 
 import ColorSet from "../style/ColorSet"
-import { LocalTime, DateTime, TodayCheck } from "../functions/index"
+import { LocalTime, DateTime, CGStartFlag, CGAuthTimeFlag } from "../functions/index"
 import { RoomContext } from "../../store/room-context"
 import { AuthContext } from "../../store/auth-context"
 
@@ -16,38 +17,34 @@ import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
 import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
 import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
 import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
+import CGStartCount from "../components/CGRoomScreen/CGStartCount"
+import TodayAuthCount from "../components/CGRoomScreen/TodayAuthCount"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 import FeedsArea from "../components/CGRoomScreen/FeedsArea"
+import AppBoldText from "../components/common/AppBoldText"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
-  const authCtx = useContext(AuthContext)
 
   const roomInfo = roomCtx.roomInfo
   const userList = roomCtx.userList
-  const MyUserId = authCtx.userInfo.MyUserId
 
   const navigation = useNavigation()
-  const [isStarted, setIsStarted] = useState(false)
-  const [todayAuth, setTodayAuth] = useState(false)
+  const headerHight = useHeaderHeight()
+  const [isStarted, setIsStarted] = useState("")
+  const [isAuthed, setIsAuth] = useState(false)
+  const [isResist, setIsResist] = useState(false)
+  const [isTime, setIsTime] = useState("")
+  console.log("I am isAuthed => ", isAuthed)
+  useEffect(() => {
+    setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
+    setIsTime(CGAuthTimeFlag(roomInfo.startTime, roomInfo.endTime))
+  }, [roomInfo])
 
   useEffect(() => {
-    const now = LocalTime()
-    const start = DateTime(roomInfo.startDate, roomInfo.startTime)
-    if (now.getTime() >= start.getTime()) {
-      setIsStarted(true)
-    }
-
-    userList.map((user) => {
-      if (user === MyUserId) {
-        const flag = TodayCheck(user.datetimeList)
-        if (flag) {
-          setTodayAuth(true)
-        }
-      }
-      return
-    })
-  }, [roomInfo, userList])
+    setIsAuth(roomCtx.isAuthed)
+    setIsResist(roomCtx.isResist)
+  }, [roomCtx])
 
   return (
     <Provider>
@@ -55,17 +52,25 @@ function CGRoomScreen() {
         style={{ flex: 1 }}
         colors={[`${ColorSet.whiteColor(1)}`, `${ColorSet.paleBlueColor(1)}`]}
       >
-        <TopMargin />
-        <TopMargin />
+        <View style={{ height: headerHight }} />
         <UserListTap navigation={navigation} />
         <CGRoomInfoTag roomInfo={roomInfo} userList={userList} />
-
         <View style={styles.buttonContainer}>
-          <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
-          <CGAuthBtn navigation={navigation} />
-          <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />
+          {isStarted == "waiting" && (
+            <>
+              <CGStartCount />
+              <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
+            </>
+          )}
+          {isStarted == "playing" && !isAuthed && <TodayAuthCount isTime={isTime} />}
+          {isResist && isStarted == "playing" && isTime == "playing" && !isAuthed && (
+            <CGAuthBtn navigation={navigation} />
+          )}
+          {!isResist && <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />}
         </View>
-        <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
+        {isStarted == "waiting" && (
+          <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
+        )}
         <FeedsArea></FeedsArea>
       </LinearGradient>
     </Provider>

@@ -14,6 +14,7 @@ import Heart4 from "./heart-icon-4.png"
 import ExclamMark from "./exclamation_question_mark_3d.png"
 import Clock from "./clock-dynamic-color.png"
 import Party from "./party.png"
+import Happy from "./happy.png"
 
 import { Image } from "react-native"
 
@@ -93,4 +94,8 @@ export function PartyIcon() {
 
 export function CommentIcon() {
   return <Image source={Comment} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
+}
+
+export function HappyIcon() {
+  return <Image source={Happy} style={{ width: "100%", height: "100%" }} resizeMode="cover" />
 }

@@ -73,7 +73,7 @@ def execute_select_std_img(participation_id):
 def execute_insert_feed(participation_id, url, feed_content, feed_time):
     # 일단 같은 participation으로 들어가있으면 삭제
     participation_id = int(participation_id)
-    sql = """INSERT INTO feed (created_datetime, feed_content, feed_img, feed_type, participation_id) VALUES (%s, %s, %s, '1', %s);"""
+    sql = """INSERT INTO feed (created_datetime, feed_content, feed_img, feed_type, participation_id) VALUES (%s, %s, %s, 'user', %s);"""
     vals = (feed_time, feed_content, url, participation_id)
     # sql = f"INSERT INTO auth_standard_img (standard_img, participation_id) VALUES (url, {participation_id});"
     conn = get_connection()
@@ -113,6 +113,17 @@ def execute_select_token_user_id(participation_id):
         return result[0][0]
     else:
         return False
+
+# 닉네임 가져오기
+def execute_select_user_nickname(user_id):
+    user_id = int(user_id)
+    sql = f"SELECT nickname from user WHERE user_id = {user_id}"
+    result = execute_select(sql)
+    if result:
+        return result[0][0]
+    else:
+        return False
+
 
 
 # 프로필 이미지 업로드
@@ -165,6 +176,19 @@ def execute_select_participation_id(challenge_id, user_id):
     vals = (challenge_id, user_id)
     result = execute_select2(sql, vals)
     if result:
+        return result[0][0]
+    else:
+        return False
+
+
+def execute_select_authtype(challenge_id):
+    challenge_id = int(challenge_id)
+    sql = """SELECT auth_type from challenge WHERE challenge_id = %s"""
+    vals = (challenge_id, )
+    result = execute_select2(sql, vals)
+    if result:
+        if result[0][0] == "feature":
+            return True
         return result[0][0]
     else:
         return False

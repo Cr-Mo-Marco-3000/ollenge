@@ -68,10 +68,10 @@ export default function ParticipatingDetailCard(props) {
       </AppText>
     )
   }
-
   const makeChallenge = () => {
     // 예를 마지막에 날려주고
     const info = {
+      challengePresetId: props.challengeInfo.challengePresetId,
       authType: challengeInfo.authType,
       challengeDescription: "",
       challengeImg: "",
@@ -83,7 +83,12 @@ export default function ParticipatingDetailCard(props) {
       endTime: challengeInfo.endTime,
       rewardContent: "",
       penaltyContent: "",
+      classificationTypeID:
+        props.challengeInfo.classificationType !== undefined
+          ? props.challengeInfo.classificationType.classificationTypeId
+          : "",
     }
+    console.log(info)
     props.makeChallenge(info)
   }
 
