@@ -31,11 +31,13 @@ function UserListTap({ navigation }) {
     }
   }, [userList])
 
+  console.log(myInfo)
+
   return (
     <View style={styles.imgListContainer}>
       <View style={styles.myProfileBox}>
         {myInfo ? (
-          <ProfileBedge url={myInfo.profileImg} isActive={TodayCheck(myInfo.datetimeList)} />
+          <ProfileBedge uri={myInfo.profileImg} isActive={TodayCheck(myInfo.datetimeList)} />
         ) : null}
       </View>
       <ScrollView
