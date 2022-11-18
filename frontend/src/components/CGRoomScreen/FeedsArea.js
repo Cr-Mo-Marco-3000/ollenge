@@ -129,6 +129,7 @@ export default FeedsArea
 const styles = StyleSheet.create({
   buttonContainer: {
     paddingHorizontal: "5%",
+    marginBottom: 10,
   },
   buttonBox: {
     width: "100%",
