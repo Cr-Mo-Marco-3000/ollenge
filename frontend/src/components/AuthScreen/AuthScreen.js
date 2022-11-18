@@ -14,6 +14,7 @@ import AppButton from "../common/AppButton"
 import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
 import { useNavigation } from "@react-navigation/native"
+import Loader from "../common/Loader"
 
 function AuthScreen({ route }) {
   const instance = AuthorizationInstance()
@@ -30,6 +31,13 @@ function AuthScreen({ route }) {
   const [challengeId, setChallengeId] = useState(roomInfo.challengeId)
   const [authType, setAuthType] = useState(roomInfo.authType)
   const [showKey, setShowKey] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (loading) {
+      authByImg()
+    }
+  }, [loading])
 
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
@@ -121,12 +129,13 @@ function AuthScreen({ route }) {
   return (
     <View style={styles.rootScreen}>
       <View style={{ height: headerHight }} />
+      {loading && <Loader />}
       {showKey === false && (
         <Pressable style={styles.authContainer} onPress={cameraHandler}>
           {uri ? (
             <Image
               source={{ uri: uri }}
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: "100%", height: "100%", borderRadius: 10 }}
               resizeMode="cover"
             />
           ) : (
@@ -159,7 +168,12 @@ function AuthScreen({ route }) {
         </View>
       </View>
       <View style={{ width: "100%", height: RFPercentage(6), marginBottom: "5%" }}>
-        <AppButton title={"인증 완료하기"} handler={authByImg} />
+        <AppButton
+          title={"인증 완료하기"}
+          handler={() => {
+            setLoading(true)
+          }}
+        />
       </View>
     </View>
   )

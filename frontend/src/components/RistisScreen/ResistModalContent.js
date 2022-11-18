@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import { Alert, Image, Pressable, StyleSheet, View } from "react-native"
 import AppText from "../common/AppText"
@@ -7,10 +7,18 @@ import { RFPercentage } from "react-native-responsive-fontsize"
 import { useNavigation } from "@react-navigation/native"
 
 import { AuthorizationInstance } from "../../api/settings"
+import Loader from "../common/Loader"
 
 function ResistModalContent({ uri, base64, challengeId, resetCamera, showResistModal }) {
   const instance = AuthorizationInstance()
   const navigation = useNavigation()
+  const [loading, setLodaing] = useState(false)
+
+  useEffect(() => {
+    if (loading) {
+      registAuthImg()
+    }
+  }, [loading])
 
   const registAuthImg = async () => {
     const dataForm = { challenge_id: challengeId, std_img: base64 }
@@ -47,6 +55,7 @@ function ResistModalContent({ uri, base64, challengeId, resetCamera, showResistM
 
   return (
     <View style={{ paddingHorizontal: "5%" }}>
+      {loading && <Loader />}
       <View style={styles.imgBox}>
         <Image
           source={{ uri: uri }}
@@ -61,7 +70,9 @@ function ResistModalContent({ uri, base64, challengeId, resetCamera, showResistM
         <AppButton
           title={"인증 이미지 제출"}
           backColor={"navy"}
-          handler={registAuthImg}
+          handler={() => {
+            setLodaing(true)
+          }}
         ></AppButton>
       </View>
     </View>

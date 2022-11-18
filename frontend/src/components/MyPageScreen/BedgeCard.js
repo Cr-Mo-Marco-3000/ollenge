@@ -108,6 +108,7 @@ function BedgeCard({ type, flag, idLst }) {
                   typeData={badgesTitle[type]}
                   grade={key}
                   badgeId={idLst[key]}
+                  key={key}
                 />
               )
             } else if (sta == 1) {
@@ -117,6 +118,7 @@ function BedgeCard({ type, flag, idLst }) {
                   typeData={badgesTitle[type]}
                   grade={key}
                   badgeId={idLst[key]}
+                  key={key}
                 />
               )
             } else {
@@ -126,6 +128,7 @@ function BedgeCard({ type, flag, idLst }) {
                   typeData={badgesTitle[type]}
                   grade={key}
                   badgeId={idLst[key]}
+                  key={key}
                 />
               )
             }
