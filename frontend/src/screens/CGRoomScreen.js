@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 
-import { View, StyleSheet, Alert, ScrollView } from "react-native"
+import { View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Provider } from "react-native-paper"
@@ -12,14 +12,9 @@ import { RoomContext } from "../../store/room-context"
 
 import UserListTap from "../components/CGRoomScreen/UserListTap"
 import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
-import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
-import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
-import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
-import CGStartCount from "../components/CGRoomScreen/CGStartCount"
-import TodayAuthCount from "../components/CGRoomScreen/TodayAuthCount"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 import FeedsArea from "../components/CGRoomScreen/FeedsArea"
-import EndingReport from "../components/CGRoomScreen/EndingReport"
+import EndCGModal from "../components/CGRoomScreen/EndCGModal"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
@@ -33,6 +28,11 @@ function CGRoomScreen() {
   const [isAuthed, setIsAuth] = useState(false)
   const [isResist, setIsResist] = useState(false)
   const [isTime, setIsTime] = useState("")
+  const [visible, setVisible] = useState()
+
+  const hideModal = function () {
+    setVisible(false)
+  }
 
   useEffect(() => {
     setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
@@ -44,8 +44,17 @@ function CGRoomScreen() {
     setIsResist(roomCtx.isResist)
   }, [roomCtx])
 
+  useEffect(() => {
+    if (Object.keys(roomInfo).length !== 0) {
+      if (isStarted == "end" && !roomInfo.isChecked) {
+        setVisible(true)
+      }
+    }
+  }, [roomCtx])
+
   return (
     <Provider>
+      <EndCGModal visible={visible} hideModal={hideModal} />
       <LinearGradient
         style={{ flex: 1 }}
         colors={[`${ColorSet.whiteColor(1)}`, `${ColorSet.paleBlueColor(1)}`]}
