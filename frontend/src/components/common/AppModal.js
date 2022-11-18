@@ -18,8 +18,8 @@ export default function AppModal(props) {
   const goBack = () => {
     props.openAndClose()
   }
-  const isTransparent = props.isTransparent ? props.isTransparent : false
-  const backgroundColor = props.backgroundColor ? props.backgroundColor : ColorSet.paleBlueColor(1)
+  const isTransparent = props.isTransparent || false
+  const backgroundColor = props.backgroundColor || ColorSet.paleBlueColor(1)
 
   const title = props.title
 

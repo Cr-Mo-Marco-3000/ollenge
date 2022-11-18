@@ -10,6 +10,7 @@ AppBoldText
 
 - props 설명
 
+
 1) color
 theme 5개 중 하나를 선택해서 넣습니다.
 기본 색은 navy입니다.
@@ -32,8 +33,9 @@ size={3}
 pxSize={24}
 */
 const AppBoldText = (props) => {
-  const selectedColor = props.color ? props.color : "navy"
-  const align = props.align ? props.align : "center"
+  const selectedColor = props.color || "navy"
+  const align = props.align || "center"
+
   let selectedSize = 24
 
   if (!props.size && !props.pxSize) {
