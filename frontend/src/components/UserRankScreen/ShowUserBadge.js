@@ -72,7 +72,7 @@ const ShowUserBadge = ({ navigation, route }) => {
             <View style={frameStyles.profile}>
               <Image
                 source={
-                  profileImg === null
+                  profileImg === null || profileImg === ""
                     ? require("../../assets/images/default-image.png")
                     : profileImg
                 }
