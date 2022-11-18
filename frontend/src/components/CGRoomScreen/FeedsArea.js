@@ -1,21 +1,26 @@
-import React from "react-native"
+import React, { StyleSheet, View } from "react-native"
 import styled from "styled-components"
-import FeedItem from "./FeedItem"
-import CommentArea from "./CommentArea"
-
 import { useState, useEffect, useContext, useRef } from "react"
 import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
 import { AuthContext } from "../../../store/auth-context"
-import { useIsFocused } from "@react-navigation/native"
-
-const FeedsArea = (props) => {
+import { useIsFocused, useNavigation } from "@react-navigation/native"
+// component
+import FeedItem from "./FeedItem"
+import CommentArea from "./CommentArea"
+import CGStartCount from "./CGStartCount"
+import InviteCodeBtn from "./InviteCodeBtn"
+import TodayAuthCount from "./TodayAuthCount"
+import EndingReport from "./EndingReport"
+import CGAuthBtn from "./CGAuthBtn"
+import ImageResistBtn from "./ImageResistBtn"
+const FeedsArea = ({ isStarted, roomInfo, isAuthed, isTime, isResist }) => {
   const isFocused = useIsFocused()
   const instance = AuthorizationInstance()
   const roomCtx = useContext(RoomContext)
   const authCtx = useContext(AuthContext)
-
   const challengeId = roomCtx.roomInfo.challengeId
+  const navigation = useNavigation()
 
   const flatListRef = useRef()
 
@@ -74,6 +79,25 @@ const FeedsArea = (props) => {
     setOpenModal(!openModal)
   }
 
+  const header = () => {
+    return (
+      <View style={styles.buttonContainer}>
+        {isStarted == "waiting" && (
+          <>
+            <CGStartCount />
+            <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
+          </>
+        )}
+        {isStarted == "playing" && !isAuthed && <TodayAuthCount isTime={isTime} />}
+        {isStarted == "end" && <EndingReport />}
+        {isResist && isStarted == "playing" && isTime == "playing" && !isAuthed && (
+          <CGAuthBtn navigation={navigation} />
+        )}
+        {!isResist && <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />}
+      </View>
+    )
+  }
+
   return (
     <FeedBody>
       {openModal && <CommentArea feedInfo={feedInfo} close={close} />}
@@ -85,6 +109,7 @@ const FeedsArea = (props) => {
         onEndReachedThreshold={0.5}
         ref={flatListRef}
         extraData={[challengeId, isFocused, feedCount]}
+        ListHeaderComponent={header}
       ></FeedList>
     </FeedBody>
   )
@@ -100,3 +125,14 @@ const FeedList = styled.FlatList`
 `
 
 export default FeedsArea
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    paddingHorizontal: "5%",
+  },
+  buttonBox: {
+    width: "100%",
+    height: "15%",
+    marginTop: "5%",
+  },
+})

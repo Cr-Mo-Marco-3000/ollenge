@@ -36,11 +36,8 @@ function CGRoomScreen() {
 
   useEffect(() => {
     setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
-    // console.log(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
     setIsTime(CGAuthTimeFlag(roomInfo.startTime, roomInfo.endTime))
   }, [roomInfo])
-
-  console.log(isStarted, isTime)
 
   useEffect(() => {
     setIsAuth(roomCtx.isAuthed)
@@ -56,7 +53,26 @@ function CGRoomScreen() {
         <View style={{ height: headerHight }} />
         <UserListTap navigation={navigation} />
         <CGRoomInfoTag roomInfo={roomInfo} userList={userList} />
-        <View style={styles.buttonContainer}>
+
+        {isStarted == "waiting" && (
+          <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
+        )}
+        <FeedsArea
+          roomInfo={roomInfo}
+          isStarted={isStarted}
+          isAuthed={isAuthed}
+          isTime={isTime}
+          isResis={isResist}
+        ></FeedsArea>
+      </LinearGradient>
+    </Provider>
+  )
+}
+export default CGRoomScreen
+
+// 이하 예전 자료들
+{
+  /* <View style={styles.buttonContainer}>
           {isStarted == "waiting" && (
             <>
               <CGStartCount />
@@ -69,25 +85,15 @@ function CGRoomScreen() {
             <CGAuthBtn navigation={navigation} />
           )}
           {!isResist && <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />}
-        </View>
-        {isStarted == "waiting" && (
-          <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
-        )}
-
-        <FeedsArea></FeedsArea>
-      </LinearGradient>
-    </Provider>
-  )
+        </View> */
 }
-export default CGRoomScreen
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    paddingHorizontal: "5%",
-  },
-  buttonBox: {
-    width: "100%",
-    height: "15%",
-    marginTop: "5%",
-  },
-})
+// const styles = StyleSheet.create({
+//   buttonContainer: {
+//     paddingHorizontal: "5%",
+//   },
+//   buttonBox: {
+//     width: "100%",
+//     height: "15%",
+//     marginTop: "5%",
+//   },
+// })
