@@ -33,8 +33,9 @@ public class ChallengeInfoData {
     int challengeScore;
     String challengeDescription;
     ClassificationType classificationType;
+    Boolean isChecked;
 
-    public static ChallengeInfoData of(Challenge challenge, ClassificationType classificationType) {
+    public static ChallengeInfoData of(Challenge challenge, ClassificationType classificationType, Boolean checkedFlag) {
         ChallengeInfoData challengeInfoData = new ChallengeInfoData();
         challengeInfoData.challengeId = challenge.getChallengeId();
         challengeInfoData.isRankingChallenge = (challenge.getChallengePreset() != null);
@@ -52,6 +53,9 @@ public class ChallengeInfoData {
         challengeInfoData.challengeScore = challenge.getChallengeScore();
         challengeInfoData.challengeDescription = challenge.getChallengeDescription();
         challengeInfoData.classificationType = classificationType;
+        if (checkedFlag != null) {
+            challengeInfoData.isChecked = checkedFlag;
+        }
         return challengeInfoData;
     }
 }
