@@ -1,6 +1,8 @@
 import React from "react-native"
 import styled from "styled-components"
 import FeedItem from "./FeedItem"
+import CommentArea from "./CommentArea"
+
 import { useState, useEffect, useContext, useRef } from "react"
 import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
@@ -9,7 +11,6 @@ import { useIsFocused } from "@react-navigation/native"
 
 const FeedsArea = (props) => {
   const isFocused = useIsFocused()
-
   const instance = AuthorizationInstance()
   const roomCtx = useContext(RoomContext)
   const authCtx = useContext(AuthContext)
@@ -51,29 +52,50 @@ const FeedsArea = (props) => {
   }, [feedCount])
 
   // 피드 아이템 개체
-  const feedItem = (feedInfo) => <FeedItem feedInfo={feedInfo} whenClosed={getRes} myId={myId} />
+
+  const feedItem = (feedInfo) => (
+    <FeedItem feedInfo={feedInfo} whenClosed={getRes} myId={myId} open={open} />
+  )
   // 단순히 댓글을 닫았을 때 피드가 불러오지는 않게 했다.
-  // const feedItem = (feedInfo) => <FeedItem feedInfo={feedInfo} />
 
   const onEndReached = () => {
     setFeedCount(feedCount + 1)
   }
 
+  const [feedInfo, setFeedInfo] = useState({})
+  const [openModal, setOpenModal] = useState(false)
+
+  const open = (feedInfo) => {
+    setFeedInfo(feedInfo)
+    setOpenModal(!openModal)
+  }
+
+  const close = () => {
+    setOpenModal(!openModal)
+  }
+
   return (
-    <FeedBody
-      data={feedsListShowed}
-      renderItem={feedItem}
-      keyExtractor={(feedInfo) => feedInfo.feedId}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.5}
-      ref={flatListRef}
-      extraData={[challengeId, isFocused, feedCount]}
-    ></FeedBody>
+    <FeedBody>
+      {openModal && <CommentArea feedInfo={feedInfo} close={close} />}
+      <FeedList
+        data={feedsListShowed}
+        renderItem={feedItem}
+        keyExtractor={(feedInfo) => feedInfo.feedId}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
+        ref={flatListRef}
+        extraData={[challengeId, isFocused, feedCount]}
+      ></FeedList>
+    </FeedBody>
   )
 }
 
-const FeedBody = styled.FlatList`
+const FeedBody = styled.View`
   margin-top: 10px;
+  flex: 1;
+`
+
+const FeedList = styled.FlatList`
   flex: 1;
 `
 

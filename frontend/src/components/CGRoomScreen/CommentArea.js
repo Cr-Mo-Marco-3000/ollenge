@@ -1,6 +1,14 @@
 import React from "react-native"
 import styled from "styled-components"
-import { View, Text, ScrollView, KeyboardAvoidingView, Image, Dimensions } from "react-native"
+import {
+  View,
+  Text,
+  ScrollView,
+  KeyboardAvoidingView,
+  Image,
+  Dimensions,
+  Modal,
+} from "react-native"
 import ColorSet from "../../style/ColorSet"
 import TopMargin from "../common/TopMargin"
 import { AntDesign } from "@expo/vector-icons"
@@ -22,7 +30,7 @@ const CommentArea = (props) => {
   const myImg = authCtx.userInfo.profileImg
 
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
-  const openAndClose = props.openAndClose
+  const close = props.close
 
   // 올린 사람 정보 등 피드정보
   let feedInfo = props.feedInfo.item
@@ -82,86 +90,88 @@ const CommentArea = (props) => {
   }
 
   return (
-    <Body behavior={"padding"}>
-      <TopMargin></TopMargin>
-      <TopView>
-        <FirstColumn>
-          <BackIconView onPress={openAndClose}>
-            <AntDesign name="arrowleft" size={24} color={ColorSet.navyColor(1)} />
-          </BackIconView>
-        </FirstColumn>
-        <SecondColumn>
-          <AppBoldText>댓글 목록</AppBoldText>
-        </SecondColumn>
-        <TriColumn></TriColumn>
-      </TopView>
-      {/* 스크롤뷰 */}
-      <ScrollView
-        style={{
-          flex: 1,
-        }}
-        ref={scrollViewRef}
-      >
-        <CommentItem commentInfo={feedInfo} />
-        <ImageView>
-          <ImageInnerView elevation={7}>
-            <Image
-              source={feedInfo.feedImg ? { uri: feedInfo.feedImg } : { uri: defaultImageUri }}
-              style={{ width: "100%", height: "100%", borderRadius: 20 }}
-              resizeMode="cover"
-            />
-          </ImageInnerView>
-        </ImageView>
-        <TextView>
-          <TextInnerView>
-            <AppText pxSize={16} align={"left"}>
-              {feedInfo.feedContent}
-            </AppText>
-          </TextInnerView>
-        </TextView>
-        <View
+    <Modal animationType="fade" statusBarTranslucent={true}>
+      <Body behavior={"padding"}>
+        <TopMargin></TopMargin>
+        <TopView>
+          <FirstColumn>
+            <BackIconView onPress={close}>
+              <AntDesign name="arrowleft" size={24} color={ColorSet.navyColor(1)} />
+            </BackIconView>
+          </FirstColumn>
+          <SecondColumn>
+            <AppBoldText>댓글 목록</AppBoldText>
+          </SecondColumn>
+          <TriColumn></TriColumn>
+        </TopView>
+        {/* 스크롤뷰 */}
+        <ScrollView
           style={{
-            justifyContent: "center",
-            alignItems: "center",
+            flex: 1,
           }}
+          ref={scrollViewRef}
         >
+          <CommentItem commentInfo={feedInfo} />
+          <ImageView>
+            <ImageInnerView elevation={7}>
+              <Image
+                source={feedInfo.feedImg ? { uri: feedInfo.feedImg } : { uri: defaultImageUri }}
+                style={{ width: "100%", height: "100%", borderRadius: 20 }}
+                resizeMode="cover"
+              />
+            </ImageInnerView>
+          </ImageView>
+          <TextView>
+            <TextInnerView>
+              <AppText pxSize={16} align={"left"}>
+                {feedInfo.feedContent}
+              </AppText>
+            </TextInnerView>
+          </TextView>
           <View
             style={{
+              justifyContent: "center",
               alignItems: "center",
-              borderBottomWidth: 1.5,
-              borderBottomColor: ColorSet.navyColor(1),
-              marginBottom: 15,
-              width: "90%",
-              borderRadius: 2,
             }}
-          ></View>
-        </View>
-        {commentList?.map((commentInfo, idx) => (
-          <CommentItem commentInfo={commentInfo} key={idx} deleteComment={deleteComment} />
-        ))}
-      </ScrollView>
-      <TextInputView>
-        {/* 오토포커스이슈 */}
-        <CommentIconView elevation={5}>
-          <Image
-            source={myImg ? { uri: myImg } : { uri: defaultImageUri }}
-            style={{ width: "100%", height: "100%", borderRadius: 45 }}
-            resizeMode="cover"
+          >
+            <View
+              style={{
+                alignItems: "center",
+                borderBottomWidth: 1.5,
+                borderBottomColor: ColorSet.navyColor(1),
+                marginBottom: 15,
+                width: "90%",
+                borderRadius: 2,
+              }}
+            ></View>
+          </View>
+          {commentList?.map((commentInfo, idx) => (
+            <CommentItem commentInfo={commentInfo} key={idx} deleteComment={deleteComment} />
+          ))}
+        </ScrollView>
+        <TextInputView>
+          {/* 오토포커스이슈 */}
+          <CommentIconView elevation={5}>
+            <Image
+              source={myImg ? { uri: myImg } : { uri: defaultImageUri }}
+              style={{ width: "100%", height: "100%", borderRadius: 45 }}
+              resizeMode="cover"
+            />
+          </CommentIconView>
+          <TextInput
+            placeholder={"댓글을 입력하세요"}
+            style={{
+              elevation: 3,
+              fontFamily: "HyeminRegular",
+              fontSize: 18,
+            }}
+            value={writedText}
+            onChangeText={changeText}
+            onSubmitEditing={submit}
           />
-        </CommentIconView>
-        <TextInput
-          placeholder={"댓글을 입력하세요"}
-          style={{
-            elevation: 3,
-            fontFamily: "HyeminRegular",
-            fontSize: 18,
-          }}
-          value={writedText}
-          onChangeText={changeText}
-          onSubmitEditing={submit}
-        />
-      </TextInputView>
-    </Body>
+        </TextInputView>
+      </Body>
+    </Modal>
   )
 }
 
