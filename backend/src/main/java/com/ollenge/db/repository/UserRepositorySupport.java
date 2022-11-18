@@ -87,11 +87,10 @@ public class UserRepositorySupport {
                 .where(qParticipation.user.eq(user), formattedEndDate.lt(formatedToday) ,challengPreseteNotNull(isRankingChallenge))
                 .fetch();
         List<UserCompletedChallengeData> participatedChallengeList = new ArrayList<>();
-        for (Participation item : participationList) {
-            Challenge challenge = item.getChallenge();
-            int feedCnt = item.getFeedCnt();
-            ChallengeResult challengeResult = item.getChallenge().getChallengeResult();
-            participatedChallengeList.add(UserCompletedChallengeData.of(challenge, feedCnt, challengeResult));
+        for (Participation participation : participationList) {
+            Challenge challenge = participation.getChallenge();
+            ChallengeResult challengeResult = participation.getChallenge().getChallengeResult();
+            participatedChallengeList.add(UserCompletedChallengeData.of(challenge, participation, challengeResult));
         }
         return participatedChallengeList;
     }
