@@ -23,7 +23,6 @@ const ArrestModal = (props) => {
           reportedUserId: feedUserId,
           reportContent: arrestText,
         })
-        console.log(res)
         setArrestState(arrestState + 1)
       } else {
         setArrestState(arrestState + 1)
@@ -54,7 +53,13 @@ const ArrestModal = (props) => {
                 </FirstTextView>
                 <TextView>
                   <TextInput
-                    style={{ width: "80%", height: 50, padding: 5 }}
+                    style={{
+                      width: "80%",
+                      height: 50,
+                      padding: 5,
+                      fontFamily: "HyeminRegular",
+                      fontSize: 17,
+                    }}
                     underlineColorAndroid={ColorSet.navyColor(1)}
                     onChangeText={(e) => {
                       setArrestText(e)

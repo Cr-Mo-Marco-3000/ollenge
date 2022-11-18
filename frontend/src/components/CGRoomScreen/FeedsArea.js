@@ -18,7 +18,7 @@ const FeedsArea = (props) => {
 
   const flatListRef = useRef()
 
-  // 내 Id와 같으면 신고하기 벝느 머시멍ㄱ
+  // 내 Id와 같으면 신고하기 버튼용
   const myId = authCtx.userInfo.userId
 
   const [feedsListShowed, setFeedsListShowed] = useState([])

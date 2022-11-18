@@ -235,7 +235,7 @@ const FeedImage = styled.View`
 const TextRow = styled.View`
   padding-left: 5px;
   padding-right: 5px;
-  height: 40px;
+  height: 50px;
   width: 100%;
   justify-content: space-between;
 `

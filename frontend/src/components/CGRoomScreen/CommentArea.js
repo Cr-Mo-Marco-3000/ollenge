@@ -6,16 +6,21 @@ import TopMargin from "../common/TopMargin"
 import { AntDesign } from "@expo/vector-icons"
 import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext, useRef } from "react"
 import defaultImage from "../../assets/images/default-image.png"
 import CommentItem from "./CommentItem"
 import { AuthorizationInstance } from "../../api/settings"
+import { AuthContext } from "../../../store/auth-context"
 
 const instance = AuthorizationInstance()
 
 const windowWidth = Dimensions.get("window").width
 
 const CommentArea = (props) => {
+  const authCtx = useContext(AuthContext)
+
+  const myImg = authCtx.userInfo.profileImg
+
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   const openAndClose = props.openAndClose
 
@@ -30,16 +35,19 @@ const CommentArea = (props) => {
 
   const [commentList, setCommentList] = useState([])
 
-  useEffect(() => {
-    const getRes = async () => {
-      try {
-        const res = await instance.get(`/api/comment/${feedId}`)
-        const newCommentList = res.data.commentList
-        setCommentList(newCommentList)
-      } catch (error) {
-        console.log(error.response.data)
-      }
+  const scrollViewRef = useRef()
+
+  const getRes = async () => {
+    try {
+      const res = await instance.get(`/api/comment/${feedId}`)
+      const newCommentList = res.data.commentList
+      setCommentList(newCommentList)
+    } catch (error) {
+      console.log(error.response.data)
     }
+  }
+
+  useEffect(() => {
     getRes()
   }, [])
 
@@ -59,6 +67,7 @@ const CommentArea = (props) => {
         const resGet = await instance.get(`/api/comment/${feedId}`)
         const newCommentList = resGet.data.commentList
         setCommentList(newCommentList)
+        scrollViewRef.current?.scrollToEnd({ animated: true })
         setWritedText("")
       } else {
         return
@@ -66,6 +75,10 @@ const CommentArea = (props) => {
     } catch (error) {
       console.log(error.response)
     }
+  }
+
+  const deleteComment = () => {
+    getRes()
   }
 
   return (
@@ -87,6 +100,7 @@ const CommentArea = (props) => {
         style={{
           flex: 1,
         }}
+        ref={scrollViewRef}
       >
         <CommentItem commentInfo={feedInfo} />
         <ImageView>
@@ -123,15 +137,24 @@ const CommentArea = (props) => {
           ></View>
         </View>
         {commentList?.map((commentInfo, idx) => (
-          <CommentItem commentInfo={commentInfo} key={idx} />
+          <CommentItem commentInfo={commentInfo} key={idx} deleteComment={deleteComment} />
         ))}
       </ScrollView>
       <TextInputView>
         {/* 오토포커스이슈 */}
+        <CommentIconView elevation={5}>
+          <Image
+            source={myImg ? { uri: myImg } : { uri: defaultImageUri }}
+            style={{ width: "100%", height: "100%", borderRadius: 45 }}
+            resizeMode="cover"
+          />
+        </CommentIconView>
         <TextInput
           placeholder={"댓글을 입력하세요"}
           style={{
             elevation: 3,
+            fontFamily: "HyeminRegular",
+            fontSize: 18,
           }}
           value={writedText}
           onChangeText={changeText}
@@ -147,7 +170,7 @@ export default CommentArea
 const Body = styled.KeyboardAvoidingView`
   flex: 1;
   width: 100%;
-  background-color: ${ColorSet.paleBlueColor(1)};
+  background-color: ${ColorSet.paleBlueColor(0.2)};
 `
 const TopView = styled.View`
   height: 50px;
@@ -202,15 +225,23 @@ const TextInputView = styled.View`
   bottom: 0;
   width: 100%;
   height: 70px;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 `
+const CommentIconView = styled.View`
+  width: ${windowWidth * 0.9 * 0.15}px;
+  height: ${windowWidth * 0.9 * 0.15}px;
+  border-radius: 45px;
+  margin-right: 5px;
+`
 
 const TextInput = styled.TextInput`
-  height: 50px;
-  width: 95%;
+  height: 45px;
+  width: ${windowWidth * 0.9 * 0.83 - 10}px;
   border-radius: 10px;
   background-color: white;
   padding-left: 15px;
   padding-right: 15px;
+  margin-left: 5px;
 `
