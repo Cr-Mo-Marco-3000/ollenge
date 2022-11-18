@@ -36,8 +36,11 @@ function CGRoomScreen() {
 
   useEffect(() => {
     setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
+    // console.log(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
     setIsTime(CGAuthTimeFlag(roomInfo.startTime, roomInfo.endTime))
   }, [roomInfo])
+
+  console.log(isStarted, isTime)
 
   useEffect(() => {
     setIsAuth(roomCtx.isAuthed)
