@@ -43,7 +43,7 @@ export const UserCard = ({ user, isMe = false }) => {
             }}
             resizeMode="cover"
             source={
-              user.profileImg === null
+              (user.profileImg === "") | (user.profileImg === null)
                 ? require("../../assets/images/default-image.png")
                 : { uri: user.profileImg }
             }

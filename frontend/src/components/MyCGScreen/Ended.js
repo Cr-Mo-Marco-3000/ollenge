@@ -8,101 +8,23 @@ import {
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 import { DataTable } from "react-native-paper"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { AuthorizationInstance } from "../../api/settings"
 import NoContent from "./NoContent"
+import { RoomContext } from "../../../store/room-context"
 
-const Ended = () => {
+const Ended = ({ navigation }) => {
   const instance = AuthorizationInstance()
 
   const [rankingCGList, setRankingCGList] = useState([])
   const [userCGList, setUserCGList] = useState([])
   const [totalChallengeInfo, setTotalChallengeInfo] = useState({})
-
   useEffect(() => {
     const getList = async () => {
       const res = await instance.get("/api/user/completed")
 
       const newRCGList = res.data.rankingChallengeList
       const newUCGList = res.data.userChallengeList
-
-      // const newRCGList = [
-      //   {
-      //     startDate: "2022-01-01",
-      //     endDate: "2022-01-31",
-      //     myFeedCnt: 13,
-      //     challengeId: 23,
-      //     challengeImg: null,
-      //     challengeTopic: "하루 3잔 물마시기",
-      //     challengeScore: 1550,
-      //     challengeRank: 2,
-      //     totalCnt: 7,
-      //     peopleCnt: 5,
-      //   },
-      //   {
-      //     startDate: "2022-02-01",
-      //     endDate: "2022-02-28",
-      //     myFeedCnt: 26,
-      //     challengeId: 23,
-      //     challengeImg: null,
-      //     challengeTopic: "하루 3잔 물마시기",
-      //     challengeScore: 750,
-      //     challengeRank: 4,
-      //     totalCnt: 7,
-      //     peopleCnt: 4,
-      //   },
-      //   {
-      //     startDate: "2022-04-01",
-      //     endDate: "2022-04-30",
-      //     myFeedCnt: 15,
-      //     challengeId: 23,
-      //     challengeImg: null,
-      //     challengeTopic: "하루 3잔 물마시기",
-      //     challengeScore: 1350,
-      //     challengeRank: 3,
-      //     totalCnt: 7,
-      //     peopleCnt: 10,
-      //   },
-      // ]
-
-      // const newUCGList = [
-      //   {
-      //     startDate: "2022-01-01",
-      //     endDate: "2022-01-31",
-      //     myFeedCnt: 13,
-      //     challengeId: 23,
-      //     challengeImg: null,
-      //     challengeTopic: "하루 3잔 물마시기",
-      //     challengeScore: 420,
-      //     challengeRank: null,
-      //     totalCnt: null,
-      //     peopleCnt: 8,
-      //   },
-      //   {
-      //     startDate: "2022-02-01",
-      //     endDate: "2022-02-28",
-      //     myFeedCnt: 26,
-      //     challengeId: 23,
-      //     challengeImg: null,
-      //     challengeTopic: "하루 3잔 물마시기",
-      //     challengeScore: 420,
-      //     challengeRank: null,
-      //     totalCnt: null,
-      //     peopleCnt: 4,
-      //   },
-      //   {
-      //     startDate: "2022-04-01",
-      //     endDate: "2022-04-30",
-      //     myFeedCnt: 15,
-      //     challengeId: 23,
-      //     challengeImg: null,
-      //     challengeTopic: "하루 3잔 물마시기",
-      //     challengeScore: 1350,
-      //     challengeRank: null,
-      //     totalCnt: null,
-      //     peopleCnt: 10,
-      //   },
-      // ]
 
       // 총 참여 챌린지 수
       let participateNumber = 0
@@ -157,6 +79,14 @@ const Ended = () => {
     }
     getList()
   }, [])
+
+  const roomCtx = useContext(RoomContext)
+
+  const pressHandler = (id) => {
+    roomCtx.getRoomInfo(id)
+    roomCtx.getUserList(id)
+    navigation.push("CGRoom")
+  }
 
   const windowWidth = Dimensions.get("window").width
 
@@ -280,7 +210,13 @@ const Ended = () => {
               </DivideView>
             ) : null}
             {rankingCGList.map((challengeInfo, idx) => (
-              <EndedCard key={idx} challengeInfo={challengeInfo} />
+              <EndedCard
+                key={idx}
+                challengeInfo={challengeInfo}
+                func={() => {
+                  pressHandler(challengeInfo.challengeId)
+                }}
+              />
             ))}
             {userCGList.length ? (
               <DivideView>
@@ -291,7 +227,13 @@ const Ended = () => {
               </DivideView>
             ) : null}
             {userCGList.map((challengeInfo, idx) => (
-              <EndedCard key={idx} challengeInfo={challengeInfo} />
+              <EndedCard
+                key={idx}
+                challengeInfo={challengeInfo}
+                func={() => {
+                  pressHandler(challengeInfo.challengeId)
+                }}
+              />
             ))}
           </View>
         </ScrollBackground>

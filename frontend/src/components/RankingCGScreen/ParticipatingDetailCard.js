@@ -1,6 +1,5 @@
 import React from "react-native"
-import { View, Dimensions, Text } from "react-native"
-import { Pressable } from "react-native"
+import { View, Dimensions, Image } from "react-native"
 import AppCard from "../common/AppCard"
 
 import styled from "styled-components"
@@ -16,35 +15,24 @@ const screenWidth = Dimensions.get("window").width
 const screenHeight = Dimensions.get("window").height
 
 export default function ParticipatingDetailCard(props) {
-  const navigation = useNavigation()
   const index = props.index
   const arrayLength = props.arrayLength
 
   // 챌린지 정보
   const challengeInfo = props.challengeInfo
-
   // 프리셋 주제, 상세정보
   const presetTopic = challengeInfo.presetTopic
   const presetDescription = challengeInfo.presetDescription
-
+  const presetImg = challengeInfo.presetImg
   // 날짜관련
   const startDate = props.startDate.replace(/-/g, ".").slice(2)
   const endDate = props.endDate.replace(/-/g, ".").slice(2)
   const yoilList = ["일", "월", "화", "수", "목", "금", "토", "일"]
   const startYoil = yoilList[new Date(props.startDate).getDay()]
   const endYoil = yoilList[new Date(props.endDate).getDay()]
-
   // 시간관련
   const startTime = challengeInfo.startTime
   const endTime = challengeInfo.endTime
-
-  //
-
-  // const presetObject = {
-  //   1: () => <Images.SunIcon left={-30} top={-20} />,
-  //   2: () => <Images.NotebookIcon left={30} top={-10} />,
-  //   3: () => <Images.GymIcon left={10} top={-50} />,
-  // }
 
   // 텍스트
   let authText = ""
@@ -52,19 +40,19 @@ export default function ParticipatingDetailCard(props) {
   if (challengeInfo.authType === "feature") {
     authText = (
       <AppText pxSize={17} align="left">
-        헬스 기구, 운동 용품 등을 사진을 통해 인식하여 당일 달성 여부를 판단합니다.
+        미리 등록해 놓은 이미지와 동일한 사진을 찍으면 당일 인증이 완료됩니다.
       </AppText>
     )
   } else if (challengeInfo.authType === "classifi" || challengeInfo.authType === "class") {
     authText = (
       <AppText pxSize={17} align="left">
-        헬스 기구, 운동 용품 등을 사진을 통해 인식하여 당일 달성 여부를 판단합니다.
+        제시된 단어에 해당하는 이미지를 찍으면 당일 인증이 완료됩니다.
       </AppText>
     )
   } else if (challengeInfo.authType === "none") {
     authText = (
       <AppText pxSize={17} align="left">
-        헬스 기구, 운동 용품 등을 사진을 통해 인식하여 당일 달성 여부를 판단합니다.
+        임의의 사진을 찍으면 당일 인증이 완료됩니다.
       </AppText>
     )
   }
@@ -88,7 +76,6 @@ export default function ParticipatingDetailCard(props) {
           ? props.challengeInfo.classificationType.classificationTypeId
           : "",
     }
-    console.log(info)
     props.makeChallenge(info)
   }
 
@@ -123,8 +110,12 @@ export default function ParticipatingDetailCard(props) {
                 height: "93%",
               }}
             >
-              <View>
-                <AppBoldText lineNumber={1} color="orange" pxSize={30}>
+              <View
+                style={{
+                  paddingHorizontal: 12,
+                }}
+              >
+                <AppBoldText align={"left"} lineNumber={1} color="orange" pxSize={30}>
                   {presetTopic}
                 </AppBoldText>
               </View>
@@ -135,7 +126,7 @@ export default function ParticipatingDetailCard(props) {
                 }}
               >
                 <View>
-                  <AppBoldText lineNumber={2} pxSize={14}>
+                  <AppBoldText align={"left"} lineNumber={2} pxSize={14}>
                     {presetDescription}
                   </AppBoldText>
                 </View>
@@ -219,10 +210,13 @@ export default function ParticipatingDetailCard(props) {
               >
                 <View
                   style={{
+                    paddingHorizontal: 12,
                     flex: 2,
                   }}
                 >
-                  <AppBoldText pxSize={22}>인증 방식</AppBoldText>
+                  <AppBoldText align={"left"} pxSize={22}>
+                    인증 방식
+                  </AppBoldText>
                 </View>
                 <MethodRow>
                   <View
@@ -245,12 +239,15 @@ export default function ParticipatingDetailCard(props) {
                         justifyContent: "center",
                       }}
                     >
-                      <AppBoldText size={2}>사진 인증</AppBoldText>
+                      <AppBoldText align={"left"} size={2}>
+                        사진 인증
+                      </AppBoldText>
                     </View>
                   </View>
                   <View
                     style={{
                       flex: 7,
+                      zIndex: 10,
                     }}
                   >
                     {authText}
@@ -260,8 +257,18 @@ export default function ParticipatingDetailCard(props) {
             </View>
             {/* 이미지 구획 */}
             <ImageView>
-              {/* {presetObject[challengePresetID]()} */}
-              <Images.SunIcon left={-30} top={-20} />
+              <Image
+                source={{ uri: presetImg }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  opacity: 0.5,
+                  position: "absolute",
+                  zIndex: -10,
+                  right: "-20%",
+                }}
+                resizeMode={"contain"}
+              ></Image>
             </ImageView>
             {/* 버튼구획 */}
             <ButtonView>
@@ -346,7 +353,6 @@ const ImageView = styled.View`
   width: 250px;
   height: 200px;
   align-items: flex-end;
-  /* background-color: red; */
   bottom: 0;
   right: 0;
   overflow: hidden;

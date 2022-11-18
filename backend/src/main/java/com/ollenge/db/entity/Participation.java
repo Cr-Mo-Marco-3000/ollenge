@@ -35,4 +35,7 @@ public class Participation {
 
     @OneToOne(mappedBy = "participation")
     AuthStandardImg authStandardImg;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    boolean checkedFlag;
 }

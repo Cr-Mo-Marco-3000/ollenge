@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 3,
     alignItems: "center",
-    paddingHorizontal: "2%",
+    paddingRight: "5%",
   },
   profileImgBox: {
     width: RFPercentage(9),

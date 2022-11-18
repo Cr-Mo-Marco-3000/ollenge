@@ -162,7 +162,14 @@ public class ChallengeService {
             AuthClassification authClassification = authClassificationRepository.findByChallenge(challenge);
             classificationType = authClassification.getClassificationType();
         }
-        return ChallengeInfoData.of(challenge, classificationType);
+
+        Boolean checkedFlag = null;
+        List<Participation> participationList = participationRepository.findByChallengeAndUser(challenge, user);
+        if(!participationList.isEmpty()) {
+            checkedFlag = participationList.get(0).isCheckedFlag();
+        }
+
+        return ChallengeInfoData.of(challenge, classificationType, checkedFlag);
     }
 
     public List<ChallengeStateData> getChallengeState(Authentication authentication, long challengeId) throws InvalidChallengeIdException, InvalidUserException {

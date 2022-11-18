@@ -119,8 +119,9 @@ function MyCGListScreen() {
           <Header>
             <HeaderTextView>
               <HeaderTextColumn>
-                <AppBoldText>내 챌린지</AppBoldText>
+                <AppBoldText align={"left"}>내 챌린지</AppBoldText>
               </HeaderTextColumn>
+              <HeaderTextColumn></HeaderTextColumn>
               <HeaderTextColumn></HeaderTextColumn>
             </HeaderTextView>
           </Header>

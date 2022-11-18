@@ -53,13 +53,12 @@ export default function EndedCard(props) {
           width: "90%",
         }}
       >
-        <AppCard>
+        <AppCard func={props.func}>
           {/* 상단  */}
           <View
             style={{
               flex: 8.5,
               flexDirection: "row",
-              // backgroundColor: "red",
               justifyContent: "center",
               alignItems: "center",
             }}

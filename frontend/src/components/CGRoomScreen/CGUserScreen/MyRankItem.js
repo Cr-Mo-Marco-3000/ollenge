@@ -75,13 +75,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 3,
     alignItems: "center",
-    paddingHorizontal: "3%",
+    paddingHorizontal: "5%",
   },
   profileImgBox: {
     width: RFPercentage(10),
     height: RFPercentage(10),
-    paddingVertical: "2%",
-    paddingHorizontal: "2%",
+    padding: "2%",
   },
   bedgeImgBox: {
     width: RFPercentage(10),

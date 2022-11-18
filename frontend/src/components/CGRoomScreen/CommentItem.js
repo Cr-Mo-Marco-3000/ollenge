@@ -1,9 +1,13 @@
 import React from "react-native"
 import styled from "styled-components"
-import { View, Image, Dimensions } from "react-native"
+import { useContext, useState } from "react"
+import { View, Image, Dimensions, Text } from "react-native"
 import AppBoldText from "../common/AppBoldText"
 import AppText from "../common/AppText"
 import defaultImage from "../../assets/images/default-image.png"
+import { AuthContext } from "../../../store/auth-context"
+import { CrossIcon } from "../../assets/images"
+import DeleteCommentModal from "./DeleteCommentModal"
 
 const windowWidth = Dimensions.get("window").width
 
@@ -16,8 +20,48 @@ const CommentItem = (props) => {
   const createdDatetime = props.commentInfo.createdDatetime
   const commentContent = props.commentInfo.commentContent
   const feedImg = props.commentInfo.feedImg
+  const commentUserId = props.commentInfo.userId
+  const commentId = props.commentInfo.commentId
+  //
+  const authCtx = useContext(AuthContext)
+  const myUserId = authCtx.userInfo.userId
+
+  const date = {
+    year: createdDatetime.slice(0, 4),
+    month: createdDatetime.slice(5, 7),
+    day: createdDatetime.slice(8, 10),
+    hour: createdDatetime.slice(11, 13),
+    minute: createdDatetime.slice(14, 16),
+  }
+  // 시간 설정
+  const intHour = parseInt(date.hour)
+
+  let morningAfternoon = "오전"
+
+  if (intHour === 0) {
+    date.hour = "12"
+  } else if (12 === intHour) {
+    morningAfternoon = "오후"
+  } else if (12 < intHour) {
+    morningAfternoon = "오후"
+    date.hour = (intHour - 12).toString()
+  }
+
+  const [openCancelModal, setOpenCancelModal] = useState(false)
+
+  const deleteComment = props.deleteComment
+
   return (
     <CommentBody>
+      {openCancelModal && (
+        <DeleteCommentModal
+          commentId={commentId}
+          openCancelModal={() => {
+            setOpenCancelModal(!openCancelModal)
+          }}
+          deleteComment={deleteComment}
+        />
+      )}
       <CommentBodyInner>
         {/* 좌측 */}
         <LeftColumn>
@@ -31,32 +75,32 @@ const CommentItem = (props) => {
         </LeftColumn>
         {/* 우측 */}
         <RightColumn>
-          <CommentInfoRow>
-            <View
-              style={{
-                alignItems: "flex-start",
-              }}
-            >
-              <AppBoldText lineNumber={1} pxSize={20}>
-                {nickname}
-              </AppBoldText>
-              <AppBoldText color="lightBlue" lineNumber={1} pxSize={15}>
-                {createdDatetime}
-              </AppBoldText>
-            </View>
-            {!feedImg && (
-              <View
-                style={{
-                  marginTop: 5,
+          <CommentRow>
+            {!feedImg ? (
+              <AppText align="left" pxSize={14}>
+                <MiddleText>{nickname} </MiddleText>
+                {commentContent}
+              </AppText>
+            ) : (
+              <AppText align="left" pxSize={14}>
+                <MiddleText>{nickname} </MiddleText>
+              </AppText>
+            )}
+          </CommentRow>
+          <DateTimeRow>
+            <AppText pxSize={13} color={"lightBlue"}>
+              {date.year}년 {date.month}월 {date.day}일 {morningAfternoon} {date.hour}:{date.minute}
+            </AppText>
+            {!feedImg && myUserId === commentUserId && (
+              <CancelIconView
+                onPress={() => {
+                  setOpenCancelModal(!openCancelModal)
                 }}
               >
-                <AppText align={"left"} size={2}>
-                  {commentContent}
-                </AppText>
-              </View>
+                <CrossIcon />
+              </CancelIconView>
             )}
-          </CommentInfoRow>
-          <View></View>
+          </DateTimeRow>
         </RightColumn>
       </CommentBodyInner>
     </CommentBody>
@@ -80,22 +124,50 @@ const CommentBodyInner = styled.View`
 `
 
 const CommentIconView = styled.View`
-  width: ${windowWidth * 0.9 * 0.2}px;
-  height: ${windowWidth * 0.9 * 0.2}px;
+  width: ${windowWidth * 0.9 * 0.15}px;
+  height: ${windowWidth * 0.9 * 0.15}px;
+  border-radius: 45px;
 `
+
 const LeftColumn = styled.View`
-  width: ${windowWidth * 0.9 * 0.2 + 10}px;
+  width: ${windowWidth * 0.9 * 0.2}px;
   align-items: center;
   justify-content: flex-start;
 `
 
 const RightColumn = styled.View`
-  width: ${windowWidth * 0.9 * 0.8 - 10}px;
+  padding-left: 3px;
+  padding-right: 3px;
+  width: ${windowWidth * 0.9 * 0.8}px;
   justify-content: center;
-  /* background-color: red; */
 `
 
-const CommentInfoRow = styled.View`
+const CommentRow = styled.View`
   width: 100%;
   align-items: flex-start;
+  margin-bottom: 5px;
+`
+
+const MiddleText = styled.Text`
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 5px;
+  margin-top: 5px;
+`
+
+const DateTimeRow = styled.View`
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+const CancelIconView = styled.Pressable`
+  margin-left: 7px;
+  height: 12px;
+  width: 12px;
+  justify-content: center;
+  align-items: center;
+  bottom: 1px;
+  opacity: 0.7;
 `

@@ -34,30 +34,6 @@ const Challenging = ({ navigation }) => {
     return focusHandler
   }, [navigation])
 
-  // const tempRankingCGList = [
-  //   {
-  //     challengeId: 34,
-  //     challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     challengeName: "찬호와 아이들",
-  //     challengeTopic: "하루 3잔 물마시기",
-  //     startDate: new Date(2022, 10, 5),
-  //     endDate: new Date(2022, 10, 10),
-  //     peopleCnt: 4,
-  //   },
-  // ]
-
-  // const tempUserCGList = [
-  //   {
-  //     challengeId: 35,
-  //     // challengeImg: "https://homybk.s3.ap-northeast-2.amazonaws.com/cat.jpg",
-  //     challengeName: "찬호와 아이들",
-  //     challengeTopic: "하루 3잔 물마시기",
-  //     startDate: new Date(2022, 10, 5),
-  //     endDate: new Date(2022, 10, 10),
-  //     peopleCnt: 4,
-  //   },
-  // ]
-
   // 이미 나열되어 있는 리스트를 눌러 CGRoom에 진입하는 경우
   const roomCtx = useContext(RoomContext)
 

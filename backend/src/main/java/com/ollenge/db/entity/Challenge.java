@@ -79,4 +79,5 @@ public class Challenge {
 
     @OneToMany(mappedBy = "challenge")
     List<Participation> participation;
+
 }
