@@ -169,6 +169,7 @@ const Ended = ({ navigation, rankingCGList, userCGList, totalChallengeInfo }) =>
               />
             ))}
           </View>
+          <UnderMargin></UnderMargin>
         </ScrollBackground>
       ) : (
         <NoContent message={"종료된"} />
@@ -194,4 +195,9 @@ export default Ended
 const IconView = styled.View`
   width: 15%;
   height: 50px;
+`
+
+const UnderMargin = styled.View`
+  width: 100%;
+  height: 70px;
 `

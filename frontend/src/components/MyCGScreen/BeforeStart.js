@@ -119,6 +119,7 @@ const BeforeStart = ({ navigation }) => {
               }}
             />
           ))}
+          <UnderMargin></UnderMargin>
         </ScrollBackground>
       ) : (
         <NoContent message={"시작 전인"} />
@@ -148,4 +149,8 @@ const IconView = styled.View`
 
 const ChallengingBody = styled.View`
   height: 100%;
+`
+const UnderMargin = styled.View`
+  width: 100%;
+  height: 100px;
 `
