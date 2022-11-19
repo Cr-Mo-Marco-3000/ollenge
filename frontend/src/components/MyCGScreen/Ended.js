@@ -8,12 +8,18 @@ import {
   NormalChallengeIcon,
 } from "../../assets/images/MyCGScreen/MyCGScreen"
 import { DataTable } from "react-native-paper"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import NoContent from "./NoContent"
 import { RoomContext } from "../../../store/room-context"
 
-const Ended = ({ navigation, rankingCGList, userCGList, totalChallengeInfo }) => {
+const Ended = ({ navigation, rankingCGList, userCGList, totalChallengeInfo, getList }) => {
   const roomCtx = useContext(RoomContext)
+  useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      getList()
+    })
+    return focusHandler
+  }, [navigation])
 
   const pressHandler = (id) => {
     roomCtx.getRoomInfo(id)

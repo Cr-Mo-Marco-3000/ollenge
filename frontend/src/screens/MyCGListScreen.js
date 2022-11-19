@@ -51,65 +51,66 @@ function MyCGListScreen() {
   }, [rankingCGList, userCGList])
 
   useEffect(() => {
-    const getList = async () => {
-      const res = await instance.get("/api/user/completed")
-
-      const newRCGList = res.data.rankingChallengeList
-      const newUCGList = res.data.userChallengeList
-
-      // 총 참여 챌린지 수
-      let participateNumber = 0
-
-      participateNumber += newRCGList.length
-      participateNumber += newUCGList.length
-
-      // 평균 달성률
-      let averageSuccess = newRCGList.reduce((pre, cur) => {
-        const days =
-          (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
-            1000 /
-            60 /
-            60 /
-            24 +
-          1
-        return pre + cur.myFeedCnt / days
-      }, 0)
-
-      averageSuccess = newUCGList.reduce((pre, cur) => {
-        const days =
-          (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
-            1000 /
-            60 /
-            60 /
-            24 +
-          1
-        return pre + cur.myFeedCnt / days
-      }, averageSuccess)
-
-      averageSuccess = Math.round((averageSuccess / participateNumber) * 100 * 100) / 100
-      let totalScore = newRCGList.reduce((pre, cur) => {
-        const score = cur.myFeedCnt * 10
-        return pre + score
-      }, 0)
-
-      totalScore = newUCGList.reduce((pre, cur) => {
-        const score = cur.myFeedCnt * 10
-        return pre + score
-      }, totalScore)
-
-      // 챌린지 참여 정보
-      const newTotalChallengeInfo = {
-        participateNumber: participateNumber,
-        averageSuccess: averageSuccess,
-        totalScore: totalScore,
-      }
-
-      setRankingCGList(newRCGList)
-      setUserCGList(newUCGList)
-      setTotalChallengeInfo(newTotalChallengeInfo)
-    }
     getList()
   }, [])
+
+  const getList = async () => {
+    const res = await instance.get("/api/user/completed")
+
+    const newRCGList = res.data.rankingChallengeList
+    const newUCGList = res.data.userChallengeList
+
+    // 총 참여 챌린지 수
+    let participateNumber = 0
+
+    participateNumber += newRCGList.length
+    participateNumber += newUCGList.length
+
+    // 평균 달성률
+    let averageSuccess = newRCGList.reduce((pre, cur) => {
+      const days =
+        (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
+          1000 /
+          60 /
+          60 /
+          24 +
+        1
+      return pre + cur.myFeedCnt / days
+    }, 0)
+
+    averageSuccess = newUCGList.reduce((pre, cur) => {
+      const days =
+        (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
+          1000 /
+          60 /
+          60 /
+          24 +
+        1
+      return pre + cur.myFeedCnt / days
+    }, averageSuccess)
+
+    averageSuccess = Math.round((averageSuccess / participateNumber) * 100 * 100) / 100
+    let totalScore = newRCGList.reduce((pre, cur) => {
+      const score = cur.myFeedCnt * 10
+      return pre + score
+    }, 0)
+
+    totalScore = newUCGList.reduce((pre, cur) => {
+      const score = cur.myFeedCnt * 10
+      return pre + score
+    }, totalScore)
+
+    // 챌린지 참여 정보
+    const newTotalChallengeInfo = {
+      participateNumber: participateNumber,
+      averageSuccess: averageSuccess,
+      totalScore: totalScore,
+    }
+
+    setRankingCGList(newRCGList)
+    setUserCGList(newUCGList)
+    setTotalChallengeInfo(newTotalChallengeInfo)
+  }
 
   const onStateChange = () => {
     setfabButton(!fabButton)
@@ -250,6 +251,7 @@ function MyCGListScreen() {
                   userCGList={userCGList}
                   totalChallengeInfo={totalChallengeInfo}
                   navigation={navigation}
+                  getList={getList}
                 />
               )}
             </Tab.Screen>
