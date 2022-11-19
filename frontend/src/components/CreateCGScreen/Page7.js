@@ -33,7 +33,6 @@ const Modal = ({ title, value, valueHandler, setPick }) => {
         <View
           style={{
             width: dw * 0.8,
-            height: dw * 0.8,
             backgroundColor: "white",
             borderRadius: 10,
             padding: 36,
@@ -41,19 +40,39 @@ const Modal = ({ title, value, valueHandler, setPick }) => {
             justifyContent: "space-between",
           }}
         >
-          <Text style={{ ...fontStyles.HyeminBold({ size: 8 }), marginBottom: 18 }}>{title}</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              marginBottom: 32,
+            }}
+          >
+            <View>
+              <Image
+                style={{ width: dw * 0.11, height: dw * 0.11 }}
+                source={
+                  title === "보상 입력"
+                    ? require("../../assets/images/thumb-up.png")
+                    : require("../../assets/images/thumb-down.png")
+                }
+              />
+            </View>
+            <View flex={1} style={{ alignItems: "flex-start", paddingHorizontal: dw * 0.05 }}>
+              <Text style={{ ...fontStyles.HyeminBold({ size: dw * 0.02 }) }}>{title}</Text>
+            </View>
+          </View>
           <TextInput
             multiline
-            numberOfLines={6}
+            numberOfLines={1}
             maxLength={50}
             style={{
               ...fontStyles.HyeminBold({ size: 6, color: "black" }),
               width: "100%",
-              flex: 1,
-              padding: 24,
-              borderWidth: 2,
+              height: 36,
+              borderBottomWidth: 4,
+              borderBottomColor: ColorSet.navyColor(1),
               marginBottom: 18,
-              borderRadius: 10,
               textAlign: "left",
             }}
             value={value}

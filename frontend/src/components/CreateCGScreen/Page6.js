@@ -5,7 +5,7 @@ import PageBase, { fontStyles } from "./PageBase"
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker"
 import ColorSet from "../../style/ColorSet"
 import AppButton from "../common/AppButton"
-import { dh } from "../../style/DeviceInfo"
+import { dh, dw } from "../../style/DeviceInfo"
 
 const formChanger = (dateData) => {
   const hour = "0" + dateData.getHours()
@@ -73,6 +73,7 @@ export default function Page6({ info, setInfo, toNext, cancelAll }) {
                 handler={() => showTimepicker("start")}
                 backColor="navy"
                 title={"시작 시간 설정"}
+                pxSize={dw * 0.05}
               />
             </View>
             <View style={{ flex: 1, height: 40, margin: 10 }}>
@@ -80,6 +81,7 @@ export default function Page6({ info, setInfo, toNext, cancelAll }) {
                 handler={() => showTimepicker("end")}
                 backColor="navy"
                 title={"종료 시간 설정"}
+                pxSize={dw * 0.05}
               />
             </View>
           </View>
