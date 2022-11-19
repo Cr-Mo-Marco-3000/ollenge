@@ -1,6 +1,15 @@
 import React, { useContext, useEffect, useState } from "react"
 
-import { View, StyleSheet, Pressable, Image, TextInput, Alert, Keyboard } from "react-native"
+import {
+  View,
+  StyleSheet,
+  Pressable,
+  Image,
+  TextInput,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+} from "react-native"
 import { useHeaderHeight } from "@react-navigation/elements"
 import { Button } from "react-native-paper"
 import * as ImagePicker from "expo-image-picker"
@@ -127,7 +136,7 @@ function AuthScreen({ route }) {
   }
 
   return (
-    <View style={styles.rootScreen}>
+    <KeyboardAvoidingView style={styles.rootScreen} behavior={"height"}>
       <View style={{ height: headerHight }} />
       {loading && <Loader />}
       {showKey === false && (
@@ -175,7 +184,7 @@ function AuthScreen({ route }) {
           }}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 export default AuthScreen
