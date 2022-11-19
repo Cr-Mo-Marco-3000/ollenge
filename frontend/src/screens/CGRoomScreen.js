@@ -15,7 +15,6 @@ import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 import FeedsArea from "../components/CGRoomScreen/FeedsArea"
 import EndCGModal from "../components/CGRoomScreen/EndCGModal"
-import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
@@ -31,6 +30,7 @@ function CGRoomScreen() {
   const [isTime, setIsTime] = useState("")
   const [visible, setVisible] = useState()
 
+  console.log(isStarted)
   const hideModal = function () {
     setVisible(false)
   }

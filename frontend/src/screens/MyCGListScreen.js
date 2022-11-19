@@ -31,6 +31,14 @@ function MyCGListScreen() {
 
   const instance = AuthorizationInstance()
 
+  const roomCtx = useContext(RoomContext)
+  useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      roomCtx.resetRoomData()
+    })
+    return focusHandler
+  }, [navigation])
+
   useEffect(() => {
     let temp = false
     for (const challenge of rankingCGList) {
@@ -119,7 +127,6 @@ function MyCGListScreen() {
   const openAndClose = () => {
     setShowCodeInput(!showCodeInput)
   }
-  const roomCtx = useContext(RoomContext)
 
   // 참여하기 토글에서 버튼을 눌러 날아가는 경우
   const joinChallenge = async () => {

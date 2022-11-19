@@ -15,6 +15,7 @@ export const RoomContext = createContext({
   getUserList: (challengeId) => {},
   getTodayAuth: (challengeId) => {},
   getImgResist: (challengeId) => {},
+  resetRoomData: () => {},
 })
 
 function RoomContextProvider({ children }) {
@@ -68,6 +69,10 @@ function RoomContextProvider({ children }) {
       .catch((err) => console.log(err))
   }
 
+  const resetRoom = function () {
+    setCGinfo(new Object())
+  }
+
   const value = {
     roomInfo: info,
     userList: user,
@@ -78,6 +83,7 @@ function RoomContextProvider({ children }) {
     getUserList: getUser,
     getTodayAuth: getAuth,
     getImgResist: getResist,
+    resetRoomData: resetRoom,
   }
 
   return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>
