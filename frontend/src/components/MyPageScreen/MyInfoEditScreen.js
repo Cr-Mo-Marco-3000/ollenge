@@ -65,7 +65,6 @@ function MyInfoEditScreen({ userInfo }) {
       }
     }
     if (data) {
-      console.log(data)
       instance
         .patch("/api/user", data)
         .then((res) => {

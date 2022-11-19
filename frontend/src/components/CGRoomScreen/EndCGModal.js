@@ -20,8 +20,6 @@ function EndCGModal({ visible, hideModal }) {
   const animation = useRef(null)
   const instance = AuthorizationInstance()
   const closeModal = function () {
-    7
-    console.log(roomInfo.challengeId)
     instance
       .patch("/api/participation/flag", { challengeId: roomInfo.challengeId })
       .then((res) => {

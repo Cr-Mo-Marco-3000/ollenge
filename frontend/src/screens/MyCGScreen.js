@@ -35,7 +35,7 @@ function MyCGScreen() {
       <Stack.Screen name="CGUser" options={{ title: "" }} component={CGUserScreen} />
       <Stack.Screen name="CGAuth" component={AuthScreen} options={{ title: "오늘 챌린지 인증" }} />
       <Stack.Screen name="CGImg" component={ResistScreen} options={{ title: "인증 이미지 입력" }} />
-      <Stack.Screen name="CGCreate" options={{ title: "" }}>
+      <Stack.Screen name="CGCreate" options={{ title: "", headerShown: false }}>
         {() => <CreateCGScreen isRank={false} />}
       </Stack.Screen>
     </Stack.Navigator>

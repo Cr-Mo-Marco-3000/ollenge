@@ -55,7 +55,6 @@ function ImageRegisterScreen() {
     await instance
       .post(urlType[methodNum], dataForm[methodNum], {})
       .then((res) => {
-        console.log(res.status, res.data.message)
         setImage(null)
         navigation.goBack("CGRoom")
       })

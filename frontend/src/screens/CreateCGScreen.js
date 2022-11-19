@@ -6,7 +6,7 @@ import { Page5, Page6, Page7, Final } from "../components/CreateCGScreen/index"
 import { useNavigation } from "@react-navigation/native"
 
 import { StyleSheet } from "react-native"
-
+import ColorSet from "../style/ColorSet"
 const Stack = createStackNavigator()
 const initialData = {
   challengeImg: "",
@@ -87,6 +87,10 @@ export default function CreateCGScreen({ isRank = false, CGInfo = initialData })
 
 const styles = StyleSheet.create({
   screenOptions: {
-    headerShown: false,
+    headerBackTitle: "",
+    headerTransparent: true,
+    headerTintColor: `${ColorSet.navyColor(100)}`,
+    headerTitleAlign: "center",
+    headerTitleStyle: { fontFamily: "HyeminBold" },
   },
 })

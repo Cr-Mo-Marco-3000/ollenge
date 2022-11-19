@@ -33,7 +33,6 @@ function TakePicture(props) {
         },
       })
         .then((res) => {
-          console.log(res.status, res.data.message)
           setStdimg(res.data.stdimg)
         })
         .catch((error) => {
@@ -79,7 +78,6 @@ function TakePicture(props) {
       data: dataForm[methodNum],
     })
       .then((res) => {
-        console.log(res.status, res.data.message)
         // 생성 완료시 빠져나가는 코드
         onChangeText("i'm feed")
         setImage(null)
