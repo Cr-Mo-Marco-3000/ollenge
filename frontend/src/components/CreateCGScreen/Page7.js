@@ -59,7 +59,7 @@ const Modal = ({ title, value, valueHandler, setPick }) => {
               />
             </View>
             <View flex={1} style={{ alignItems: "flex-start", paddingHorizontal: dw * 0.05 }}>
-              <Text style={{ ...fontStyles.HyeminBold({ size: dw * 0.02 }) }}>{title}</Text>
+              <Text style={{ ...fontStyles.HyeminBold({ size: 7 }) }}>{title}</Text>
             </View>
           </View>
           <TextInput
@@ -111,7 +111,7 @@ export default function Page7({ info, setInfo, toNext, cancelAll }) {
     <>
       <PageBase toNext={toNext} disabled={false} cancelAll={cancelAll}>
         <View flex={2} justifyContent="center">
-          <Text style={{ ...fontStyles.HyeminBold({ size: 9 }), marginBottom: 16 }}>
+          <Text style={{ ...fontStyles.HyeminBold({ size: 8 }), marginBottom: 16 }}>
             보상 / 벌칙 입력
           </Text>
           <Text style={fontStyles.Hyemin({ size: 5 })}>

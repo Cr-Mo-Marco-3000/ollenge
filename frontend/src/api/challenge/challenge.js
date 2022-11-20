@@ -55,7 +55,6 @@ const requiredList = [
 ]
 
 export const createCG = async (info) => {
-  console.log("[ChallAPI.js] 챌린지 생성 API 시작")
   const instance = await AuthorizationInstance()
   if (checkRequired(requiredList, info) !== true) {
     Alert.alert({ title: "Input Error", message: "입력하지 않은 정보가 있습니다." })
@@ -71,14 +70,9 @@ export const createCG = async (info) => {
   const res = await instance
     .post("/api/challenge", data)
     .then((res) => {
-      console.log("[ChallAPI.js] 챌린지 생성 API => 성공")
-      console.log(res.data)
       return res
     })
     .catch((err) => {
-      console.log("[ChallAPI.js] 챌린지 생성 API => 실패")
-      console.log(data)
-      console.log(err.response.data)
       return err
     })
   return res

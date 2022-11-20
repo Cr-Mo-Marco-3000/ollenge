@@ -64,7 +64,7 @@ export default function CustinTopicInput({ topic, setTopic, setClicked }) {
               backgroundColor: `${ColorSet.grayColor(1)}`,
             }}
           >
-            돌아가기
+            취소
           </Text>
         </Pressable>
       </View>

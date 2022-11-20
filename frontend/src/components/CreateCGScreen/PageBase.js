@@ -28,7 +28,7 @@ const CancelBtn = (props) => {
   )
 }
 
-const NextBtn = ({ toNext, disabled, toSubmit }) => {
+const NextBtn = ({ btnText, toNext, disabled, toSubmit }) => {
   const navigation = useNavigation()
 
   return (
@@ -40,13 +40,15 @@ const NextBtn = ({ toNext, disabled, toSubmit }) => {
         if (!disabled) {
           if (toNext === "Submit") {
             toSubmit()
+          } else if (toNext === -1) {
+            navigation.goBack()
           } else {
             navigation.navigate(toNext)
           }
         }
       }}
     >
-      <Text style={styles.NextBtnText}>{toNext !== "Submit" ? "다음" : "챌린지 생성"}</Text>
+      <Text style={styles.NextBtnText}>{toNext !== "Submit" ? btnText : "챌린지 생성"}</Text>
     </TouchableOpacity>
   )
 }
@@ -75,11 +77,26 @@ export default function PageBase(props) {
           <View style={styles.ContentArea}>{props.children}</View>
           {showKey !== true && props.hideBtn !== true && (
             <View style={styles.BottomArea}>
-              <NextBtn
-                toNext={props.toNext}
-                disabled={props.disabled}
-                toSubmit={props.toSubmit ? props.toSubmit : false}
-              />
+              <View style={{ flexDirection: "row" }}>
+                {props.toNext !== "Submit" && (
+                  <View style={{ flex: 1, marginHorizontal: 3 }}>
+                    <NextBtn
+                      toNext={-1}
+                      btnText={"이전"}
+                      disabled={false}
+                      toSubmit={props.toSubmit ? props.toSubmit : false}
+                    />
+                  </View>
+                )}
+                <View style={{ flex: 1, marginHorizontal: 3 }}>
+                  <NextBtn
+                    toNext={props.toNext}
+                    btnText={"다음"}
+                    disabled={props.disabled}
+                    toSubmit={props.toSubmit ? props.toSubmit : false}
+                  />
+                </View>
+              </View>
               {/* props.disabled */}
               <CancelBtn cancelAll={props.cancelAll} />
             </View>
@@ -94,7 +111,7 @@ export const fontStyles = StyleSheet.create({
   HyeminBold: (props) => {
     return {
       fontFamily: "HyeminBold",
-      fontSize: props.size !== undefined ? (props.size * dw) / 100 : 24,
+      fontSize: props.size !== undefined ? (props.size * dw) / 100 : dw * 0.01,
       fontWeight: props.bold !== undefined ? props.bold : "100",
       color: props.color !== undefined ? props.color : ColorSet.navyColor(1),
       textAlign: props.align ? props.align : "center",
@@ -130,11 +147,11 @@ const styles = {
   NextBtn: {
     ...baseStyle,
     borderRadius: 10,
-    padding: 12,
+    padding: dh * 0.015,
     marginBottom: dh * 0.01,
     elevation: 12,
   },
   NextBtnText: {
-    ...fontStyles.HyeminBold({ size: 6, color: "white" }),
+    ...fontStyles.HyeminBold({ size: 5, color: "white" }),
   },
 }

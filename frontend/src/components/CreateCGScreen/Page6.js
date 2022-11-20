@@ -51,7 +51,7 @@ export default function Page6({ info, setInfo, toNext, cancelAll }) {
   return (
     <>
       <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
-        <Text style={{ ...fontStyles.HyeminBold({ size: 9 }), marginBottom: dh * 0.05 }}>
+        <Text style={{ ...fontStyles.HyeminBold({ size: 8 }), marginBottom: dh * 0.05 }}>
           인증 시간 설정
         </Text>
         <Text style={fontStyles.HyeminBold({ size: 4 })}>

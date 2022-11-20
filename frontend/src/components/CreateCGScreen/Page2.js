@@ -41,10 +41,10 @@ export default function Page2({ info, setInfo, toNext, cancelAll }) {
 
   return (
     <PageBase toNext={toNext} disabled={disabled} hideBtn={clicked} cancelAll={cancelAll}>
-      <Text style={textStyles.header}>팀 목표 설정</Text>
       <KeyboardAvoidingView style={{ width: "100%", flex: 1 }} behavior="padding">
         {clicked === false && (
           <>
+            <Text style={textStyles.header}>팀 목표 설정</Text>
             <View flex={1} style={{ width: "100%", justifyContent: "center" }}>
               <Text style={textStyles.Title}>{topic}</Text>
             </View>
@@ -111,14 +111,14 @@ const frameStyles = {
     marginBottom: 12,
     backgroundColor: `${ColorSet.navyColor(1)}`,
     borderRadius: 12,
-    padding: 18,
+    padding: dh * 0.02,
     elevation: 6,
   },
 }
 
 const textStyles = {
   header: {
-    ...fontStyles.HyeminBold({ size: 9 }),
+    ...fontStyles.HyeminBold({ size: 8 }),
     textAlign: "center",
     marginBottom: 12,
   },
