@@ -60,7 +60,7 @@ function ProceedingRank({ challengeInfo, hideModal }) {
             style={styles.imgBox}
             resizeMode="cover"
           />
-          {teams && myTeam && (
+          {teams && (
             <View style={styles.rankItemContainer}>
               {teams.map((team, key) => {
                 return <TeamRankItem team={team} key={key} />
