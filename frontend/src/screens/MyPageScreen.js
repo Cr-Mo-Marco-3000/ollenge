@@ -12,6 +12,7 @@ const Stack = createNativeStackNavigator()
 
 function MyPageScreen() {
   const authCtx = useContext(AuthContext)
+  console.log(authCtx.userInfo)
   return (
     <Stack.Navigator
       screenOptions={{

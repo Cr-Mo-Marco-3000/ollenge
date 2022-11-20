@@ -15,7 +15,7 @@ import { AuthContext } from "../../../store/auth-context"
 
 function SignupScreen() {
   const instance = AuthorizationInstance()
-  const authCxt = useContext(AuthContext)
+  const authCtx = useContext(AuthContext)
   const [profileImageUri, setProfileImageUri] = useState()
   const [profileImageBase64, setProfileImageBase64] = useState()
   const [nicknameInput, setNicknameInput] = useState("")
@@ -56,7 +56,8 @@ function SignupScreen() {
       instance
         .patch("/api/user", data)
         .then((res) => {
-          authCxt.signed("signedUser")
+          authCtx.signed("signedUser")
+          authCtx.getInfo()
         })
         .catch((err) => {
           console.log(err)

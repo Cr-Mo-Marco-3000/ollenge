@@ -2,11 +2,16 @@
 
 ## 서비스 소개
 
+![Ollenge System Architecture](exec/img/Ollenge%20System%20Architecture.png)
+
+
+![Ollenge ERD](exec/img/Ollenge%20ERD.png)
+
 ### 기술 스택
 
-- Front-end : Nginx, React Native, Material UI
-- Back-end : Spring Boot, JPA, QueryDSL
-- Infra, etc : Docker, Jenkins
+- Front-end : React Native, React Native Paper, Expo
+- Back-end : Spring Boot, JPA, QueryDSL, FastAPI, OpenCV(AKAZE), Clarifai
+- Infra, etc : Nginx, Docker, Jenkins, Google Auth, AWS S3, AWS EC2
 
 ## 팀 소개
 
