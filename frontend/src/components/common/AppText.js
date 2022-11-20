@@ -33,8 +33,8 @@ pxSize={24}
 
 */
 const AppText = (props) => {
-  const selectedColor = props.color ? props.color : "navy"
-  const align = props.align ? props.align : "center"
+  const selectedColor = props.color || "navy"
+  const align = props.align || "center"
   let selectedSize = 24
 
   if (!props.size && !props.pxSize) {

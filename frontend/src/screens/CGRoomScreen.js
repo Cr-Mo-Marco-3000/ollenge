@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 
-import { View, StyleSheet, Alert, ScrollView } from "react-native"
+import { View } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { LinearGradient } from "expo-linear-gradient"
 import { Provider } from "react-native-paper"
@@ -12,14 +12,9 @@ import { RoomContext } from "../../store/room-context"
 
 import UserListTap from "../components/CGRoomScreen/UserListTap"
 import CGRoomInfoTag from "../components/CGRoomScreen/CGRoomInfoTag"
-import InviteCodeBtn from "../components/CGRoomScreen/InviteCodeBtn"
-import CGAuthBtn from "../components/CGRoomScreen/CGAuthBtn"
-import ImageResistBtn from "../components/CGRoomScreen/ImageResistBtn"
-import CGStartCount from "../components/CGRoomScreen/CGStartCount"
-import TodayAuthCount from "../components/CGRoomScreen/TodayAuthCount"
 import CGLeaveBtn from "../components/CGRoomScreen/CGLeaveBtn"
 import FeedsArea from "../components/CGRoomScreen/FeedsArea"
-import EndingReport from "../components/CGRoomScreen/EndingReport"
+import EndCGModal from "../components/CGRoomScreen/EndCGModal"
 
 function CGRoomScreen() {
   const roomCtx = useContext(RoomContext)
@@ -33,6 +28,11 @@ function CGRoomScreen() {
   const [isAuthed, setIsAuth] = useState(false)
   const [isResist, setIsResist] = useState(false)
   const [isTime, setIsTime] = useState("")
+  const [visible, setVisible] = useState()
+
+  const hideModal = function () {
+    setVisible(false)
+  }
 
   useEffect(() => {
     setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
@@ -42,10 +42,19 @@ function CGRoomScreen() {
   useEffect(() => {
     setIsAuth(roomCtx.isAuthed)
     setIsResist(roomCtx.isResist)
-  }, [roomCtx])
+  }, [roomCtx.isAuthed, roomCtx, isResist])
+
+  useEffect(() => {
+    if (Object.keys(roomInfo).length !== 0) {
+      if (isStarted == "end" && !roomInfo.isChecked) {
+        setVisible(true)
+      }
+    }
+  }, [roomInfo, isStarted])
 
   return (
     <Provider>
+      <EndCGModal visible={visible} hideModal={hideModal} />
       <LinearGradient
         style={{ flex: 1 }}
         colors={[`${ColorSet.whiteColor(1)}`, `${ColorSet.paleBlueColor(1)}`]}
@@ -53,38 +62,19 @@ function CGRoomScreen() {
         <View style={{ height: headerHight }} />
         <UserListTap navigation={navigation} />
         <CGRoomInfoTag roomInfo={roomInfo} userList={userList} />
-        <View style={styles.buttonContainer}>
-          {isStarted == "waiting" && (
-            <>
-              <CGStartCount />
-              <InviteCodeBtn inviteCode={roomInfo.inviteCode} challengeId={roomInfo.challengeId} />
-            </>
-          )}
-          {isStarted == "playing" && !isAuthed && <TodayAuthCount isTime={isTime} />}
-          {isStarted == "end" && <EndingReport />}
-          {isResist && isStarted == "playing" && isTime == "playing" && !isAuthed && (
-            <CGAuthBtn navigation={navigation} />
-          )}
-          {!isResist && <ImageResistBtn navigation={navigation} roomInfo={roomInfo} />}
-        </View>
+
         {isStarted == "waiting" && (
           <CGLeaveBtn challengeId={roomInfo.challengeId} userNum={userList.length} />
         )}
-
-        <FeedsArea></FeedsArea>
+        <FeedsArea
+          roomInfo={roomInfo}
+          isStarted={isStarted}
+          isAuthed={isAuthed}
+          isTime={isTime}
+          isResist={isResist}
+        ></FeedsArea>
       </LinearGradient>
     </Provider>
   )
 }
 export default CGRoomScreen
-
-const styles = StyleSheet.create({
-  buttonContainer: {
-    paddingHorizontal: "5%",
-  },
-  buttonBox: {
-    width: "100%",
-    height: "15%",
-    marginTop: "5%",
-  },
-})

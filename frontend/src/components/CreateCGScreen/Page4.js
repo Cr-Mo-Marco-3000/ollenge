@@ -64,5 +64,5 @@ const styles = {
     elevation: 12,
     padding: 12,
   },
-  header: { ...fontStyles.HyeminBold({ size: 9 }), textAlign: "center" },
+  header: { ...fontStyles.HyeminBold({ size: 8 }), textAlign: "center" },
 }

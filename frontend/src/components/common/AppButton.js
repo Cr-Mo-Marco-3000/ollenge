@@ -44,7 +44,11 @@ function AppButton(props) {
   })
 
   return (
-    <Pressable style={styles.buttonContainer} onPress={props.handler}>
+    <Pressable
+      style={styles.buttonContainer}
+      onPress={props.handler}
+      android_ripple={{ color: `${ColorSet.whiteColor(0.5)}` }}
+    >
       <View>
         {blodFlag === "bold" ? (
           <AppBoldText color={fontColor} pxSize={pxSize}>

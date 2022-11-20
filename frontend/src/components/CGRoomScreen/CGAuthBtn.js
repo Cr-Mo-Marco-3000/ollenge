@@ -23,6 +23,7 @@ function CGAuthBtn({ navigation }) {
   function showAuthModal() {
     setVisible(true)
   }
+  console.log(visible)
 
   function hideModal() {
     setVisible(false)

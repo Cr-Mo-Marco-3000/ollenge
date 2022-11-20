@@ -97,6 +97,7 @@ const Challenging = ({ navigation }) => {
               }}
             />
           ))}
+          <UnderMargin></UnderMargin>
         </ScrollBackground>
       ) : (
         <NoContent message={"도전 중인"} />
@@ -126,4 +127,9 @@ export default Challenging
 const IconView = styled.View`
   width: 15%;
   height: 50px;
+`
+
+const UnderMargin = styled.View`
+  width: 100%;
+  height: 100px;
 `

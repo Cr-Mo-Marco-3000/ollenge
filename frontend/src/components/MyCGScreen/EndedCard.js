@@ -1,4 +1,4 @@
-import React from "react-native"
+import React, { StyleSheet } from "react-native"
 import { View, Dimensions, Image } from "react-native"
 import ColorSet from "../../style/ColorSet"
 import AppBoldText from "../common/AppBoldText"
@@ -6,8 +6,11 @@ import AppCard from "../common/AppCard"
 import { ProgressBar } from "react-native-paper"
 import { CrownIcon } from "../../assets/images/MyCGScreen/MyCGScreen"
 import defaultImage from "../../assets/images/default-image.png"
+import LottieView from "lottie-react-native"
+import { useRef } from "react"
 
 export default function EndedCard(props) {
+  const animation = useRef(null)
   const windowWidth = Dimensions.get("window").width
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
   const challengeImg = props.challengeInfo.challengeImg
@@ -86,6 +89,22 @@ export default function EndedCard(props) {
                   flex: 4,
                 }}
               >
+                {props.newFlag && (
+                  <View style={styles.newBadge}>
+                    <LottieView
+                      autoPlay
+                      ref={animation}
+                      style={{
+                        width: "100%",
+                        height: undefined,
+                        top: "-10%",
+                      }}
+                      resizeMode="cover"
+                      source={require("../../assets/Lottie/New.json")}
+                    />
+                  </View>
+                )}
+
                 {/* 사진 들어가는 똥글뱅이 */}
                 <View
                   style={{
@@ -292,3 +311,16 @@ export default function EndedCard(props) {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  newBadge: {
+    position: "absolute",
+    zIndex: 20,
+    top: "-10%",
+    left: "-20%",
+    width: "50%",
+    paddingHorizontal: "5%",
+    paddingVertical: "3%",
+    borderRadius: 20,
+  },
+})

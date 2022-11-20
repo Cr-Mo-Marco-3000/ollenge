@@ -38,7 +38,7 @@ function WaitingBedgeItem({ typeData, grade, badgeId }) {
   function pressHandler() {
     instance
       .patch("/api/badge", { badgeId: badgeId })
-      .then((res) => console.log(res))
+      .then((res) => {})
       .catch((err) => console.log(err))
     showModal()
   }

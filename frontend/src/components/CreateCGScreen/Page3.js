@@ -56,7 +56,7 @@ const styles = {
   Title: (selected) => {
     const color = selected ? "white" : `${ColorSet.navyColor(1)}`
     return {
-      ...fontStyles.HyeminBold({ size: 6.5, align: "left", color }),
+      ...fontStyles.HyeminBold({ size: 6, align: "left", color }),
       marginBottom: 15,
     }
   },
@@ -64,7 +64,7 @@ const styles = {
   Content: (selected) => {
     const color = selected ? "white" : `${ColorSet.navyColor(1)}`
     return {
-      ...fontStyles.Hyemin({ size: 4.5, align: "left", color }),
+      ...fontStyles.Hyemin({ size: 4, align: "left", color }),
     }
   },
   Card: (selected) => {
@@ -78,5 +78,5 @@ const styles = {
     }
   },
 
-  header: { ...fontStyles.HyeminBold({ size: 9 }), textAlign: "center", marginBottom: dh * 0.04 },
+  header: { ...fontStyles.HyeminBold({ size: 8 }), textAlign: "center", marginBottom: dh * 0.04 },
 }

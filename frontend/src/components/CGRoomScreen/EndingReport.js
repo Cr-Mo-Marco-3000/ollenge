@@ -13,6 +13,7 @@ import { AuthContext } from "./../../../store/auth-context"
 
 import { RFPercentage } from "react-native-responsive-fontsize"
 import { CalendarIcon, RunGirlIcon } from "./../../assets/images/RankingCGScreen/RankingCGScreen"
+import { HappyIcon } from "../../assets/images"
 
 function EndingReport() {
   const animation = useRef(null)
@@ -57,7 +58,7 @@ function EndingReport() {
   return (
     <LinearGradient
       style={styles.endingContainer}
-      colors={[`${ColorSet.yellowColor(1)}`, `${ColorSet.orangeColor(1)}`]}
+      colors={[`${ColorSet.paleBlueColor(1)}`, `${ColorSet.yellowColor(1)}`]}
     >
       <LottieView
         autoPlay
@@ -79,28 +80,29 @@ function EndingReport() {
 
       {myInfo && (
         <View>
-          <AppBoldText color={"white"} size={5}>
-            {percent >= 80 ? "대단해요!!" : "수고하셨습니다"}
-          </AppBoldText>
-          <View style={{ flexDirection: "row", marginTop: "5%" }}>
+          <View style={{ flexDirection: "row", marginTop: "3%" }}>
+            <View style={{ width: RFPercentage(4), height: RFPercentage(4), marginRight: "3%" }}>
+              <HappyIcon />
+            </View>
+            <AppText size={2.5}>나의 달성률: {percent}%</AppText>
+          </View>
+          <View style={{ flexDirection: "row", marginTop: "3%" }}>
             <View style={{ width: RFPercentage(4), height: RFPercentage(4), marginRight: "3%" }}>
               <CalendarIcon />
             </View>
-            <AppText color={"white"}>
+
+            <AppText size={2.5}>
               총 {wholeDay}일 중 {myInfo.datetimeList.length}일 참여했어요
             </AppText>
           </View>
-          <View style={{ flexDirection: "row", marginVertical: "3%" }}>
+          <View style={{ flexDirection: "row", marginTop: "3%" }}>
             <View style={{ width: RFPercentage(4), height: RFPercentage(4), marginRight: "3%" }}>
               <RunGirlIcon />
             </View>
-            <AppText color={"white"}>
+            <AppText size={2.5}>
               총 {userList.length}명 중 {myRank}등이에요
             </AppText>
           </View>
-          <AppBoldText color={"paleBlue"}>
-            {percent}%의 달성률로{"\n"} 챌린지를 마감했습니다
-          </AppBoldText>
         </View>
       )}
     </LinearGradient>
@@ -110,9 +112,11 @@ export default EndingReport
 
 const styles = StyleSheet.create({
   endingContainer: {
+    alignItems: "flex-start",
     width: "100%",
     borderRadius: 10,
-    paddingVertical: "10%",
+    paddingVertical: "2%",
+    paddingHorizontal: "5%",
     marginTop: "5%",
     shadowColor: "#000",
     shadowOffset: {
@@ -122,7 +126,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    alignItems: "center",
     justifyContent: "center",
   },
 })

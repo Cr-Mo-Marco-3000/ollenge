@@ -30,7 +30,6 @@ function ProceedingRank({ challengeInfo, hideModal }) {
       .catch((err) => console.log(err))
   }, [challengeInfo])
 
-  console.log(challengeInfo)
   return (
     <View style={{ flex: 1 }}>
       <TopMargin />

@@ -1,4 +1,4 @@
-import React, { KeyboardAvoidingView } from "react-native"
+import React, { KeyboardAvoidingView, Text, View } from "react-native"
 import styled from "styled-components"
 import AppBoldText from "../components/common/AppBoldText"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
@@ -8,7 +8,7 @@ import Ended from "../components/MyCGScreen/Ended"
 import ColorSet from "../style/ColorSet"
 import TopMargin from "../components/common/TopMargin"
 import { FAB, Portal, Provider } from "react-native-paper"
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import { Modal } from "react-native"
 import AppCard from "../components/common/AppCard"
 import { MailIcon } from "../assets/images/MyCGScreen/MyCGScreen"
@@ -24,7 +24,101 @@ function MyCGListScreen() {
   const [showCodeInput, setShowCodeInput] = useState(false)
   const [inputValue, setInputValue] = useState("")
   const [errorFlag, setErrorFlag] = useState(true)
+  const [rankingCGList, setRankingCGList] = useState([])
+  const [userCGList, setUserCGList] = useState([])
+  const [totalChallengeInfo, setTotalChallengeInfo] = useState({})
+  const [newFlag, setNewFlag] = useState(false)
+
   const instance = AuthorizationInstance()
+
+  const roomCtx = useContext(RoomContext)
+  useEffect(() => {
+    const focusHandler = navigation.addListener("focus", () => {
+      roomCtx.resetRoomData()
+    })
+    return focusHandler
+  }, [navigation])
+
+  useEffect(() => {
+    let temp = false
+    for (const challenge of rankingCGList) {
+      if (!challenge.isChecked) {
+        temp = true
+        break
+      }
+    }
+    if (!temp) {
+      for (const challenge of userCGList) {
+        if (!challenge.isChecked) {
+          temp = true
+          break
+        }
+      }
+    }
+    setNewFlag(temp)
+  }, [rankingCGList, userCGList])
+
+  useEffect(() => {
+    getList()
+  }, [])
+
+  const getList = async () => {
+    const res = await instance.get("/api/user/completed")
+
+    const newRCGList = res.data.rankingChallengeList
+    const newUCGList = res.data.userChallengeList
+
+    // 총 참여 챌린지 수
+    let participateNumber = 0
+
+    participateNumber += newRCGList.length
+    participateNumber += newUCGList.length
+
+    // 평균 달성률
+    let averageSuccess = newRCGList.reduce((pre, cur) => {
+      const days =
+        (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
+          1000 /
+          60 /
+          60 /
+          24 +
+        1
+      return pre + cur.myFeedCnt / days
+    }, 0)
+
+    averageSuccess = newUCGList.reduce((pre, cur) => {
+      const days =
+        (new Date(cur.endDate).getTime() - new Date(cur.startDate).getTime()) /
+          1000 /
+          60 /
+          60 /
+          24 +
+        1
+      return pre + cur.myFeedCnt / days
+    }, averageSuccess)
+
+    averageSuccess = Math.round((averageSuccess / participateNumber) * 100 * 100) / 100
+    let totalScore = newRCGList.reduce((pre, cur) => {
+      const score = cur.myFeedCnt * 10
+      return pre + score
+    }, 0)
+
+    totalScore = newUCGList.reduce((pre, cur) => {
+      const score = cur.myFeedCnt * 10
+      return pre + score
+    }, totalScore)
+
+    // 챌린지 참여 정보
+    const newTotalChallengeInfo = {
+      participateNumber: participateNumber,
+      averageSuccess: averageSuccess,
+      totalScore: totalScore,
+    }
+
+    setRankingCGList(newRCGList)
+    setUserCGList(newUCGList)
+    setTotalChallengeInfo(newTotalChallengeInfo)
+  }
 
   const onStateChange = () => {
     setfabButton(!fabButton)
@@ -33,7 +127,6 @@ function MyCGListScreen() {
   const openAndClose = () => {
     setShowCodeInput(!showCodeInput)
   }
-  const roomCtx = useContext(RoomContext)
 
   // 참여하기 토글에서 버튼을 눌러 날아가는 경우
   const joinChallenge = async () => {
@@ -143,7 +236,32 @@ function MyCGListScreen() {
           >
             <Tab.Screen name="도전 중" component={Challenging} />
             <Tab.Screen name="시작 전" component={BeforeStart} />
-            <Tab.Screen name="종료" component={Ended} />
+            <Tab.Screen
+              name="종료"
+              options={{
+                tabBarBadge: () => {
+                  if (newFlag) {
+                    return (
+                      <View style={{ position: "relative", right: "140%", bottom: "5%" }}>
+                        <AppBoldText size={2} color={"orange"}>
+                          new
+                        </AppBoldText>
+                      </View>
+                    )
+                  }
+                },
+              }}
+            >
+              {() => (
+                <Ended
+                  rankingCGList={rankingCGList}
+                  userCGList={userCGList}
+                  totalChallengeInfo={totalChallengeInfo}
+                  navigation={navigation}
+                  getList={getList}
+                />
+              )}
+            </Tab.Screen>
           </Tab.Navigator>
           <FAB.Group
             open={fabButton}

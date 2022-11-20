@@ -13,7 +13,6 @@ import ArrestModal from "./ArrestModal"
 const windowWidth = Dimensions.get("window").width
 
 const FeedItem = (props) => {
-  const [openModal, setOpenModal] = useState(false)
   const [openArrestModal, setOpenArrestModal] = useState(false)
 
   const feedInfo = props.feedInfo
@@ -29,7 +28,7 @@ const FeedItem = (props) => {
   const feedImg = feedInfo.item.feedImg
   const commentNum = feedInfo.item.commentNum
   const feedContent = feedInfo.item.feedContent
-  const whenClosed = props.whenClosed
+
   const date = {
     year: createdDatetime.slice(0, 4),
     month: createdDatetime.slice(5, 7),
@@ -51,18 +50,12 @@ const FeedItem = (props) => {
     date.hour = (intHour - 12).toString()
   }
 
-  const openAndClose = () => {
-    whenClosed()
-    setOpenModal(!openModal)
+  const open = () => {
+    props.open(feedInfo)
   }
 
   return (
     <FeedDistrict>
-      {openModal && (
-        <Modal animationType="fade" statusBarTranslucent={true}>
-          <CommentArea openAndClose={openAndClose} feedInfo={props.feedInfo} />
-        </Modal>
-      )}
       {openArrestModal && (
         <ArrestModal
           backToFeed={() => {
@@ -73,7 +66,7 @@ const FeedItem = (props) => {
       )}
       <CardView>
         <AppCard>
-          <Pressable style={{ width: "100%", height: "100%" }} onPress={openAndClose}>
+          <Pressable style={{ width: "100%", height: "100%" }} onPress={open}>
             <InnerCard>
               <ContentCard>
                 <TitleRow>

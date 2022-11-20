@@ -74,7 +74,7 @@ const ShowUserBadge = ({ navigation, route }) => {
                 source={
                   profileImg === null || profileImg === ""
                     ? require("../../assets/images/default-image.png")
-                    : profileImg
+                    : { uri: profileImg }
                 }
                 style={{ width: dw * 0.35, height: dw * 0.35 }}
               />

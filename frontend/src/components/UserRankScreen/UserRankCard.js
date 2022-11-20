@@ -53,7 +53,7 @@ export const UserCard = ({ user, isMe = false }) => {
           {selectedBadge !== null && (
             <Image
               style={{ width: "60%", height: "60%", alignSelf: "center" }}
-              source={badgesTitle[selectedBadge.type].src[selectedBadge.grade]}
+              source={badgesTitle[selectedBadge.type].src[selectedBadge.grade - 1]}
             />
           )}
           {selectedBadge === null && (

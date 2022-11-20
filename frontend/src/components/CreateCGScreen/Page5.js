@@ -73,5 +73,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  header: { ...fontStyles.HyeminBold({ size: 9 }), textAlign: "center", marginBottom: dh * 0.02 },
+  header: { ...fontStyles.HyeminBold({ size: 8 }), textAlign: "center", marginBottom: dh * 0.02 },
 })
