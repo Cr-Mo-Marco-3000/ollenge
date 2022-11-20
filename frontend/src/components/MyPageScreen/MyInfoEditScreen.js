@@ -82,7 +82,7 @@ function MyInfoEditScreen({ userInfo }) {
 
   return (
     <View style={styles.rootContainer}>
-      <KeyboardAvoidingView style={{ flex: 1, width: "100%" }}>
+      <KeyboardAvoidingView style={{ flex: 1, width: "100%" }} behavior={"position"}>
         <View style={{ marginTop: "15%", width: "100%", alignItems: "center" }}>
           <AppBoldText>회원 정보 수정</AppBoldText>
         </View>

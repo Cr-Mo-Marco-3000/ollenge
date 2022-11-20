@@ -3,6 +3,7 @@ import React from "react"
 import { createContext, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AuthorizationInstance } from "../src/api/settings"
+import * as Notification from "expo-notifications"
 
 const instance = AuthorizationInstance()
 
@@ -22,12 +23,14 @@ export const AuthContext = createContext({
 function AuthContextProvider({ children }) {
   const [authToken, setAuthToken] = useState()
   const [userFlag, setUserFlag] = useState()
+  const [pushToken, setPushToken] = useState("")
   const [info, setInfo] = useState()
   const [badge, setBadge] = useState()
 
   function authenticate(token) {
     setAuthToken(token)
     AsyncStorage.setItem("token", token)
+    getPushToken()
     infoData()
   }
 
@@ -54,6 +57,15 @@ function AuthContextProvider({ children }) {
       .catch((err) => console.log(err))
   }
 
+  function getPushToken() {
+    Notification.getExpoPushTokenAsync().then((res) => {
+      instance
+        .patch("/api/user", { userDescription: res.data })
+        .then((res) => console.log(res))
+        .catch((res) => console.log(res))
+    })
+  }
+
   function signed(flag) {
     setUserFlag(flag)
     AsyncStorage.setItem("userFlag", flag)
@@ -61,6 +73,7 @@ function AuthContextProvider({ children }) {
 
   function logout() {
     setAuthToken(null)
+    setUserFlag(false)
     AsyncStorage.removeItem("token")
     AsyncStorage.removeItem("userFlag")
   }
