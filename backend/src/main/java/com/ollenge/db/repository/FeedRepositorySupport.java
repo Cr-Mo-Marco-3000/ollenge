@@ -23,7 +23,7 @@ public class FeedRepositorySupport {
         List<Feed> result = jpaQueryFactory.select(qFeed)
                 .from(qFeed)
                 .where(qFeed.participation.challenge.eq(challenge))
-                .orderBy(qFeed.feedId.desc())
+                .orderBy(qFeed.createdDatetime.desc())
                 .fetch();
         List<FeedGetData> feedGetDataList = new ArrayList<>();
         for (Feed feed : result) {
