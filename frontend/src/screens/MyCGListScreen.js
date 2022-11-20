@@ -397,9 +397,10 @@ const IconView = styled.View`
 const AppTextInput = styled.TextInput`
   width: 100%;
   height: 100%;
-  font-size: 30px;
+  font-size: 20px;
   padding-left: 2.5%;
   color: ${ColorSet.navyColor(1)};
+  font-family: "HyeminBold";
 `
 
 const ButtonView = styled.View`
