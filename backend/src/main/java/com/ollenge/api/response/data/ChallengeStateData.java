@@ -19,6 +19,7 @@ public class ChallengeStateData {
     long userId;
     String nickname;
     String profileImg;
+    String userDescription;
     List<LocalDateTime> datetimeList;
     BadgeGetData selectedBadge;
 
@@ -27,6 +28,7 @@ public class ChallengeStateData {
         challengeStateData.userId = user.getUserId();
         challengeStateData.nickname = user.getNickname();
         challengeStateData.profileImg = user.getProfileImg();
+        challengeStateData.userDescription = user.getUserDescription();
         challengeStateData.datetimeList = datetimeList;
         if(user.getBadge() != null) {
             challengeStateData.selectedBadge = new BadgeGetData();
