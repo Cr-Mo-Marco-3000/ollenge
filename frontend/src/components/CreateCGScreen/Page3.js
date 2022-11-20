@@ -27,7 +27,7 @@ export default function Page2({ info, setInfo, toNext, cancelAll }) {
 
   return (
     <PageBase toNext={toNext} disabled={disabled} cancelAll={cancelAll}>
-      <Text style={styles.header}>팀 목표 설정</Text>
+      <Text style={styles.header}>인증 방식</Text>
       {/* 랭킹 챌린지 종류별 카드 렌더링 */}
       {Object.keys(words).map((key, ind) => {
         return (
