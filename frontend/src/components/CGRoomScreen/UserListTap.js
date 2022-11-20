@@ -11,10 +11,19 @@ import ProfileBedge from "./ProfileBedge"
 import { AuthContext } from "../../../store/auth-context"
 import { RoomContext } from "../../../store/room-context"
 import { TodayCheck } from "../../functions"
+import { CGStartFlag, CGAuthTimeFlag } from "../../functions/index"
 
 function UserListTap({ navigation }) {
   const authCtx = useContext(AuthContext)
   const roomCtx = useContext(RoomContext)
+  const roomInfo = roomCtx.roomInfo
+  const [isStarted, setIsStarted] = useState("")
+  const [isTime, setIsTime] = useState("")
+
+  useEffect(() => {
+    setIsStarted(CGStartFlag(roomInfo.startDate, roomInfo.endDate))
+    setIsTime(CGAuthTimeFlag(roomInfo.startTime, roomInfo.endTime))
+  }, [roomInfo])
 
   const userInfo = authCtx.userInfo
   const userList = roomCtx.userList
@@ -34,9 +43,7 @@ function UserListTap({ navigation }) {
   return (
     <View style={styles.imgListContainer}>
       <View style={styles.myProfileBox}>
-        {myInfo ? (
-          <ProfileBedge uri={myInfo.profileImg} isActive={TodayCheck(myInfo.datetimeList)} />
-        ) : null}
+        {myInfo ? <ProfileBedge isActive={TodayCheck(myInfo.datetimeList)} user={myInfo} /> : null}
       </View>
       <ScrollView
         style={styles.userListBox}
@@ -48,8 +55,11 @@ function UserListTap({ navigation }) {
             return (
               <ProfileBedge
                 key={index}
-                uri={user.profileImg}
                 isActive={TodayCheck(user.datetimeList)}
+                pushtoken={user.userDescription}
+                isStarted={isStarted}
+                isTime={isTime}
+                user={user}
               />
             )
           }

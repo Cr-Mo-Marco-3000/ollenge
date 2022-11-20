@@ -15,6 +15,7 @@ import ExclamMark from "./exclamation_question_mark_3d.png"
 import Clock from "./clock-dynamic-color.png"
 import Party from "./party.png"
 import Happy from "./happy.png"
+import Mail from "./mail.png"
 
 import { Image } from "react-native"
 
@@ -115,4 +116,8 @@ export function CrossIcon() {
 
 export function CheckIcon() {
   return <Image source={Check} style={{ width: "100%", height: "100%" }} resizeMode="contain" />
+}
+
+export function MailIcon() {
+  return <Image source={Mail} style={{ width: "100%", height: "100%" }} resizeMode="contain" />
 }

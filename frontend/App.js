@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import * as Notifications from "expo-notifications"
 
 import StartScreen from "./src/screens/StartScreen"
 import MyCGScreen from "./src/screens/MyCGScreen"
@@ -18,6 +19,16 @@ import ColorSet from "./src/style/ColorSet"
 import AuthContextProvider, { AuthContext } from "./store/auth-context"
 import RoomContextProvider from "./store/room-context"
 import { RFPercentage } from "react-native-responsive-fontsize"
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: false,
+      shouldSetBadge: true,
+      shouldShowAlert: true,
+    }
+  },
+})
 
 function AuthStack() {
   return <StartScreen />
