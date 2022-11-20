@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
+import { Provider, Portal, Modal, IconButton } from "react-native-paper"
 
 import {
   View,
@@ -24,12 +25,19 @@ import { AuthorizationInstance } from "../../api/settings"
 import { RoomContext } from "../../../store/room-context"
 import { useNavigation } from "@react-navigation/native"
 import Loader from "../common/Loader"
+import AppText from "../common/AppText"
 
 function AuthScreen({ route }) {
   const instance = AuthorizationInstance()
   const navigation = useNavigation()
 
   const { showAuthModal } = route.params
+
+  const [visible, setVisible] = React.useState(false)
+
+  const showModal = () => setVisible(true)
+  const hideModal = () => setVisible(false)
+  const containerStyle = { backgroundColor: "white", padding: 10, borderRadius: 10 }
 
   const roomCtx = useContext(RoomContext)
   const roomInfo = roomCtx.roomInfo
@@ -135,56 +143,95 @@ function AuthScreen({ route }) {
       })
   }
 
+  console.log(roomCtx.authImage)
+
   return (
-    <KeyboardAvoidingView style={styles.rootScreen} behavior={"height"}>
-      <View style={{ height: headerHight }} />
-      {loading && <Loader />}
-      {showKey === false && (
-        <Pressable style={styles.authContainer} onPress={cameraHandler}>
-          {uri ? (
+    <Provider>
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={containerStyle}
+          style={{ alignItems: "center" }}
+        >
+          <View style={{ width: RFPercentage(40), height: RFPercentage(40) }}>
             <Image
-              source={{ uri: uri }}
+              source={{ uri: roomCtx.authImage }}
               style={{ width: "100%", height: "100%", borderRadius: 10 }}
               resizeMode="cover"
             />
-          ) : (
-            <Button
-              icon="camera"
-              textColor={`${ColorSet.paleBlueColor(1)}`}
-              theme={{
-                fonts: {
-                  labelLarge: {
-                    fontFamily: "HyeminBold",
-                    fontSize: 18,
-                  },
-                },
-              }}
-            >
-              인증 사진 촬영
-            </Button>
-          )}
-        </Pressable>
-      )}
-      <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: "row", height: 30 }}>
-          <View style={{ width: 30, height: 30, marginRight: "2%" }}>
-            <PencilIcon />
           </View>
-          <AppBoldText PxSize={18}>피드 내용 작성</AppBoldText>
+        </Modal>
+      </Portal>
+      <KeyboardAvoidingView style={styles.rootScreen} behavior={"height"}>
+        <View style={{ width: "100%", height: undefined }}>
+          <Image source={{ uri: roomCtx.authImage }} resizeMode="cover" />
         </View>
-        <View style={{ marginVertical: "5%", flex: 1 }} value={inputText}>
-          <TextInput onChangeText={inputHandler} multiline style={styles.descriptionBox} />
+        <View style={{ height: headerHight }} />
+        {loading && <Loader />}
+        {showKey === false && (
+          <Pressable style={styles.authContainer} onPress={cameraHandler}>
+            {uri ? (
+              <Image
+                source={{ uri: uri }}
+                style={{ width: "100%", height: "100%", borderRadius: 10 }}
+                resizeMode="cover"
+              />
+            ) : (
+              <Button
+                icon="camera"
+                textColor={`${ColorSet.paleBlueColor(1)}`}
+                theme={{
+                  fonts: {
+                    labelLarge: {
+                      fontFamily: "HyeminBold",
+                      fontSize: 18,
+                    },
+                  },
+                }}
+              >
+                인증 사진 촬영
+              </Button>
+            )}
+          </Pressable>
+        )}
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              height: 30,
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ width: 30, height: 30, marginRight: "2%" }}>
+                <PencilIcon />
+              </View>
+              <AppBoldText PxSize={18}>피드 내용 작성</AppBoldText>
+            </View>
+            {roomCtx.authImage && (
+              <Pressable onPress={showModal}>
+                <AppText color={"orange"} size={2}>
+                  인증 이미지 확인
+                </AppText>
+              </Pressable>
+            )}
+          </View>
+          <View style={{ marginVertical: "5%", flex: 1 }} value={inputText}>
+            <TextInput onChangeText={inputHandler} multiline style={styles.descriptionBox} />
+          </View>
         </View>
-      </View>
-      <View style={{ width: "100%", height: RFPercentage(6), marginBottom: "5%" }}>
-        <AppButton
-          title={"인증 완료하기"}
-          handler={() => {
-            setLoading(true)
-          }}
-        />
-      </View>
-    </KeyboardAvoidingView>
+        <View style={{ width: "100%", height: RFPercentage(6), marginBottom: "5%" }}>
+          <AppButton
+            title={"인증 완료하기"}
+            handler={() => {
+              setLoading(true)
+            }}
+          />
+        </View>
+      </KeyboardAvoidingView>
+    </Provider>
   )
 }
 export default AuthScreen
@@ -231,4 +278,5 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  imgBtn: {},
 })
