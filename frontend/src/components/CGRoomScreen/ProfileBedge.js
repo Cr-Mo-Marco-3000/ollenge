@@ -10,16 +10,14 @@ import ColorSet from "../../style/ColorSet"
 import AppBoldText from "../common/AppBoldText"
 import { MailIcon } from "../../assets/images/index"
 import { AuthContext } from "../../../store/auth-context"
-import { RoomContext } from "../../../store/room-context"
 
 function ProfileBedge({ user, isActive, pushtoken, isStarted, isTime }) {
   const animation = useRef(null)
   const [visible, setVisible] = useState(false)
   const [send, setSend] = useState(false)
-  const [inputValue, setInputValue] = useState(" ")
+  const [inputValue, setInputValue] = useState("")
 
   const authCtx = useContext(AuthContext)
-  const roomCtx = useContext(RoomContext)
   const defaultImageUri = Image.resolveAssetSource(defaultImage).uri
 
   const sendHandler = function () {
@@ -114,11 +112,7 @@ function ProfileBedge({ user, isActive, pushtoken, isStarted, isTime }) {
                   marginTop: "5%",
                 }}
               >
-                <TextInput
-                  style={styles.inputBox}
-                  value={inputValue}
-                  onChangeText={setInputValue}
-                />
+                <TextInput style={styles.inputBox} onChangeText={(text) => setInputValue(text)} />
                 <Button
                   mode="contained"
                   onPress={sendHandler}
