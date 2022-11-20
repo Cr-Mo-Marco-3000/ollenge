@@ -30,7 +30,6 @@ function CGRoomScreen() {
   const [isTime, setIsTime] = useState("")
   const [visible, setVisible] = useState()
 
-  console.log(isStarted)
   const hideModal = function () {
     setVisible(false)
   }
@@ -51,7 +50,7 @@ function CGRoomScreen() {
         setVisible(true)
       }
     }
-  }, [roomInfo])
+  }, [roomInfo, isStarted])
 
   return (
     <Provider>
